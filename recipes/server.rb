@@ -67,11 +67,11 @@ end
 mysql_info = get_settings_by_role("mysql-master", "mysql")
 rabbit_info = get_settings_by_role("rabbitmq-server", "rabbitmq") # FIXME: access
 
-ks_admin_endpoint = endpoint("keystone", "keystone", "admin-api")
-ks_service_endpoint = endpoint("keystone", "keystone","service-api")
+ks_admin_endpoint = endpoint "identity-admin"
+ks_service_endpoint = endpoint "identity-api"
 keystone = get_settings_by_role("keystone", "keystone")
 glance = get_settings_by_role("glance-api", "glance")
-glance_api_endpoint = endpoint("glance-api", "glance", "api")
+glance_api_endpoint = endpoint "image-api"
 api_endpoint = get_bind_endpoint("cinder", "volume")
 
 if glance["api"]["swift_store_auth_address"].nil?
