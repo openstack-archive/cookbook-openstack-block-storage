@@ -64,7 +64,11 @@ directory "/etc/cinder" do
 end
 
 
-mysql_info = get_settings_by_role("mysql-master", "mysql")
+#mysql_info = get_settings_by_role("mysql-master", "mysql")
+db_user = node['openstack']['cinder']['db']['username']
+db_pass = node['openstack']['cinder']['db']['password']
+sql_connection = db_uri("cinder", db_user, db_pass)
+
 rabbit_info = get_settings_by_role("rabbitmq-server", "rabbitmq") # FIXME: access
 
 ks_admin_endpoint = endpoint "identity-admin"
@@ -92,7 +96,7 @@ template "/etc/cinder/cinder.conf" do
   group "root"
   mode "0644"
   variables(
-    "db_ipaddress" => mysql_info["bind_address"],
+    "sql_connection" => sql_connection,
     "user" => node["openstack"]["cinder"]["db"]["username"],
     "passwd" => node["openstack"]["cinder"]["db"]["password"],
     "db_name" => node["openstack"]["cinder"]["db"]["name"],

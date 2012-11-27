@@ -58,7 +58,7 @@ syslog_log_facility = <%= @log_facility %>
 #### (StrOpt) Virtualization api connection type : libvirt, xenapi, or
 ####          fake
 
-sql_connection=mysql://<%= @user %>:<%= @passwd %>@<%= @db_ipaddress %>/<%= @db_name %>
+sql_connection=<%= @sql_connection %>
 # sql_connection=sqlite:///$state_path/$sqlite_db
 #### (StrOpt) The SQLAlchemy connection string used to connect to the
 ####          database
