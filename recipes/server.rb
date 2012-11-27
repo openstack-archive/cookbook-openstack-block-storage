@@ -19,32 +19,16 @@
 # limitations under the License.
 #
 
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-
-# Allow for using a well known db password
-if node["developer_mode"]
-  node.set_unless["openstack"]["cinder"]["db"]["password"] = "cinder"
-else
-  node.set_unless["openstack"]["cinder"]["db"]["password"] = secure_password
+class ::Chef::Recipe
+  include ::Openstack
 end
 
-# Allow for using a well known db password
+# Allow for using a well known service password
 if node["developer_mode"]
   node.set_unless["openstack"]["cinder"]["service_pass"] = "cinder"
 else
   node.set_unless["openstack"]["cinder"]["service_pass"] = secure_password
 end
-
-#creates db and user
-#function defined in osops-utils/libraries
-create_db_and_user("mysql",
-                   node["openstack"]["cinder"]["db"]["name"],
-                   node["openstack"]["cinder"]["db"]["username"],
-                   node["openstack"]["cinder"]["db"]["password"])
-
-include_recipe "mysql::client"
-include_recipe "osops-utils"
-include_recipe "osops-utils::repo"
 
 platform_options = node["openstack"]["cinder"]["platform"]
 
@@ -83,11 +67,11 @@ end
 mysql_info = get_settings_by_role("mysql-master", "mysql")
 rabbit_info = get_settings_by_role("rabbitmq-server", "rabbitmq") # FIXME: access
 
-ks_admin_endpoint = get_access_endpoint("keystone", "keystone", "admin-api")
-ks_service_endpoint = get_access_endpoint("keystone", "keystone","service-api")
+ks_admin_endpoint = endpoint("keystone", "keystone", "admin-api")
+ks_service_endpoint = endpoint("keystone", "keystone","service-api")
 keystone = get_settings_by_role("keystone", "keystone")
 glance = get_settings_by_role("glance-api", "glance")
-glance_api_endpoint = get_access_endpoint("glance-api", "glance", "api")
+glance_api_endpoint = endpoint("glance-api", "glance", "api")
 api_endpoint = get_bind_endpoint("cinder", "volume")
 
 if glance["api"]["swift_store_auth_address"].nil?
