@@ -111,14 +111,14 @@ template "/etc/cinder/cinder.conf" do
     :swift_large_object_size => glance["api"]["swift"]["store_large_object_size"],
     :swift_large_object_chunk_size => glance["api"]["swift"]["store_large_object_chunk_size"],
     :swift_store_container => glance["api"]["swift"]["store_container"],
-    :keystone_api_ipaddress => ks_admin_endpoint["host"],
-    :keystone_service_port => ks_service_endpoint["port"],
-    :keystone_admin_port => ks_admin_endpoint["port"],
-    :keystone_admin_token => keystone["admin_token"],
-    :glance_api_ipaddress => glance_api_endpoint["host"],
-    :glance_service_port => glance_api_endpoint["port"],
-    :glance_admin_port => glance_api_endpoint["port"],
-    :glance_admin_token => glance["admin_token"],
+    :keystone_api_ipaddress => identity_endpoint.host,
+    :keystone_service_port => identity_endpoint.port,
+    :keystone_admin_port => identity_endpoint.port,
+    #:keystone_admin_token => keystone["admin_token"],
+    :glance_api_ipaddress => image_endpoint.host,
+    :glance_service_port => image_endpoint.port,
+    :glance_admin_port => image_endpoint.port,
+    #:glance_admin_token => glance["admin_token"],
     :service_tenant_name => node["openstack"]["cinder"]["service_tenant_name"],
     :service_user => node["openstack"]["cinder"]["service_user"],
     :service_pass => node["openstack"]["cinder"]["service_pass"]
@@ -142,10 +142,10 @@ template "/etc/cinder/api-paste.ini" do
   variables(
     "use_syslog" => node["openstack"]["cinder"]["syslog"]["use"],
     "log_facility" => node["openstack"]["cinder"]["syslog"]["facility"],
-    "keystone_api_ipaddress" => ks_admin_endpoint["host"],
-    "keystone_service_port" => ks_service_endpoint["port"],
-    "keystone_admin_port" => ks_admin_endpoint["port"],
-    "keystone_admin_token" => keystone["admin_token"],
+    "keystone_api_ipaddress" => identity_endpoint.host,
+    "keystone_service_port" => identity_endpoint.port,
+    "keystone_admin_port" => identity_endpoint.port,
+    #"keystone_admin_token" => keystone["admin_token"],
     "service_tenant_name" => node["openstack"]["cinder"]["service_tenant_name"],
     "service_user" => node["openstack"]["cinder"]["service_user"],
     "service_pass" => node["openstack"]["cinder"]["service_pass"]
@@ -157,33 +157,33 @@ end
 
 # Register Cinder Volume Service
 keystone_register "Register Cinder Volume Service" do
-  auth_host ks_admin_endpoint["host"]
-  auth_port ks_admin_endpoint["port"]
-  auth_protocol ks_admin_endpoint["scheme"]
-  api_ver ks_admin_endpoint["path"]
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port.to_s
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
   auth_token keystone["admin_token"]
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
   endpoint_region "RegionOne"
-  endpoint_adminurl api_endpoint["uri"]
-  endpoint_internalurl api_endpoint["uri"]
-  endpoint_publicurl api_endpoint["uri"]
+  endpoint_adminurl api_endpoint.to_s
+  endpoint_internalurl api_endpoint.to_s
+  endpoint_publicurl api_endpoint.to_s
   action :create_service
 end
 keystone_register "Register Cinder Volume Endpoint" do
-  auth_host ks_admin_endpoint["host"]
-  auth_port ks_admin_endpoint["port"]
-  auth_protocol ks_admin_endpoint["scheme"]
-  api_ver ks_admin_endpoint["path"]
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
   auth_token keystone["admin_token"]
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
   endpoint_region "RegionOne"
-  endpoint_adminurl api_endpoint["uri"]
-  endpoint_internalurl api_endpoint["uri"]
-  endpoint_publicurl api_endpoint["uri"]
+  endpoint_adminurl api_endpoint.to_s
+  endpoint_internalurl api_endpoint.to_s
+  endpoint_publicurl api_endpoint.to_s
   action :create_endpoint
 end
 
