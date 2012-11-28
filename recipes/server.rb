@@ -75,7 +75,8 @@ ks_admin_endpoint = endpoint "identity-admin"
 ks_service_endpoint = endpoint "identity-api"
 keystone_service_role = node["nova"]["keystone_service_chef_role"]
 keystone = get_settings_by_role keystone_service_role, "keystone"
-glance = get_settings_by_role glance_api_chef_role, "glance"
+glance_api_role = node["nova"]["glance_api_chef_role"]
+glance = get_settings_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 api_endpoint = endpoint "compute-volume"
 
