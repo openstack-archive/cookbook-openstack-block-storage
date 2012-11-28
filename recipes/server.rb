@@ -64,19 +64,19 @@ directory "/etc/cinder" do
 end
 
 
-#mysql_info = get_settings_by_role("mysql-master", "mysql")
 db_user = node['openstack']['cinder']['db']['username']
 db_pass = node['openstack']['cinder']['db']['password']
 sql_connection = db_uri("cinder", db_user, db_pass)
 
-rabbit_info = get_settings_by_role("rabbitmq-server", "rabbitmq") # FIXME: access
+rabbit_server_role = node["nova"]["rabbit_server_chef_role"]
+rabbit_info = get_settings_by_role rabbit_server_role, "queue"
 
 ks_admin_endpoint = endpoint "identity-admin"
 ks_service_endpoint = endpoint "identity-api"
-keystone = get_settings_by_role("keystone", "keystone")
-glance = get_settings_by_role("glance-api", "glance")
+keystone = get_settings_by_role keystone_service_role, "keystone"
+glance = get_settings_by_role glance_api_chef_role, "glance"
 glance_api_endpoint = endpoint "image-api"
-api_endpoint = get_bind_endpoint("cinder", "volume")
+api_endpoint = endpoint "compute-volume"
 
 if glance["api"]["swift_store_auth_address"].nil?
   swift_store_auth_address="http://#{ks_admin_endpoint["host"]}:#{ks_service_endpoint["port"]}/v2.0"
@@ -96,32 +96,30 @@ template "/etc/cinder/cinder.conf" do
   group "root"
   mode "0644"
   variables(
-    "sql_connection" => sql_connection,
-    "user" => node["openstack"]["cinder"]["db"]["username"],
-    "passwd" => node["openstack"]["cinder"]["db"]["password"],
-    "db_name" => node["openstack"]["cinder"]["db"]["name"],
-    "use_syslog" => node["openstack"]["cinder"]["syslog"]["use"],
-    "log_facility" => node["openstack"]["cinder"]["syslog"]["facility"],
-    "rabbit_ipaddress" => IPManagement.get_ips_for_role("rabbitmq-server","nova",node)[0],    #FIXME!
-    "default_store" => glance["api"]["default_store"],
-    "swift_store_key" => swift_store_key,
-    "swift_store_user" => swift_store_user,
-    "swift_store_auth_address" => swift_store_auth_address,
-    "swift_store_auth_version" => swift_store_auth_version,
-    "swift_large_object_size" => glance["api"]["swift"]["store_large_object_size"],
-    "swift_large_object_chunk_size" => glance["api"]["swift"]["store_large_object_chunk_size"],
-    "swift_store_container" => glance["api"]["swift"]["store_container"],
-    "keystone_api_ipaddress" => ks_admin_endpoint["host"],
-    "keystone_service_port" => ks_service_endpoint["port"],
-    "keystone_admin_port" => ks_admin_endpoint["port"],
-    "keystone_admin_token" => keystone["admin_token"],
-    "glance_api_ipaddress" => glance_api_endpoint["host"],
-    "glance_service_port" => glance_api_endpoint["port"],
-    "glance_admin_port" => glance_api_endpoint["port"],
-    "glance_admin_token" => glance["admin_token"],
-    "service_tenant_name" => node["openstack"]["cinder"]["service_tenant_name"],
-    "service_user" => node["openstack"]["cinder"]["service_user"],
-    "service_pass" => node["openstack"]["cinder"]["service_pass"]
+    :sql_connection => sql_connection,
+    :use_syslog => node["openstack"]["cinder"]["syslog"]["use"],
+    :log_facility => node["openstack"]["cinder"]["syslog"]["facility"],
+    :rabbit_ipaddress => rabbit_info["host"],
+    :rabbit_port => rabbit_info["port"],
+    :default_store => glance["api"]["default_store"],
+    :swift_store_key => swift_store_key,
+    :swift_store_user => swift_store_user,
+    :swift_store_auth_address => swift_store_auth_address,
+    :swift_store_auth_version => swift_store_auth_version,
+    :swift_large_object_size => glance["api"]["swift"]["store_large_object_size"],
+    :swift_large_object_chunk_size => glance["api"]["swift"]["store_large_object_chunk_size"],
+    :swift_store_container => glance["api"]["swift"]["store_container"],
+    :keystone_api_ipaddress => ks_admin_endpoint["host"],
+    :keystone_service_port => ks_service_endpoint["port"],
+    :keystone_admin_port => ks_admin_endpoint["port"],
+    :keystone_admin_token => keystone["admin_token"],
+    :glance_api_ipaddress => glance_api_endpoint["host"],
+    :glance_service_port => glance_api_endpoint["port"],
+    :glance_admin_port => glance_api_endpoint["port"],
+    :glance_admin_token => glance["admin_token"],
+    :service_tenant_name => node["openstack"]["cinder"]["service_tenant_name"],
+    :service_user => node["openstack"]["cinder"]["service_user"],
+    :service_pass => node["openstack"]["cinder"]["service_pass"]
     )
   notifies :restart, resources(:service => "cinder-api"), :immediately
   notifies :restart, resources(:service => "cinder-scheduler"), :immediately
