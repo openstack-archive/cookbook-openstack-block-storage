@@ -1,14 +1,21 @@
-maintainer       "DreamHost, Inc."
-maintainer_email "carl.perry@dreamhost.com"
+maintainer       "AT&T, Inc."
+maintainer_email "jaypipes@gmail.com"
 license          "Apache 2.0"
 description      "The OpenStack Advanced Volume Management service Cinder."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "5.0.0"
+version          "2012.2.0"
 
-%w{ ubuntu fedora }.each do |os|
-  supports os
-end
+supports         "ubuntu"
+supports         "fedora"
+supports         "redhat"
 
-%w{ database mysql openstack-utils openstack-common }.each do |dep|
-  depends dep
-end
+depends          "mysql"
+depends          "database"
+depends          "openstack-common"
+depends          "apt"
+depends          "rabbitmq"
+depends          "glance"
+depends          "openstack-utils"
+depends          "keystone"
+depends          "openssh"
+depends          "selinux"

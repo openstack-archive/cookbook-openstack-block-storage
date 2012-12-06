@@ -50,6 +50,6 @@ template "/etc/cinder/api-paste.ini" do
   variables(
     "identity_endpoint" => identity_endpoint,
     "identity_admin_endpoint" => identity_admin_endpoint,
-    )
+  )
   notifies :restart, resources(:service => "cinder-api"), :immediately
 end
