@@ -1,0 +1,7 @@
+<% if %w{redhat centos fedora}.include?(node["platform"]) %>
+include /var/lib/cinder/volumes/*
+<% end %>
+<% if %w{debian ubuntu}.include?(node["platform"]) %>
+include /etc/tgt/conf.d/*.conf
+<% end %>
+default-driver iscsi

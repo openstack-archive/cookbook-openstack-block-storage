@@ -3,51 +3,60 @@
 #############
 
 [composite:osapi_volume]
-use = call:cinder.api.openstack.urlmap:urlmap_factory
-/: osvolumeversions
+use = call:cinder.api:root_app_factory
+/: apiversions
 /v1: openstack_volume_api_v1
+/v2: openstack_volume_api_v2
 
 [composite:openstack_volume_api_v1]
-use = call:cinder.api.auth:pipeline_factory
-noauth = faultwrap sizelimit noauth osapi_volume_app_v1
-keystone = faultwrap sizelimit authtoken keystonecontext osapi_volume_app_v1
-keystone_nolimit = faultwrap sizelimit authtoken keystonecontext osapi_volume_app_v1
+use = call:cinder.api.middleware.auth:pipeline_factory
+noauth = faultwrap sizelimit noauth apiv1
+keystone = faultwrap sizelimit authtoken keystonecontext apiv1
+keystone_nolimit = faultwrap sizelimit authtoken keystonecontext apiv1
+
+[composite:openstack_volume_api_v2]
+use = call:cinder.api.middleware.auth:pipeline_factory
+noauth = faultwrap sizelimit noauth apiv2
+keystone = faultwrap sizelimit authtoken keystonecontext apiv2
+keystone_nolimit = faultwrap sizelimit authtoken keystonecontext apiv2
 
 [filter:faultwrap]
-paste.filter_factory = cinder.api.openstack:FaultWrapper.factory
+paste.filter_factory = cinder.api.middleware.fault:FaultWrapper.factory
 
 [filter:noauth]
-paste.filter_factory = cinder.api.openstack.auth:NoAuthMiddleware.factory
+paste.filter_factory = cinder.api.middleware.auth:NoAuthMiddleware.factory
 
 [filter:sizelimit]
-paste.filter_factory = cinder.api.sizelimit:RequestBodySizeLimiter.factory
+paste.filter_factory = cinder.api.middleware.sizelimit:RequestBodySizeLimiter.factory
 
-[app:osapi_volume_app_v1]
-paste.app_factory = cinder.api.openstack.volume:APIRouter.factory
+[app:apiv1]
+paste.app_factory = cinder.api.v1.router:APIRouter.factory
 
-[pipeline:osvolumeversions]
+[app:apiv2]
+paste.app_factory = cinder.api.v2.router:APIRouter.factory
+
+[pipeline:apiversions]
 pipeline = faultwrap osvolumeversionapp
 
 [app:osvolumeversionapp]
-paste.app_factory = cinder.api.openstack.volume.versions:Versions.factory
+paste.app_factory = cinder.api.versions:Versions.factory
 
 ##########
 # Shared #
 ##########
 
 [filter:keystonecontext]
-paste.filter_factory = cinder.api.auth:CinderKeystoneContext.factory
+paste.filter_factory = cinder.api.middleware.auth:CinderKeystoneContext.factory
 
 [filter:authtoken]
-paste.filter_factory = keystone.middleware.auth_token:filter_factory
-service_host = <%= @keystone_api_ipaddress %>
-service_port = <%= @keystone_service_port %>
-service_protocol = http
-auth_host = <%= @keystone_api_ipaddress %>
-auth_port = <%= @keystone_admin_port %>
-auth_protocol = http
-auth_uri = http://<%= @keystone_api_ipaddress %>:<%= @service_port %>/v2.0/
-admin_token = <%= @keystone_admin_token %>
-admin_tenant_name = <%= @service_tenant_name %>
-admin_user = <%= @service_user %>
-admin_password = <%= @service_pass %>
+paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
+service_host = <%= @identity_endpoint.host %>
+service_port = <%= @identity_endpoint.port %>
+service_protocol = <%= identity_endpoint.scheme %>
+auth_host = <%= @identity_admin_endpoint.host %>
+auth_port = <%= @identity_admin_endpoint.port %>
+auth_protocol = <%= @identity_admin_endpoint.scheme %>
+admin_tenant_name = <%= node["cinder"]["service_tenant_name"] %>
+admin_user = <%= node["cinder"]["service_user"] %>
+admin_password = <%= node["cinder"]["service_pass"] %>
+signing_dir = /var/lib/cinder
