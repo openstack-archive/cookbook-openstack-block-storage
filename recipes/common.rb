@@ -58,7 +58,7 @@ template "/etc/cinder/cinder.conf" do
     :rabbit_host => rabbit_info["host"],
     :rabbit_port => rabbit_info["port"],
     :glance_host => glance_api_endpoint.host,
-    :glance_port => glance_api_endpoint.port,
+    :glance_port => glance_api_endpoint.port
   )
   notifies :restart, resources(:service => "cinder-api"), :immediately
   notifies :restart, resources(:service => "cinder-scheduler"), :immediately
