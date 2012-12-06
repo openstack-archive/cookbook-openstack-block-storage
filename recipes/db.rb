@@ -18,7 +18,7 @@
 #
 
 # This recipe should be placed in the run_list of the node that
-# runs the database server that houses the Nova main database
+# runs the database server that houses the Cinder main database
 
 class ::Chef::Recipe
   include ::Openstack
@@ -32,12 +32,12 @@ include_recipe "mysql::ruby"
 
 # Allow for using a well known db password
 if node["developer_mode"]
-  node.set_unless["openstack"]["cinder"]["db"]["password"] = "cinder"
+  node.set_unless["cinder"]["db"]["password"] = "cinder"
 else
-  node.set_unless["openstack"]["cinder"]["db"]["password"] = secure_password
+  node.set_unless["cinder"]["db"]["password"] = secure_password
 end
 
-db_create_with_user("image",
-  node["openstack"]["cinder"]["db"]["username"],
-  node["openstack"]["cinder"]["db"]["password"]
+db_create_with_user("volume",
+  node["cinder"]["db"]["username"],
+  node["cinder"]["db"]["password"]
 )
