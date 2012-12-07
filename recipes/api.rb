@@ -24,11 +24,40 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
+platform_options = node["cinder"]["platform"]
+
 service "cinder-api" do
   service_name platform_options["cinder_api_service"]
   supports :status => true, :restart => true
 
   action :enable
+end
+
+db_user = node["cinder"]["db"]["username"]
+db_pass = node["cinder"]["db"]["password"]
+sql_connection = db_uri("cinder", db_user, "cinder")
+
+rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
+rabbit_info = get_settings_by_role rabbit_server_role, "queue"
+
+glance_api_role = node["cinder"]["glance_api_chef_role"]
+glance = get_settings_by_role glance_api_role, "glance"
+glance_api_endpoint = endpoint "image-api"
+
+template "/etc/cinder/cinder.conf" do
+  source "cinder.conf.erb"
+  group  node["cinder"]["group"]
+  owner  node["cinder"]["user"]
+  mode   00644
+  variables(
+    :sql_connection => sql_connection,
+    :rabbit_host => rabbit_info["host"],
+    :rabbit_port => rabbit_info["port"],
+    :glance_host => glance_api_endpoint.host,
+    :glance_port => glance_api_endpoint.port
+  )
+
+  notifies :restart, resources(:service => "cinder-api"), :delayed
 end
 
 identity_admin_endpoint = endpoint "identity-admin"
