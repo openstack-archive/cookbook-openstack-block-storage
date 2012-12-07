@@ -24,18 +24,10 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-platform_options = node["cinder"]["platform"]
-
-platform_options["cinder_api_packages"].each do |pkg|
-  package pkg do
-    action :upgrade
-    options platform_options["package_overrides"]
-  end
-end
-
 service "cinder-api" do
   service_name platform_options["cinder_api_service"]
   supports :status => true, :restart => true
+
   action :enable
 end
 
@@ -44,12 +36,13 @@ identity_endpoint = endpoint "identity-api"
 
 template "/etc/cinder/api-paste.ini" do
   source "api-paste.ini.erb"
-  group node["cinder"]["group"]
-  owner node["cinder"]["user"]
-  mode 00644
+  group  node["cinder"]["group"]
+  owner  node["cinder"]["user"]
+  mode   00644
   variables(
     "identity_endpoint" => identity_endpoint,
     "identity_admin_endpoint" => identity_admin_endpoint
   )
+
   notifies :restart, resources(:service => "cinder-api"), :immediately
 end
