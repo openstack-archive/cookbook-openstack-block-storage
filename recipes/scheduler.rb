@@ -24,13 +24,15 @@ platform_options = node["cinder"]["platform"]
 
 platform_options["cinder_scheduler_packages"].each do |pkg|
   package pkg do
-    action :upgrade
     options platform_options["package_overrides"]
+
+    action :upgrade
   end
 end
 
 service "cinder-scheduler" do
   service_name platform_options["cinder_scheduler_service"]
   supports :status => true, :restart => true
+
   action [ :enable, :start ]
 end

@@ -30,11 +30,22 @@ else
   node.set_unless["cinder"]["service_pass"] = secure_password
 end
 
+platform_options = node["cinder"]["platform"]
+
+platform_options["cinder_api_packages"].each do |pkg|
+  package pkg do
+    options platform_options["package_overrides"]
+
+    action :upgrade
+  end
+end
+
 directory "/etc/cinder" do
-  action :create
   group node["cinder"]["group"]
   owner node["cinder"]["user"]
-  mode 00700
+  mode  00700
+
+  action :create
 end
 
 db_user = node["cinder"]["db"]["username"]
@@ -50,9 +61,9 @@ glance_api_endpoint = endpoint "image-api"
 
 template "/etc/cinder/cinder.conf" do
   source "cinder.conf.erb"
-  group node["cinder"]["group"]
-  owner node["cinder"]["user"]
-  mode 00644
+  group  node["cinder"]["group"]
+  owner  node["cinder"]["user"]
+  mode   00644
   variables(
     :sql_connection => sql_connection,
     :rabbit_host => rabbit_info["host"],
@@ -60,6 +71,7 @@ template "/etc/cinder/cinder.conf" do
     :glance_host => glance_api_endpoint.host,
     :glance_port => glance_api_endpoint.port
   )
+
   notifies :restart, resources(:service => "cinder-api"), :immediately
   notifies :restart, resources(:service => "cinder-scheduler"), :immediately
   notifies :restart, resources(:service => "cinder-volume"), :immediately
