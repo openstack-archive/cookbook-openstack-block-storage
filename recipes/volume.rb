@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include_recipe "cinder::common"
-
 platform_options = node["cinder"]["platform"]
 
 platform_options["cinder_volume_packages"].each do |pkg|
@@ -38,15 +36,18 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
   end
 end
 
+db_role = node["cinder"]["cinder_db_chef_role"]
+db_info = config_by_role db_role, "cinder"
+
 db_user = node["cinder"]["db"]["username"]
-db_pass = node["cinder"]["db"]["password"]
-sql_connection = db_uri("cinder", db_user, "cinder")
+db_pass = db_info["db"]["password"]
+sql_connection = db_uri("volume", db_user, db_pass)
 
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
-rabbit_info = get_settings_by_role rabbit_server_role, "queue"
+rabbit_info = config_by_role rabbit_server_role, "queue"
 
 glance_api_role = node["cinder"]["glance_api_chef_role"]
-glance = get_settings_by_role glance_api_role, "glance"
+glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
 service "cinder-volume" do

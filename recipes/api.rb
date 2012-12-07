@@ -18,10 +18,18 @@
 # limitations under the License.
 #
 
-include_recipe "cinder::common"
+require "uri"
 
 class ::Chef::Recipe
   include ::Openstack
+  include ::Opscode::OpenSSL::Password
+end
+
+# Allow for using a well known service password
+if node["developer_mode"]
+  node.set_unless["cinder"]["service_pass"] = "cinder"
+else
+  node.set_unless["cinder"]["service_pass"] = secure_password
 end
 
 platform_options = node["cinder"]["platform"]
@@ -33,9 +41,19 @@ service "cinder-api" do
   action :enable
 end
 
+execute "cinder-manage db sync" do
+  command "cinder-manage db sync"
+  not_if "cinder-manage db version && test $(cinder-manage db version) -gt 0"
+
+  action :nothing
+end
+
+db_role = node["cinder"]["cinder_db_chef_role"]
+db_info = config_by_role db_role, "cinder"
+
 db_user = node["cinder"]["db"]["username"]
-db_pass = node["cinder"]["db"]["password"]
-sql_connection = db_uri("cinder", db_user, "cinder")
+db_pass = db_info["db"]["password"]
+sql_connection = db_uri("volume", db_user, db_pass)
 
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
 rabbit_info = get_settings_by_role rabbit_server_role, "queue"
@@ -74,4 +92,63 @@ template "/etc/cinder/api-paste.ini" do
   )
 
   notifies :restart, resources(:service => "cinder-api"), :immediately
+end
+
+keystone_register "Register Cinder Volume Service" do
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port.to_s
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
+  auth_token keystone["admin_token"]
+  service_name "cinder"
+  service_type "volume"
+  service_description "Cinder Volume Service"
+  endpoint_region node["cinder"]["region"]
+  endpoint_adminurl ::URI.decode api_endpoint.to_s
+  endpoint_internalurl ::URI.decode api_endpoint.to_s
+  endpoint_publicurl ::URI.decode api_endpoint.to_s
+
+  action :create_service
+end
+
+keystone_register "Register Cinder Volume Endpoint" do
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port.to_s
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
+  auth_token keystone["admin_token"]
+  service_name "cinder"
+  service_type "volume"
+  service_description "Cinder Volume Service"
+  endpoint_region node["cinder"]["region"]
+  endpoint_adminurl ::URI.decode api_endpoint.to_s
+  endpoint_internalurl ::URI.decode api_endpoint.to_s
+  endpoint_publicurl ::URI.decode api_endpoint.to_s
+
+  action :create_endpoint
+end
+
+keystone_register "Register Cinder Service User" do
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port.to_s
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
+  auth_token keystone["admin_token"]
+  tenant_name node["cinder"]["service_tenant_name"]
+  user_name node["cinder"]["service_user"]
+  user_pass node["cinder"]["service_pass"]
+  user_enabled "true" # Not required as this is the default
+  action :create_user
+end
+
+keystone_register "Grant service Role to Cinder Service User for Cinder Service Tenant" do
+  auth_host identity_admin_endpoint.host
+  auth_port identity_admin_endpoint.port.to_s
+  auth_protocol identity_admin_endpoint.scheme
+  api_ver identity_admin_endpoint.path
+  auth_token keystone["admin_token"]
+  tenant_name node["cinder"]["service_tenant_name"]
+  user_name node["cinder"]["service_user"]
+  role_name node["cinder"]["service_role"]
+  action :grant_role
 end
