@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+require "uri"
+
 class ::Chef::Recipe
   include ::Openstack
   include ::Opscode::OpenSSL::Password
@@ -102,9 +104,9 @@ keystone_register "Register Cinder Volume Service" do
   service_type "volume"
   service_description "Cinder Volume Service"
   endpoint_region node["cinder"]["region"]
-  endpoint_adminurl api_endpoint.to_s
-  endpoint_internalurl api_endpoint.to_s
-  endpoint_publicurl api_endpoint.to_s
+  endpoint_adminurl ::URI.decode api_endpoint.to_s
+  endpoint_internalurl ::URI.decode api_endpoint.to_s
+  endpoint_publicurl ::URI.decode api_endpoint.to_s
 
   action :create_service
 end
@@ -119,9 +121,9 @@ keystone_register "Register Cinder Volume Endpoint" do
   service_type "volume"
   service_description "Cinder Volume Service"
   endpoint_region node["cinder"]["region"]
-  endpoint_adminurl api_endpoint.to_s
-  endpoint_internalurl api_endpoint.to_s
-  endpoint_publicurl api_endpoint.to_s
+  endpoint_adminurl ::URI.decode api_endpoint.to_s
+  endpoint_internalurl ::URI.decode api_endpoint.to_s
+  endpoint_publicurl ::URI.decode api_endpoint.to_s
 
   action :create_endpoint
 end
