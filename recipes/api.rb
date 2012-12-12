@@ -34,6 +34,14 @@ end
 
 platform_options = node["cinder"]["platform"]
 
+platform_options["cinder_api_packages"].each do |pkg|
+  package pkg do
+    options platform_options["package_overrides"]
+
+    action :upgrade
+  end
+end
+
 service "cinder-api" do
   service_name platform_options["cinder_api_service"]
   supports :status => true, :restart => true
