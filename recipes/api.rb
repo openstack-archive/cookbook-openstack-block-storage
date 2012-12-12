@@ -51,7 +51,6 @@ end
 
 execute "cinder-manage db sync" do
   command "cinder-manage db sync"
-  not_if "cinder-manage db version && test $(cinder-manage db version) -gt 0"
 
   action :nothing
 end
