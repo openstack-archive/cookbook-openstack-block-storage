@@ -56,10 +56,10 @@ db_pass = db_info["db"]["password"]
 sql_connection = db_uri("volume", db_user, db_pass)
 
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
-rabbit_info = get_settings_by_role rabbit_server_role, "queue"
+rabbit_info = config_by_role rabbit_server_role, "queue"
 
 glance_api_role = node["cinder"]["glance_api_chef_role"]
-glance = get_settings_by_role glance_api_role, "glance"
+glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
 template "/etc/cinder/cinder.conf" do
@@ -93,6 +93,9 @@ template "/etc/cinder/api-paste.ini" do
 
   notifies :restart, resources(:service => "cinder-api"), :immediately
 end
+
+keystone_service_role = node["cinder"]["keystone_service_chef_role"]
+keystone = config_by_role keystone_service_role, "keystone"
 
 keystone_register "Register Cinder Volume Service" do
   auth_host identity_admin_endpoint.host
