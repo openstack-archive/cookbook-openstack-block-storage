@@ -55,6 +55,30 @@ glance_api_role = node["cinder"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
+if node["developer_mode"]
+  execute "creating cinder disk image" do
+    image_file = node["cinder"]["volume"]["lvm"]["image_file"]
+    image_size = node["cinder"]["volume"]["lvm"]["image_size"]
+    user = node["cinder"]["group"]
+    group = node["cinder"]["user"]
+    command <<-EOF
+      truncate -s #{image_size} #{image_file}
+      chown #{user}:#{group} #{image_file}
+    EOF
+
+    not_if { ::File.exists? node["cinder"]["volume"]["lvm"]["image"] }
+  end
+
+  execute "creating cinder LVM volume group" do
+    image_file = node["cinder"]["volume"]["lvm"]["image_file"]
+    volume_group = node["cinder"]["volume"]["volume_group"]
+
+    command "vgcreate #{volume_group} $(losetup --show -f #{image_file})"
+
+    not_if "vgdisplay #{volume_group}"
+  end
+end
+
 service "cinder-volume" do
   service_name platform_options["cinder_volume_service"]
   supports :status => true, :restart => true

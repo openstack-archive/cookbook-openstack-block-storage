@@ -1,4 +1,5 @@
 <%= node["cinder"]["custom_template_banner"] %>
+
 [DEFAULT]
 
 ######## defined in cinder.openstack.common.cfg:CommonConfigOpts ########
@@ -36,10 +37,10 @@ verbose=<%= node["cinder"]["verbose"] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified
 # by `log_file`
-use_syslog = <%= node["cinder"]["syslog"]["use"] %>
+use_syslog=<%= node["cinder"]["syslog"]["use"] %>
 
 # Facility to use. If unset defaults to LOG_USER.
-syslog_log_facility = <%= node["cinder"]["syslog"]["facility"]%>
+syslog_log_facility=<%= node["cinder"]["syslog"]["facility"]%>
 
 ######## defined in cinder.flags ########
 
@@ -65,7 +66,6 @@ sql_connection=<%= @sql_connection %>
 # bindir=$pybasedir/bin
 #### (StrOpt) Directory where cinder binaries are installed
 
-# state_path=$pybasedir
 state_path=<%= node["cinder"]["volume"]["state_path"] %>
 #### (StrOpt) Top-level directory for maintaining cinder's state
 
@@ -515,7 +515,6 @@ rabbit_port=<%= @rabbit_port %>
 
 ######## defined in cinder.volume.driver ########
 
-# volume_group=cinder-volumes
 volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
 
@@ -553,7 +552,7 @@ volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 
 ######## defined in cinder.volume.iscsi ########
 
-# iscsi_helper=tgtadm
+iscsi_helper=<%= node["cinder"]["volume"]["iscsi_helper"] %>
 #### (StrOpt) iscsi target user-land tool to use
 
 # volumes_dir=$state_path/volumes
@@ -562,7 +561,7 @@ volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 
 ######## defined in cinder.volume.manager ########
 
-# volume_driver=cinder.volume.driver.ISCSIDriver
+volume_driver=<%= node["cinder"]["volume"]["volume_driver"] %>
 #### (StrOpt) Driver to use for volume creation
 
 # use_local_volumes=true
@@ -812,4 +811,4 @@ volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 #### (BoolOpt) Don't halt on deletion of non-existing volumes
 
 [keystone_authtoken]
-signing_dirname = /tmp/keystone-signing-cinder
+signing_dirname=/tmp/keystone-signing-cinder

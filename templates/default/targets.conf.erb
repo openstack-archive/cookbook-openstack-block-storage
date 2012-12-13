@@ -1,3 +1,5 @@
+<%= node["cinder"]["custom_template_banner"] %>
+
 <% if %w{redhat centos fedora}.include?(node["platform"]) %>
 include /var/lib/cinder/volumes/*
 <% end %>
