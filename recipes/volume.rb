@@ -62,7 +62,7 @@ if node["developer_mode"]
     user = node["cinder"]["group"]
     group = node["cinder"]["user"]
     command <<-EOF
-      truncate -s #{image_size} #{image_file}
+      truncate -s #{image_size} #{image_file};
       chown #{user}:#{group} #{image_file}
     EOF
 
