@@ -18,6 +18,11 @@
 # limitations under the License.
 #
 
+class ::Chef::Recipe
+  include ::Openstack
+  include ::Opscode::OpenSSL::Password
+end
+
 platform_options = node["cinder"]["platform"]
 
 platform_options["cinder_volume_packages"].each do |pkg|

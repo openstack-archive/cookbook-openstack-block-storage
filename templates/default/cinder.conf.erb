@@ -66,6 +66,7 @@ sql_connection=<%= @sql_connection %>
 #### (StrOpt) Directory where cinder binaries are installed
 
 # state_path=$pybasedir
+state_path=<%= node["cinder"]["volume"]["state_path"] %>
 #### (StrOpt) Top-level directory for maintaining cinder's state
 
 my_ip=<%= node["ipaddress"] %>
@@ -515,6 +516,7 @@ rabbit_port=<%= @rabbit_port %>
 ######## defined in cinder.volume.driver ########
 
 # volume_group=cinder-volumes
+volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
 
 # num_shell_tries=3
