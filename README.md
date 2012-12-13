@@ -60,7 +60,9 @@ Attributes
 * `cinder["syslog"]["use"]`
 * `cinder["syslog"]["facility"]`
 * `cinder["syslog"]["config_facility"]`
-* `cinder["platform"]` = hash of platform specific package/service names and options
+* `cinder["platform"]` - hash of platform specific package/service names and options
+* `cinder["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
+* `cinder["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 
 Templates
 =====
