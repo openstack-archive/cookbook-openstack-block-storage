@@ -66,7 +66,7 @@ if node["developer_mode"]
       chown #{user}:#{group} #{image_file}
     EOF
 
-    not_if { ::File.exists? node["cinder"]["volume"]["lvm"]["image"] }
+    not_if { ::File.exists? image_file}
   end
 
   execute "creating cinder LVM volume group" do
