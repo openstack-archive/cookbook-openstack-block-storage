@@ -70,7 +70,11 @@ default["cinder"]["syslog"]["config_facility"] = "local2"
 default["cinder"]["api"]["ratelimit"] = "True"
 
 default["cinder"]["volume"]["state_path"] = "/var/lib/cinder"
+default["cinder"]["volume"]["volume_driver"] = "nova.volume.driver.ISCSIDriver"
 default["cinder"]["volume"]["volume_group"] = "cinder-volumes"
+default["cinder"]["volume"]["iscsi_helper"] = "tgtadm"
+default["cinder"]["volume"]["lvm"]["image_file"] = "/var/lib/cinder/cinder-volumes.img"
+default["cinder"]["volume"]["lvm"]["image_size"] = "20G"
 
 case platform
 when "fedora", "redhat", "centos"
