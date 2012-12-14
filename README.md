@@ -48,7 +48,7 @@ volume
 ----
 - Installs the cinder-volume service and sets up the iscsi helper
 
-Defaults to the ISCSI (LVM) Driver, and creates a LVM volume group named `cinder["volume"]["volume_group"]` while in developer\_mode.  This volume group is not intended for production use.
+Defaults to the ISCSI (LVM) Driver.
 
 Attributes
 ==========
@@ -66,8 +66,6 @@ Attributes
 * `cinder["volume"]["volume_driver"]` - Driver to use for volume creation
 * `cinder["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `cinder["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
-* `cinder["volume"]["lvm"]["image_file"]` - Path to the sparse file to create
-* `cinder["volume"]["lvm"]["image_size"]` - Size of the sparse file to create
 
 Templates
 =====
