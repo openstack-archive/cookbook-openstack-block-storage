@@ -71,7 +71,7 @@ default["cinder"]["api"]["ratelimit"] = "True"
 
 default["cinder"]["volume"]["state_path"] = "/var/lib/cinder"
 default["cinder"]["volume"]["volume_driver"] = "cinder.volume.driver.ISCSIDriver"
-default["cinder"]["volume"]["volume_group"] = "cinder-volume"
+default["cinder"]["volume"]["volume_group"] = "cinder-volumes"
 default["cinder"]["volume"]["iscsi_helper"] = "tgtadm"
 
 case platform
