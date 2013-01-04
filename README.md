@@ -27,10 +27,10 @@ The following cookbooks are dependencies:
 * keystone
 * mysql
 * openssh
-* rabbitmq
-* selinux (Fedora)
 * openstack-common
 * openstack-utils
+* rabbitmq
+* selinux (Fedora)
 
 Recipes
 =======
@@ -39,6 +39,10 @@ api
 ----
 - Installs the cinder-api, sets up the cinder database,
  and cinder service/user/endpoints in keystone
+
+db
+--
+- Creates the Cinder database
 
 scheduler
 ----
