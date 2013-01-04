@@ -22,14 +22,6 @@ require "uri"
 
 class ::Chef::Recipe
   include ::Openstack
-  include ::Opscode::OpenSSL::Password
-end
-
-# Allow for using a well known service password
-if node["developer_mode"]
-  node.set_unless["cinder"]["service_pass"] = "cinder"
-else
-  node.set_unless["cinder"]["service_pass"] = secure_password
 end
 
 platform_options = node["cinder"]["platform"]
@@ -55,11 +47,8 @@ execute "cinder-manage db sync" do
   action :nothing
 end
 
-db_role = node["cinder"]["cinder_db_chef_role"]
-db_info = config_by_role db_role, "cinder"
-
 db_user = node["cinder"]["db"]["username"]
-db_pass = db_info["db"]["password"]
+db_pass = db_password "cinder"
 sql_connection = db_uri("volume", db_user, db_pass)
 
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
@@ -68,6 +57,20 @@ rabbit_info = config_by_role rabbit_server_role, "queue"
 glance_api_role = node["cinder"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
+
+keystone_service_role = node["cinder"]["keystone_service_chef_role"]
+keystone = config_by_role keystone_service_role, "keystone"
+identity_admin_endpoint = endpoint "identity-admin"
+
+# Instead of the search to find the keystone service, put this
+# into openstack-common as a common attribute?
+ksadmin_user = keystone["admin_user"]
+ksadmin_tenant_name = keystone["admin_tenant_name"]
+ksadmin_pass = user_password ksadmin_user
+auth_uri = ::URI.decode identity_admin_endpoint.to_s
+
+cinder_api_endpoint = endpoint "volume-api"
+service_pass = service_password "cinder"
 
 template "/etc/cinder/cinder.conf" do
   source "cinder.conf.erb"
@@ -85,32 +88,24 @@ template "/etc/cinder/cinder.conf" do
   notifies :restart, resources(:service => "cinder-api"), :delayed
 end
 
-identity_admin_endpoint = endpoint "identity-admin"
-identity_endpoint = endpoint "identity-api"
-cinder_api_endpoint = endpoint "volume-api"
-
 template "/etc/cinder/api-paste.ini" do
   source "api-paste.ini.erb"
   group  node["cinder"]["group"]
   owner  node["cinder"]["user"]
   mode   00644
   variables(
-    "identity_endpoint" => identity_endpoint,
-    "identity_admin_endpoint" => identity_admin_endpoint
+    "auth_uri" => auth_uri,
+    "service_password" => service_pass
   )
 
   notifies :restart, resources(:service => "cinder-api"), :immediately
 end
 
-keystone_service_role = node["cinder"]["keystone_service_chef_role"]
-keystone = config_by_role keystone_service_role, "keystone"
-
 keystone_register "Register Cinder Volume Service" do
-  auth_host identity_admin_endpoint.host
-  auth_port identity_admin_endpoint.port.to_s
-  auth_protocol identity_admin_endpoint.scheme
-  api_ver identity_admin_endpoint.path
-  auth_token keystone["admin_token"]
+  auth_uri auth_uri
+  admin_user ksadmin_user
+  admin_tenant_name ksadmin_tenant_name
+  admin_password ksadmin_pass
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
@@ -123,11 +118,10 @@ keystone_register "Register Cinder Volume Service" do
 end
 
 keystone_register "Register Cinder Volume Endpoint" do
-  auth_host identity_admin_endpoint.host
-  auth_port identity_admin_endpoint.port.to_s
-  auth_protocol identity_admin_endpoint.scheme
-  api_ver identity_admin_endpoint.path
-  auth_token keystone["admin_token"]
+  auth_uri auth_uri
+  admin_user ksadmin_user
+  admin_tenant_name ksadmin_tenant_name
+  admin_password ksadmin_pass
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
@@ -140,11 +134,10 @@ keystone_register "Register Cinder Volume Endpoint" do
 end
 
 keystone_register "Register Cinder Service User" do
-  auth_host identity_admin_endpoint.host
-  auth_port identity_admin_endpoint.port.to_s
-  auth_protocol identity_admin_endpoint.scheme
-  api_ver identity_admin_endpoint.path
-  auth_token keystone["admin_token"]
+  auth_uri auth_uri
+  admin_user ksadmin_user
+  admin_tenant_name ksadmin_tenant_name
+  admin_password ksadmin_pass
   tenant_name node["cinder"]["service_tenant_name"]
   user_name node["cinder"]["service_user"]
   user_pass node["cinder"]["service_pass"]
@@ -153,11 +146,10 @@ keystone_register "Register Cinder Service User" do
 end
 
 keystone_register "Grant service Role to Cinder Service User for Cinder Service Tenant" do
-  auth_host identity_admin_endpoint.host
-  auth_port identity_admin_endpoint.port.to_s
-  auth_protocol identity_admin_endpoint.scheme
-  api_ver identity_admin_endpoint.path
-  auth_token keystone["admin_token"]
+  auth_uri auth_uri
+  admin_user ksadmin_user
+  admin_tenant_name ksadmin_tenant_name
+  admin_password ksadmin_pass
   tenant_name node["cinder"]["service_tenant_name"]
   user_name node["cinder"]["service_user"]
   role_name node["cinder"]["service_role"]

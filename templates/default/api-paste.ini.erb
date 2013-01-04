@@ -45,13 +45,8 @@ paste.filter_factory = cinder.api.auth:CinderKeystoneContext.factory
 # when keystoneclient packages are updated (which contain the middleware, not
 # the Keystone server package...)
 paste.filter_factory = keystone.middleware.auth_token:filter_factory
-service_host = <%= @identity_endpoint.host %>
-service_port = <%= @identity_endpoint.port %>
-service_protocol = <%= @identity_endpoint.scheme %>
-auth_host = <%= @identity_admin_endpoint.host %>
-auth_port = <%= @identity_admin_endpoint.port %>
-auth_protocol = <%= @identity_admin_endpoint.scheme %>
+auth_uri = <%= @auth_uri %>
 admin_tenant_name = <%= node["cinder"]["service_tenant_name"] %>
 admin_user = <%= node["cinder"]["service_user"] %>
-admin_password = <%= node["cinder"]["service_pass"] %>
+admin_password = <%= @service_pass %>
 signing_dir = /var/lib/cinder

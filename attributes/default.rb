@@ -36,10 +36,6 @@ default["cinder"]["debug"] = "False"
 # Availability zone/region for the Cinder service
 default["cinder"]["region"] = "RegionOne"
 
-# The name of the Chef role that installs the database and database user
-# that Cinder uses
-default["cinder"]["cinder_db_chef_role"] = "cinder"
-
 # The name of the Chef role that knows about the message queue server
 # that Cinder uses
 default["cinder"]["rabbit_server_chef_role"] = "rabbitmq-server"
@@ -55,7 +51,6 @@ default["cinder"]["group"] = "cinder"
 # operating system user that services will run under
 default["cinder"]["user"] = "cinder"
 
-default["cinder"]["db"]["name"] = "cinder"
 default["cinder"]["db"]["username"] = "cinder"
 
 default["cinder"]["service_tenant_name"] = "service"
