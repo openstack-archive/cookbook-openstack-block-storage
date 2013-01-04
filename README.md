@@ -53,7 +53,6 @@ Defaults to the ISCSI (LVM) Driver.
 Attributes
 ==========
 
-* `cinder["db"]["name"]` - name of database to create for cinder
 * `cinder["db"]["username"]` - cinder username for database
 * `cinder["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `cinder["service_user"]` - cinder service user in keystone

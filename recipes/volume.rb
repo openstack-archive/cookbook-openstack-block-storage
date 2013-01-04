@@ -20,7 +20,6 @@
 
 class ::Chef::Recipe
   include ::Openstack
-  include ::Opscode::OpenSSL::Password
 end
 
 platform_options = node["cinder"]["platform"]
@@ -41,11 +40,8 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
   end
 end
 
-db_role = node["cinder"]["cinder_db_chef_role"]
-db_info = config_by_role db_role, "cinder"
-
 db_user = node["cinder"]["db"]["username"]
-db_pass = db_info["db"]["password"]
+db_pass = db_password "cinder"
 sql_connection = db_uri("volume", db_user, db_pass)
 
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]

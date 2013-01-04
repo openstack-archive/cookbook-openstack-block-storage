@@ -11,7 +11,7 @@ supports         "redhat"
 
 depends          "mysql"
 depends          "database"
-depends          "openstack-common"
+depends          "openstack-common", ">= 0.1.5"
 depends          "apt"
 depends          "rabbitmq"
 depends          "glance"
