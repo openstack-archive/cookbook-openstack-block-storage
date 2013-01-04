@@ -573,6 +573,34 @@ volume_driver=<%= node["cinder"]["volume"]["volume_driver"] %>
 
 ######## defined in cinder.volume.netapp ########
 
+<% if node["cinder"]["netapp"]["enabled"] = true %>
+netapp_wsdl_url=http://<%= node["cinder"]["netapp"]["dfm_hostname"] %>:<%= node["cinder"]["netapp"]["dfm_port"] %>/dfm.wsdl
+#### (StrOpt) URL of the WSDL file for the DFM server
+
+netapp_login=<%= node["cinder"]["netapp"]["dfm_login"] %>
+#### (StrOpt) User name for the DFM server
+
+netapp_password=<%= node["cinder"]["netapp"]["dfm_password"] %>
+#### (StrOpt) Password for the DFM server
+
+netapp_server_hostname=<%= node["cinder"]["netapp"]["dfm_hostname"] %>
+#### (StrOpt) Hostname for the DFM server
+
+netapp_server_port=<%= node["cinder"]["netapp"]["dfm_port"] %>
+#### (IntOpt) Port number for the DFM server
+
+netapp_storage_service=<%= node["cinder"]["netapp"]["storage_service"] %>
+#### (StrOpt) Storage service to use for provisioning (when
+####          volume_type=None)
+
+# netapp_storage_service_prefix=<None>
+#### (StrOpt) Prefix of storage service name to use for provisioning
+####          (volume_type name will be appended)
+
+# netapp_vfiler=<None>
+#### (StrOpt) Vfiler to use for provisioning
+<% else %>
+
 # netapp_wsdl_url=<None>
 #### (StrOpt) URL of the WSDL file for the DFM server
 
@@ -598,7 +626,7 @@ volume_driver=<%= node["cinder"]["volume"]["volume_driver"] %>
 
 # netapp_vfiler=<None>
 #### (StrOpt) Vfiler to use for provisioning
-
+<% end %>
 
 ######## defined in cinder.volume.netapp_nfs ########
 

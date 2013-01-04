@@ -61,6 +61,13 @@ default["cinder"]["service_tenant_name"] = "service"
 default["cinder"]["service_user"] = "cinder"
 default["cinder"]["service_role"] = "admin"
 
+# Netapp support
+default["cinder"]["netapp"]["enabled"] = false
+default["cinder"]["netapp"]["dfm_login"] = "dfm_login"
+default["cinder"]["netapp"]["dfm_password"] = "dfm_password"
+default["cinder"]["netapp"]["dfm_port"] = "8080"
+default["cinder"]["netapp"]["storage_service"] = "storage_service"
+
 # logging attribute
 default["cinder"]["syslog"]["use"] = false
 default["cinder"]["syslog"]["facility"] = "LOG_LOCAL2"
