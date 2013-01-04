@@ -1,3 +1,4 @@
+name             "cinder"
 maintainer       "AT&T, Inc."
 maintainer_email "jaypipes@gmail.com"
 license          "Apache 2.0"
