@@ -70,9 +70,7 @@ default["cinder"]["volume"]["volume_group"] = "cinder-volumes"
 default["cinder"]["volume"]["iscsi_helper"] = "tgtadm"
 
 case platform
-# FC024: Probably won't be running this on Amazon.
-# when "centos", "redhat", "amazon", "scientific"
-when "fedora", "redhat", "centos"
+when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
   default["cinder"]["platform"] = {
     "cinder_api_packages" => ["openstack-cinder", "python-cinderclient", "MySQL-python"],
     "cinder_api_service" => "openstack-cinder-api",
