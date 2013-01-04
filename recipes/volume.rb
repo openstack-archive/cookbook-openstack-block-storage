@@ -71,7 +71,7 @@ template "/etc/cinder/cinder.conf" do
     :glance_port => glance_api_endpoint.port
   )
 
-  notifies :restart, resources(:service => "cinder-volume")
+  notifies :restart, service['cinder-volume']
 end
 
 service "iscsitarget" do
@@ -85,5 +85,5 @@ template "/etc/tgt/targets.conf" do
   source "targets.conf.erb"
   mode   00600
 
-  notifies :restart, resources(:service => "iscsitarget"), :immediately
+  notifies :restart, service['iscsitarget'], :immediately
 end
