@@ -67,7 +67,8 @@ identity_admin_endpoint = endpoint "identity-admin"
 ksadmin_user = keystone["admin_user"]
 ksadmin_tenant_name = keystone["admin_tenant_name"]
 ksadmin_pass = user_password ksadmin_user
-auth_uri = ::URI.decode identity_admin_endpoint.to_s
+raw_auth_uri = ::URI.decode identity_admin_endpoint
+auth_uri = raw_auth_uri.to_s
 
 cinder_api_endpoint = endpoint "volume-api"
 service_pass = service_password "cinder"
@@ -94,8 +95,9 @@ template "/etc/cinder/api-paste.ini" do
   owner  node["cinder"]["user"]
   mode   00644
   variables(
-    "auth_uri" => auth_uri,
-    "service_password" => service_pass
+    :raw_auth_uri => raw_auth_uri,
+    :auth_uri => auth_uri,
+    :service_pass => service_pass
   )
 
   notifies :restart, resources(:service => "cinder-api"), :immediately
