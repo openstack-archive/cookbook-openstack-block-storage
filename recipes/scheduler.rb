@@ -59,5 +59,5 @@ template "/etc/cinder/cinder.conf" do
     :glance_port => glance_api_endpoint.port
   )
 
-  notifies :restart, service['cinder-scheduler']
+  notifies :restart, resources(:service => "cinder-scheduler")
 end

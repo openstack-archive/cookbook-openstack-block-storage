@@ -85,7 +85,7 @@ template "/etc/cinder/cinder.conf" do
     :glance_port => glance_api_endpoint.port
   )
 
-  notifies :restart, service['cinder-api']
+  notifies :restart, resources(:service => "cinder-api"), :delayed
 end
 
 template "/etc/cinder/api-paste.ini" do
@@ -98,7 +98,7 @@ template "/etc/cinder/api-paste.ini" do
     "service_password" => service_pass
   )
 
-  notifies :restart, service['cinder-api'], :immediately
+  notifies :restart, resources(:service => "cinder-api"), :immediately
 end
 
 keystone_register "Register Cinder Volume Service" do
