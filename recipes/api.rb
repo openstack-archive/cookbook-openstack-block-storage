@@ -140,7 +140,7 @@ keystone_register "Register Cinder Service User" do
   admin_password ksadmin_pass
   tenant_name node["cinder"]["service_tenant_name"]
   user_name node["cinder"]["service_user"]
-  user_pass node["cinder"]["service_pass"]
+  user_pass service_pass
   user_enabled "true" # Not required as this is the default
   action :create_user
 end
