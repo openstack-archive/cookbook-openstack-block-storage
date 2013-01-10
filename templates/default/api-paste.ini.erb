@@ -51,4 +51,6 @@ auth_protocol = <%= @identity_admin_endpoint.scheme %>
 admin_tenant_name = <%= node["cinder"]["service_tenant_name"] %>
 admin_user = <%= node["cinder"]["service_user"] %>
 admin_password = <%= @service_pass %>
-signing_dir = /var/lib/cinder
+<% if node["openstack"]["signing"]["pki"] -%>
+signing_dir = <%= node["cinder"]["pki"]["signing_dir"] %>
+<% end -%>
