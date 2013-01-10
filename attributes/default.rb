@@ -46,6 +46,10 @@ default["cinder"]["keystone_service_chef_role"] = "keystone"
 # This is the name of the Chef role that will install the Glance API
 default["cinder"]["glance_api_chef_role"] = "glance-api"
 
+# Controls for the PKI options in the auth_token middleware
+# that is in the paste INI files.
+default["cinder"]["pki"]["signing_dir"] = "/tmp/cinder-signing-dir"
+
 # operating system group name
 default["cinder"]["group"] = "cinder"
 # operating system user that services will run under

@@ -69,6 +69,7 @@ Attributes
 * `cinder["volume"]["volume_driver"]` - Driver to use for volume creation
 * `cinder["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `cinder["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
+* `cinder["pki"]["signing_dir"]` - Defaults to `/tmp/cinder-signing-dir`.  Directory where `auth_token` middleware writes certificate
 
 Templates
 =====
