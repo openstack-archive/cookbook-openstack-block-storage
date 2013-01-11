@@ -52,5 +52,5 @@ admin_tenant_name = <%= node["cinder"]["service_tenant_name"] %>
 admin_user = <%= node["cinder"]["service_user"] %>
 admin_password = <%= @service_pass %>
 <% if node["openstack"]["auth"]["strategy"] == "pki" -%>
-signing_dir = <%= node["cinder"]["pki"]["signing_dir"] %>
+signing_dir = <%= node["cinder"]["api"]["auth"]["cache_dir"] %>
 <% end -%>
