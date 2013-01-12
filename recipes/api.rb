@@ -34,7 +34,7 @@ platform_options["cinder_api_packages"].each do |pkg|
   end
 end
 
-directory node["cinder"]["api"]["auth"]["cache_dir"] do
+directory ::File.dirname(node["cinder"]["api"]["auth"]["cache_dir"]) do
   owner node["cinder"]["user"]
   group node["cinder"]["group"]
   mode 00700
