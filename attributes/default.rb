@@ -55,6 +55,13 @@ default["cinder"]["group"] = "cinder"
 # operating system user that services will run under
 default["cinder"]["user"] = "cinder"
 
+# This user's password is stored in an encrypted databag
+# and accessed with openstack-common cookbook library's
+# user_password routine.  You are expected to create
+# the user, pass, vhost in a wrapper rabbitmq cookbook.
+default["cinder"]["rabbit"]["username"] = "rabbit"
+default["cinder"]["rabbit"]["vhost"] = "/cinder"
+
 default["cinder"]["db"]["username"] = "cinder"
 
 default["cinder"]["service_tenant_name"] = "service"
