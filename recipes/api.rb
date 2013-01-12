@@ -34,12 +34,11 @@ platform_options["cinder_api_packages"].each do |pkg|
   end
 end
 
-directory node["cinder"]["api"]["auth"]["cache_dir"] do
+directory ::File.dirname(node["cinder"]["api"]["auth"]["cache_dir"]) do
   owner node["cinder"]["user"]
   group node["cinder"]["group"]
   mode 00700
 
-  action :create
   only_if { node["openstack"]["auth"]["strategy"] == "pki" }
 end
 
@@ -50,11 +49,7 @@ service "cinder-api" do
   action :enable
 end
 
-execute "cinder-manage db sync" do
-  command "cinder-manage db sync"
-
-  action :nothing
-end
+execute "cinder-manage db sync"
 
 db_user = node["cinder"]["db"]["username"]
 db_pass = db_password "cinder"
