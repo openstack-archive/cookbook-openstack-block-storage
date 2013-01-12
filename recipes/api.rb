@@ -49,11 +49,7 @@ service "cinder-api" do
   action :enable
 end
 
-execute "cinder-manage db sync" do
-  command "cinder-manage db sync"
-
-  action :nothing
-end
+execute "cinder-manage db sync"
 
 db_user = node["cinder"]["db"]["username"]
 db_pass = db_password "cinder"
