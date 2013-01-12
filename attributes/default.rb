@@ -60,7 +60,7 @@ default["cinder"]["user"] = "cinder"
 # user_password routine.  You are expected to create
 # the user, pass, vhost in a wrapper rabbitmq cookbook.
 default["cinder"]["rabbit"]["username"] = "rabbit"
-default["cinder"]["rabbit"]["vhost"] = "/cinder"
+default["cinder"]["rabbit"]["vhost"] = "/nova"
 
 default["cinder"]["db"]["username"] = "cinder"
 
