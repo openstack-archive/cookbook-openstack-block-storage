@@ -382,13 +382,13 @@ rabbit_port=<%= @rabbit_port %>
 # rabbit_use_ssl=false
 #### (BoolOpt) connect over SSL for RabbitMQ
 
-# rabbit_userid=guest
+rabbit_userid=<%= @rabbit_user %>
 #### (StrOpt) the RabbitMQ userid
 
-# rabbit_password=guest
+rabbit_password=<%= @rabbit_password %>
 #### (StrOpt) the RabbitMQ password
 
-# rabbit_virtual_host=/
+rabbit_virtual_host=<%= @rabbit_virtual_host %>
 #### (StrOpt) the RabbitMQ virtual host
 
 # rabbit_retry_interval=1

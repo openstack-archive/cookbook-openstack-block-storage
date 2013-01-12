@@ -58,6 +58,8 @@ Attributes
 ==========
 
 * `cinder["db"]["username"]` - cinder username for database
+* `cinder["rabbit"]["username"]` - Username for cinder rabbit access
+* `cinder["rabbit"]["vhost"]` - The rabbit vhost to use
 * `cinder["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `cinder["service_user"]` - cinder service user in keystone
 * `cinder["service_role"]` - role for the cinder service user in keystone
