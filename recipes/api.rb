@@ -39,7 +39,6 @@ directory ::File.dirname(node["cinder"]["api"]["auth"]["cache_dir"]) do
   group node["cinder"]["group"]
   mode 00700
 
-  action :create
   only_if { node["openstack"]["auth"]["strategy"] == "pki" }
 end
 
