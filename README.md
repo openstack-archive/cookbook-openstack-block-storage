@@ -28,7 +28,6 @@ The following cookbooks are dependencies:
 * mysql
 * openssh
 * openstack-common
-* openstack-utils
 * rabbitmq
 * selinux (Fedora)
 
