@@ -35,6 +35,10 @@ sql_connection = db_uri("volume", db_user, db_pass)
 rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
 rabbit_info = config_by_role rabbit_server_role, "queue"
 
+rabbit_user = node["cinder"]["rabbit"]["username"]
+rabbit_pass = user_password "rabbit"
+rabbit_vhost = node["cinder"]["rabbit"]["vhost"]
+
 glance_api_role = node["cinder"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
@@ -53,8 +57,11 @@ template "/etc/cinder/cinder.conf" do
   mode   00644
   variables(
     :sql_connection => sql_connection,
-    :rabbit_host => rabbit_info["host"],
+    :rabbit_ipaddress => rabbit_info["host"],
+    :rabbit_user => rabbit_user,
+    :rabbit_password => rabbit_pass,
     :rabbit_port => rabbit_info["port"],
+    :rabbit_virtual_host => rabbit_vhost,
     :glance_host => glance_api_endpoint.host,
     :glance_port => glance_api_endpoint.port
   )
