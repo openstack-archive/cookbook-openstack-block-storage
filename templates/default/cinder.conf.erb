@@ -574,7 +574,7 @@ volume_driver=<%= node["cinder"]["volume"]["volume_driver"] %>
 ######## defined in cinder.volume.netapp ########
 
 <% if node["cinder"]["netapp"]["enabled"] %>
-netapp_wsdl_url=http://<%= node["cinder"]["netapp"]["dfm_hostname"] %>:<%= node["cinder"]["netapp"]["dfm_port"] %>/dfm.wsdl
+netapp_wsdl_url=<%= node:["cinder"]["netapp"]["protocol"] %>://<%= node["cinder"]["netapp"]["dfm_hostname"] %>:<%= node["cinder"]["netapp"]["dfm_port"] %>/dfm.wsdl
 #### (StrOpt) URL of the WSDL file for the DFM server
 
 netapp_login=<%= node["cinder"]["netapp"]["dfm_login"] %>

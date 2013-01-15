@@ -63,6 +63,7 @@ default["cinder"]["service_role"] = "admin"
 
 # Netapp support
 default["cinder"]["netapp"]["enabled"] = false
+default["cinder"]["netapp"]["protocol"] = "http"
 default["cinder"]["netapp"]["dfm_hostname"] = nil
 default["cinder"]["netapp"]["dfm_login"] = nil
 default["cinder"]["netapp"]["dfm_password"] = nil
