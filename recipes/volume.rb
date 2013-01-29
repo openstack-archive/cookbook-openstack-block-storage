@@ -55,7 +55,7 @@ glance_api_role = node["cinder"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
-node.override["cinder"]["netapp"]["dfm_password"] = user_password "cinder_netapp_user"
+node.override["cinder"]["netapp"]["dfm_password"] = service_password "netapp"
 
 service "cinder-volume" do
   service_name platform_options["cinder_volume_service"]
