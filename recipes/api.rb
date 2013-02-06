@@ -49,8 +49,6 @@ service "cinder-api" do
   action :enable
 end
 
-execute "cinder-manage db sync"
-
 db_user = node["cinder"]["db"]["username"]
 db_pass = db_password "cinder"
 sql_connection = db_uri("volume", db_user, db_pass)
@@ -98,6 +96,8 @@ template "/etc/cinder/cinder.conf" do
 
   notifies :restart, "service[cinder-api]"
 end
+
+execute "cinder-manage db sync"
 
 template "/etc/cinder/api-paste.ini" do
   source "api-paste.ini.erb"
