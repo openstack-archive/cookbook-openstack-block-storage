@@ -502,7 +502,7 @@ rabbit_virtual_host=<%= @rabbit_virtual_host %>
 
 ######## defined in cinder.scheduler.simple ########
 
-# max_gigabytes=10000
+max_gigabytes=<%= node["cinder"]["max_gigabytes"] %>
 #### (IntOpt) maximum number of volume gigabytes to allow per host
 
 
