@@ -55,6 +55,10 @@ default["cinder"]["group"] = "cinder"
 # operating system user that services will run under
 default["cinder"]["user"] = "cinder"
 
+# Maximum allocatable gigabytes
+# Should equal total backend storage, default is 10TB
+default["cinder"]["max_gigabytes"] = "10000"
+
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
 # user_password routine.  You are expected to create
