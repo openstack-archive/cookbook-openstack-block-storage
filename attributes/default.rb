@@ -74,7 +74,8 @@ default["cinder"]["netapp"]["protocol"] = "http"
 default["cinder"]["netapp"]["dfm_hostname"] = nil
 default["cinder"]["netapp"]["dfm_login"] = nil
 default["cinder"]["netapp"]["dfm_password"] = nil
-default["cinder"]["netapp"]["dfm_port"] = "8080"
+default["cinder"]["netapp"]["dfm_port"] = "8088"
+default["cinder"]["netapp"]["dfm_web_port"] = "8080"
 default["cinder"]["netapp"]["storage_service"] = "storage_service"
 
 # logging attribute
