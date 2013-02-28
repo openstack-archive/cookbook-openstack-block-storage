@@ -136,7 +136,7 @@ api_rate_limit=<%= node["cinder"]["api"]["ratelimit"] %>
 #### (StrOpt) Name of this node.  This can be an opaque identifier.  It is
 ####          not necessarily a hostname, FQDN, or IP address.
 
-# storage_availability_zone=nova
+storage_availability_zone=<%= node["cinder"]["storage_availability_zone"] %>
 #### (StrOpt) availability zone of this node
 
 # memcached_servers=<None>
