@@ -59,6 +59,15 @@ default["cinder"]["user"] = "cinder"
 # Should equal total backend storage, default is 10TB
 default["cinder"]["max_gigabytes"] = "10000"
 
+# Storage availability zone
+# Default is nova
+default["cinder"]["storage_availability_zone"] = "nova"
+
+# Quota definitions
+default["cinder"]["quota_volumes"] = "10"
+default["cinder"]["quota_gigabytes"] = "1000"
+default["cinder"]["quota_driver"] = "cinder.quota.DbQuotaDriver"
+
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
 # user_password routine.  You are expected to create
