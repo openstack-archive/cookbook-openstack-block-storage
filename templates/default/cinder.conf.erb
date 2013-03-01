@@ -184,10 +184,10 @@ auth_strategy=keystone
 
 ######## defined in cinder.quota ########
 
-# quota_volumes=10
+quota_volumes=<%= node["cinder"]["quota_volumes"] %>
 #### (IntOpt) number of volumes allowed per project
 
-# quota_gigabytes=1000
+quota_gigabytes=<%= node["cinder"]["quota_gigabytes"] %>
 #### (IntOpt) number of volume gigabytes allowed per project
 
 # reservation_expire=86400
@@ -199,7 +199,7 @@ auth_strategy=keystone
 # max_age=0
 #### (IntOpt) number of seconds between subsequent usage refreshes
 
-# quota_driver=cinder.quota.DbQuotaDriver
+quota_driver=<%= node["cinder"]["quota_driver"] %>
 #### (StrOpt) default driver to use for quota checks
 
 
