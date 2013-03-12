@@ -104,6 +104,10 @@ cookbook_file "/usr/share/pyshared/cinder/openstack/common/fileutils.py" do
   group "root"
 end
 
+link "/usr/lib/python2.7/dist-packages/cinder/openstack/common/fileutils.py" do
+  to  "/usr/share/pyshared/cinder/openstack/common/fileutils.py"
+end
+
 cookbook_file "/usr/share/pyshared/cinder/openstack/common/gettextutils.py" do
   source "gettextutils_new-8e450aaa6ba1a2a88f6326c2e8d285d00fd28691.py"
   mode  00644
