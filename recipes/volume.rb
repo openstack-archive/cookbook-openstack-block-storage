@@ -96,3 +96,11 @@ template "/etc/tgt/targets.conf" do
 
   notifies :restart, "service[iscsitarget]", :immediately
 end
+
+cookbook_file node["cinder"]["netapp"]["driver"] do
+  source "netapp_new-42cdc4d947a73ae6a3dbbaab36634e425b57c18c.py"
+  mode  00644
+  owner "root"
+  group "root"
+  notifies :restart, "service[cinder-volume]"
+end
