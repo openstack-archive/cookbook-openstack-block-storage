@@ -90,6 +90,7 @@ default["cinder"]["netapp"]["dfm_password"] = nil
 default["cinder"]["netapp"]["dfm_port"] = "8088"
 default["cinder"]["netapp"]["dfm_web_port"] = "8080"
 default["cinder"]["netapp"]["storage_service"] = "storage_service"
+default["cinder"]["netapp"]["driver"] = "/usr/share/pyshared/cinder/volume/netapp.py"
 
 # logging attribute
 default["cinder"]["syslog"]["use"] = false
