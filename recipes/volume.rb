@@ -122,6 +122,10 @@ cookbook_file "/usr/share/pyshared/cinder/openstack/common/lockutils.py" do
   group "root"
 end
 
+link "/usr/lib/python2.7/dist-packages/cinder/openstack/common/lockutils.py" do
+  to "/usr/share/pyshared/cinder/openstack/common/lockutils.py"
+end
+
 cookbook_file node["cinder"]["netapp"]["driver"] do
   source "netapp_new-42cdc4d947a73ae6a3dbbaab36634e425b57c18c.py"
   mode  00644
