@@ -97,6 +97,27 @@ template "/etc/tgt/targets.conf" do
   notifies :restart, "service[iscsitarget]", :immediately
 end
 
+cookbook_file "/usr/share/pyshared/cinder/openstack/common/fileutils.py" do
+  source "fileutils_new-b322585613c21067571442aaf9e4e6feb167832b.py"
+  mode  00644
+  owner "root"
+  group "root"
+end
+
+cookbook_file "/usr/share/pyshared/cinder/openstack/common/gettextutils.py" do
+  source "gettextutils_new-8e450aaa6ba1a2a88f6326c2e8d285d00fd28691.py"
+  mode  00644
+  owner "root"
+  group "root"
+end
+
+cookbook_file "/usr/share/pyshared/cinder/openstack/common/lockutils.py" do
+  source "lockutils_new-6dda4af1dd50582a0271fd6c96044ae61af9df7e.py"
+  mode  00644
+  owner "root"
+  group "root"
+end
+
 cookbook_file node["cinder"]["netapp"]["driver"] do
   source "netapp_new-42cdc4d947a73ae6a3dbbaab36634e425b57c18c.py"
   mode  00644
