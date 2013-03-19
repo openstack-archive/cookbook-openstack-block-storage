@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-require "uri"
-
 class ::Chef::Recipe
   include ::Openstack
 end
@@ -64,14 +62,7 @@ glance_api_role = node["cinder"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
-keystone_service_role = node["cinder"]["keystone_service_chef_role"]
-keystone = config_by_role keystone_service_role, "keystone"
 identity_admin_endpoint = endpoint "identity-admin"
-
-bootstrap_token = secret "secrets", "keystone_bootstrap_token"
-auth_uri = ::URI.decode identity_admin_endpoint.to_s
-
-cinder_api_endpoint = endpoint "volume-api"
 service_pass = service_password "cinder"
 
 template "/etc/cinder/cinder.conf" do
@@ -106,51 +97,4 @@ template "/etc/cinder/api-paste.ini" do
   )
 
   notifies :restart, "service[cinder-api]", :immediately
-end
-
-keystone_register "Register Cinder Volume Service" do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name "cinder"
-  service_type "volume"
-  service_description "Cinder Volume Service"
-  endpoint_region node["cinder"]["region"]
-  endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
-
-  action :create_service
-end
-
-keystone_register "Register Cinder Volume Endpoint" do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name "cinder"
-  service_type "volume"
-  service_description "Cinder Volume Service"
-  endpoint_region node["cinder"]["region"]
-  endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
-
-  action :create_endpoint
-end
-
-keystone_register "Register Cinder Service User" do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  tenant_name node["cinder"]["service_tenant_name"]
-  user_name node["cinder"]["service_user"]
-  user_pass service_pass
-  user_enabled "true" # Not required as this is the default
-  action :create_user
-end
-
-keystone_register "Grant service Role to Cinder Service User for Cinder Service Tenant" do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  tenant_name node["cinder"]["service_tenant_name"]
-  user_name node["cinder"]["service_user"]
-  role_name node["cinder"]["service_role"]
-  action :grant_role
 end
