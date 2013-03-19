@@ -68,11 +68,7 @@ keystone_service_role = node["cinder"]["keystone_service_chef_role"]
 keystone = config_by_role keystone_service_role, "keystone"
 identity_admin_endpoint = endpoint "identity-admin"
 
-# Instead of the search to find the keystone service, put this
-# into openstack-common as a common attribute?
-ksadmin_user = keystone["admin_user"]
-ksadmin_tenant_name = keystone["admin_tenant_name"]
-ksadmin_pass = user_password ksadmin_user
+bootstrap_token = secret "secrets", "keystone_bootstrap_token"
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
 
 cinder_api_endpoint = endpoint "volume-api"
@@ -114,9 +110,7 @@ end
 
 keystone_register "Register Cinder Volume Service" do
   auth_uri auth_uri
-  admin_user ksadmin_user
-  admin_tenant_name ksadmin_tenant_name
-  admin_password ksadmin_pass
+  bootstrap_token bootstrap_token
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
@@ -130,9 +124,7 @@ end
 
 keystone_register "Register Cinder Volume Endpoint" do
   auth_uri auth_uri
-  admin_user ksadmin_user
-  admin_tenant_name ksadmin_tenant_name
-  admin_password ksadmin_pass
+  bootstrap_token bootstrap_token
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
@@ -146,9 +138,7 @@ end
 
 keystone_register "Register Cinder Service User" do
   auth_uri auth_uri
-  admin_user ksadmin_user
-  admin_tenant_name ksadmin_tenant_name
-  admin_password ksadmin_pass
+  bootstrap_token bootstrap_token
   tenant_name node["cinder"]["service_tenant_name"]
   user_name node["cinder"]["service_user"]
   user_pass service_pass
@@ -158,9 +148,7 @@ end
 
 keystone_register "Grant service Role to Cinder Service User for Cinder Service Tenant" do
   auth_uri auth_uri
-  admin_user ksadmin_user
-  admin_tenant_name ksadmin_tenant_name
-  admin_password ksadmin_pass
+  bootstrap_token bootstrap_token
   tenant_name node["cinder"]["service_tenant_name"]
   user_name node["cinder"]["service_user"]
   role_name node["cinder"]["service_role"]
