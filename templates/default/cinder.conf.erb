@@ -35,12 +35,9 @@ verbose=<%= node["cinder"]["verbose"] %>
 
 # ================= Syslog Options ============================
 
-# Send logs to syslog (/dev/log) instead of to file specified
-# by `log_file`
-use_syslog=<%= node["cinder"]["syslog"]["use"] %>
-
-# Facility to use. If unset defaults to LOG_USER.
-syslog_log_facility=<%= node["cinder"]["syslog"]["facility"]%>
+<% if node["cinder"]["syslog"]["use"] %>
+log_config = /etc/openstack/logging.conf
+<% end %>
 
 ######## defined in cinder.flags ########
 

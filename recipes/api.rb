@@ -22,6 +22,10 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
+if node["cinder"]["syslog"]["use"]
+  include_recipe "openstack-common::logging"
+end
+
 platform_options = node["cinder"]["platform"]
 
 platform_options["cinder_api_packages"].each do |pkg|

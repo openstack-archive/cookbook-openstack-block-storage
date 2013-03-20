@@ -18,6 +18,10 @@
 # limitations under the License.
 #
 
+if node["cinder"]["syslog"]["use"]
+  include_recipe "openstack-common::logging"
+end
+
 platform_options = node["cinder"]["platform"]
 
 platform_options["cinder_scheduler_packages"].each do |pkg|
