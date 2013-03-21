@@ -33,6 +33,8 @@ default["cinder"]["custom_template_banner"] = "
 default["cinder"]["verbose"] = "False"
 default["cinder"]["debug"] = "False"
 
+# Default lock_path
+default["cinder"]["lock_path"] = "/var/lock/cinder"
 # Availability zone/region for the Cinder service
 default["cinder"]["region"] = "RegionOne"
 
