@@ -54,6 +54,18 @@ service "cinder-scheduler" do
   action [ :enable, :start ]
 end
 
+cookbook_file "/usr/local/bin/cinder-volume-usage-audit" do
+  source "cinder-volume-usage-audit"
+  mode  00755
+  owner "root"
+  group "root"
+end
+
+# cronjob run every minute
+cron "cinder-volume-usage-audit" do
+  command "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+end
+
 template "/etc/cinder/cinder.conf" do
   source "cinder.conf.erb"
   group  node["cinder"]["group"]
