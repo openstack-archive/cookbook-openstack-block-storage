@@ -71,6 +71,9 @@ Attributes
 * `cinder["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `cinder["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
 * `cinder["netapp"]["enabled"]` - Enable netapp-specific options
+* `cinder["rbd_pool"]` - RADOS Block Device pool to use
+* `cinder["rbd_user"]` - User for Cephx Authentication
+* `cinder["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
 
 Templates
 =====
