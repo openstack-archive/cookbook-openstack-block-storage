@@ -106,6 +106,11 @@ default["cinder"]["volume"]["volume_driver"] = "cinder.volume.driver.ISCSIDriver
 default["cinder"]["volume"]["volume_group"] = "cinder-volumes"
 default["cinder"]["volume"]["iscsi_helper"] = "tgtadm"
 
+# Ceph/RADOS options
+default["cinder"]["rbd_pool"] = "rbd"
+default["cinder"]["rbd_user"] = nil
+default["cinder"]["rbd_secret_uuid"] = nil
+
 case platform
 when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
   default["cinder"]["platform"] = {

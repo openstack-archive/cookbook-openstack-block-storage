@@ -537,13 +537,13 @@ volume_group=<%= node["cinder"]["volume"]["volume_group"] %>
 # iscsi_port=3260
 #### (IntOpt) The port that the iSCSI daemon is listening on
 
-# rbd_pool=rbd
+rbd_pool=<%= node["cinder"]["rbd_pool"] %>
 #### (StrOpt) the RADOS pool in which rbd volumes are stored
 
-# rbd_user=<None>
+rbd_user=<%= node["cinder"]["rbd_user"] %>
 #### (StrOpt) the RADOS client name for accessing rbd volumes
 
-# rbd_secret_uuid=<None>
+rbd_secret_uuid=<%= node["cinder"]["rbd_secret_uuid"] %>
 #### (StrOpt) the libvirt uuid of the secret for the rbd_uservolumes
 
 # volume_tmp_dir=<None>
