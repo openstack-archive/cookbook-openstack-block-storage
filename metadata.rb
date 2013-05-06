@@ -1,6 +1,6 @@
 name             "cinder"
-maintainer       "AT&T, Inc."
-maintainer_email "jaypipes@gmail.com"
+maintainer       "AT&T Services, Inc."
+maintainer_email "cookbooks@lists.tfoundry.com"
 license          "Apache 2.0"
 description      "The OpenStack Advanced Volume Management service Cinder."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
