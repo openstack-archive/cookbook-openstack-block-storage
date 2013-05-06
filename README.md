@@ -10,12 +10,6 @@ Requirements
 
 Chef 0.10.0 or higher required (for Chef environment use).
 
-Platforms
---------
-
-* Ubuntu-12.04
-* Fedora-17
-
 Cookbooks
 ---------
 
@@ -31,8 +25,8 @@ The following cookbooks are dependencies:
 * rabbitmq
 * selinux (Fedora)
 
-Recipes
-=======
+Usage
+=====
 
 api
 ----
@@ -72,26 +66,31 @@ Attributes
 * `cinder["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
 * `cinder["netapp"]["enabled"]` - Enable netapp-specific options
 
-Templates
+Testing
 =====
-* `api-paste.ini.erb` - Paste config for cinder API middleware
-* `cinder.conf.erb` - Basic cinder.conf file
-* `targets.conf.erb` - config file for tgt (iscsi target software)
+
+This cookbook is using [ChefSpec](https://github.com/acrmp/chefspec) for 
+testing. Run the following before commiting. It will run your tests,
+and check for lint errors.
+
+    $ ./run_tests.bash
 
 License and Author
 ==================
 
-Author:: Justin Shepherd (<justin.shepherd@rackspace.com>)  
-Author:: Jason Cannavale (<jason.cannavale@rackspace.com>)  
-Author:: Ron Pedde (<ron.pedde@rackspace.com>)  
-Author:: Joseph Breu (<joseph.breu@rackspace.com>)  
-Author:: William Kelly (<william.kelly@rackspace.com>)  
-Author:: Darren Birkett (<darren.birkett@rackspace.co.uk>)  
-Author:: Evan Callicoat (<evan.callicoat@rackspace.com>)  
-Author:: Jay Pipes (<jaypipes@gmail.com>)  
+Author:: Justin Shepherd (<justin.shepherd@rackspace.com>)
+Author:: Jason Cannavale (<jason.cannavale@rackspace.com>)
+Author:: Ron Pedde (<ron.pedde@rackspace.com>)
+Author:: Joseph Breu (<joseph.breu@rackspace.com>)
+Author:: William Kelly (<william.kelly@rackspace.com>)
+Author:: Darren Birkett (<darren.birkett@rackspace.co.uk>)
+Author:: Evan Callicoat (<evan.callicoat@rackspace.com>)
+Author:: Jay Pipes (<jaypipes@att.com>)
+Author:: John Dewey (<jdewey@att.com>)
+Author:: Abel Lopez (<al592b@att.com>)
 
 Copyright 2012, Rackspace US, Inc.
-Copyright 2012, AT&T, Inc.
+Copyright 2012-2013, AT&T Services, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
