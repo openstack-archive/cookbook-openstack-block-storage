@@ -11,7 +11,7 @@ require "chefspec"
     :log_level => ::LOG_LEVEL
 }
 
-def glance_stubs
+def cinder_stubs
   ::Chef::Recipe.any_instance.stub(:config_by_role).
     with("rabbitmq-server", "queue").and_return(
       {'host' => 'rabbit-host', 'port' => 'rabbit-port'}
