@@ -3,7 +3,7 @@ require "spec_helper"
 describe "cinder::volume" do
   describe "ubuntu" do
     before do
-      glance_stubs
+      cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
       @node.set["cinder"]["syslog"]["use"] = true

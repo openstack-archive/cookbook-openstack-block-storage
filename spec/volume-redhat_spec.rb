@@ -3,7 +3,7 @@ require "spec_helper"
 describe "cinder::volume" do
   describe "redhat" do
     before do
-      glance_stubs
+      cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
       @chef_run.converge "cinder::volume"
     end
