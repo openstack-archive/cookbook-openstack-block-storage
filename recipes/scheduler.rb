@@ -61,8 +61,8 @@ cookbook_file "/usr/local/bin/cinder-volume-usage-audit" do
   group "root"
 end
 
-# cronjob run every minute
 cron "cinder-volume-usage-audit" do
+  minute node["cinder"]["cron"]["minute"]
   command "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
 end
 
