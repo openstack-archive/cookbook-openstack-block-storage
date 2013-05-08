@@ -61,9 +61,21 @@ cookbook_file "/usr/local/bin/cinder-volume-usage-audit" do
   group "root"
 end
 
-cron "cinder-volume-usage-audit" do
-  minute node["cinder"]["cron"]["minute"]
-  command "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+# run cronjob only on one node
+cron_cmd = "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+node_search = search(:node, "roles:openstack-volume-scheduler AND chef_environment:#{node.chef_environment}")
+cron_node = node_search.collect{|a| a.name}.sort[0]
+if node.name == cron_node
+  cron "cinder-volume-usage-audit" do
+    action :create
+    minute node["cinder"]["cron"]["minute"]
+    command cron_cmd
+  end
+else
+  cron "cinder-volume-usage-audit" do
+    action :delete
+    command cron_cmd
+  end
 end
 
 template "/etc/cinder/cinder.conf" do

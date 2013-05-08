@@ -45,6 +45,7 @@ describe "cinder::scheduler" do
       cmd = "/usr/local/bin/cinder-volume-usage-audit > " \
             "/var/log/cinder/audit.log 2>&1"
       expect(cron.command).to eq cmd
+      expect(cron.minute).to eq '00'
     end
 
     expect_creates_cinder_conf "service[cinder-scheduler]"
