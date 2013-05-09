@@ -50,6 +50,7 @@ def expect_creates_cinder_conf service, action=:restart
       expect(@chef_run).to create_file_with_content "/etc/cinder/cinder.conf", "rbd_pool=rbd"
       expect(@chef_run).to create_file_with_content "/etc/cinder/cinder.conf", "iscsi_helper=tgtadm"
       expect(@chef_run).to create_file_with_content "/etc/cinder/cinder.conf", "RBDDriver"
+      expect(@chef_run).not_to create_file_with_content "/etc/cinder/cinder.conf", "NetAppISCSIDriver"
 
     end 
 

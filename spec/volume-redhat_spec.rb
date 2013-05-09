@@ -29,5 +29,9 @@ describe "cinder::volume" do
     it "starts iscsi target on boot" do
       expect(@chef_run).to set_service_to_start_on_boot "tgtd"
     end
+
+    it "has different tgt" do
+      expect(@chef_run).to create_file_with_content "/etc/tgt/targets.conf", "/var/lib/cinder/volumes"
+    end
   end
 end
