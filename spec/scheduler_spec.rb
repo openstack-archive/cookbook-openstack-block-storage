@@ -7,6 +7,7 @@ describe "cinder::scheduler" do
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
       @node.set["cinder"]["syslog"]["use"] = true
+      @node.set["cinder"]["volume"]["volume_driver"] = "cinder.volume.driver.RBDDriver"
       @chef_run.converge "cinder::scheduler"
     end
 
