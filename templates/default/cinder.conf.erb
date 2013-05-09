@@ -574,7 +574,7 @@ volume_driver=<%= node["cinder"]["volume"]["volume_driver"] %>
 
 ######## defined in cinder.volume.netapp ########
 
-<% if node["cinder"]["volume"]["volume_driver"] = "cinder.volume.netapp.NetAppISCSIDriver" %>
+<% if node["cinder"]["volume"]["volume_driver"] == "cinder.volume.netapp.NetAppISCSIDriver" %>
 netapp_wsdl_url=<%= node["cinder"]["netapp"]["protocol"] %>://<%= node["cinder"]["netapp"]["dfm_hostname"] %>:<%= node["cinder"]["netapp"]["dfm_web_port"] %>/dfm.wsdl
 #### (StrOpt) URL of the WSDL file for the DFM server
 
