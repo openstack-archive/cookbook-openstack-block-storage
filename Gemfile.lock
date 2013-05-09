@@ -160,6 +160,7 @@ PLATFORMS
 
 DEPENDENCIES
   berkshelf (~> 1.4.0)
+  celluloid (= 0.13.0)
   chef (~> 10.18.2)
   chefspec (~> 1.0.0)
   foodcritic (~> 2.1.0)
