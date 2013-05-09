@@ -7,11 +7,17 @@ describe "cinder::scheduler" do
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
       @node.set["cinder"]["syslog"]["use"] = true
-      @node.set["cinder"]["volume"]["volume_driver"] = "cinder.volume.driver.RBDDriver"
       @chef_run.converge "cinder::scheduler"
     end
 
     expect_runs_openstack_common_logging_recipe
+
+    it "doesn't run logging recipe" do
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+      chef_run.converge "cinder::api"
+
+      expect(chef_run).not_to include_recipe "openstack-common::logging"
+    end
 
     it "installs cinder api packages" do
       expect(@chef_run).to upgrade_package "cinder-scheduler"
