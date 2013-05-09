@@ -44,7 +44,8 @@ def expect_creates_cinder_conf service, action=:restart
     end 
 
     it "template contents" do
-      pending "TODO: implement"
+      chef_run.node.set['cinder']['custom_template_banner'] = 'chef spec test'
+      expect(@file).to create_file_with_content '/etc/cinder/cinder.conf', 'chef spec test'
     end 
 
     it "notifies nova-api-ec2 restart" do
