@@ -14,7 +14,7 @@ describe "cinder::volume" do
 
     it "doesn't run logging recipe" do
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      chef_run.converge "cinder::api"
+      chef_run.converge "cinder::volume"
 
       expect(chef_run).not_to include_recipe "openstack-common::logging"
     end
