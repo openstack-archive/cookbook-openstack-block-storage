@@ -50,3 +50,23 @@ def expect_creates_cinder_conf service, action=:restart
     end
   end 
 end
+
+def expect_creates_policy_json service, action=:restart
+  describe "policy.json" do
+    before do
+      @file = @chef_run.template "/etc/cinder/policy.json"
+    end
+
+    it "has proper owner" do
+      expect(@file).to be_owned_by "cinder", "cinder"
+    end
+
+    it "has proper modes" do
+      expect(sprintf("%o", @file.mode)).to eq "644"
+    end
+
+    it "notifies nova-api-ec2 restart" do
+      expect(@file.to notify service, action
+    end
+  end
+end
