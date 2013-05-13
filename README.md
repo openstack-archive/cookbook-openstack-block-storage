@@ -67,6 +67,10 @@ Attributes
 * `cinder["rbd_pool"]` - RADOS Block Device pool to use
 * `cinder["rbd_user"]` - User for Cephx Authentication
 * `cinder["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
+* `cinder["policy"]["context_is_admin"]` - Define administrators
+* `cinder["policy"]["default"]` - default volume operations rule
+* `cinder["policy"]["admin_or_owner"]` - Define an admin or owner
+* `cinder["policy"]["admin_api"]` - Define api admin
 
 Testing
 =====
