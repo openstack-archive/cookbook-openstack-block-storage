@@ -66,7 +66,7 @@ def expect_creates_policy_json service, action=:restart
     end
 
     it "notifies nova-api-ec2 restart" do
-      expect(@file.to notify service, action
+      expect(@file).to notify service, action
     end
   end
 end
