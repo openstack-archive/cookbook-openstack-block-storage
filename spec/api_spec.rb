@@ -101,19 +101,7 @@ describe "cinder::api" do
       expect(@chef_run).to execute_command cmd
     end
 
-    describe "policy.json" do
-      before do
-        @file = @chef_run.template "/etc/cinder/policy.json"
-      end
-
-      it "has proper owner" do
-        expect(@file).to be_owned_by "cinder", "cinder"
-      end
-
-      it "has proper modes" do
-        expect(sprintf("%o", @file.mode)).to eq "644"
-      end
-    end
+    expect_creates_policy_json "service[cinder-api]"
 
     describe "api-paste.ini" do
       before do
