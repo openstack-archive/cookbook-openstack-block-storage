@@ -101,6 +101,8 @@ describe "cinder::api" do
       expect(@chef_run).to execute_command cmd
     end
 
+    expect_creates_policy_json "service[cinder-api]"
+
     describe "api-paste.ini" do
       before do
         @file = @chef_run.template "/etc/cinder/api-paste.ini"

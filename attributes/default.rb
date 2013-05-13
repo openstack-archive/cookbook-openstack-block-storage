@@ -112,6 +112,12 @@ default["cinder"]["rbd_pool"] = "rbd"
 default["cinder"]["rbd_user"] = nil
 default["cinder"]["rbd_secret_uuid"] = nil
 
+# Cinder Policy defaults
+default["cinder"]["policy"]["context_is_admin"] = '["role:admin"]'
+default["cinder"]["policy"]["default"] = '["rule:admin_or_owner"]'
+default["cinder"]["policy"]["admin_or_owner"] = '["is_admin:True"], ["project_id:%(project_id)s"]'
+default["cinder"]["policy"]["admin_api"] = '["is_admin:True"]'
+
 case platform
 when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
   default["cinder"]["platform"] = {
