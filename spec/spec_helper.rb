@@ -22,7 +22,6 @@ def cinder_stubs
   ::Chef::Recipe.any_instance.stub(:db_password).and_return String.new
   ::Chef::Recipe.any_instance.stub(:user_password).and_return String.new
   ::Chef::Recipe.any_instance.stub(:service_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:search).and_return([OpenStruct.new(:name => 'fauxhai.local')])
 end
 
 def expect_runs_openstack_common_logging_recipe
