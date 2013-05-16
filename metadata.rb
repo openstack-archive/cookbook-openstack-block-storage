@@ -18,8 +18,8 @@ end
 
 depends          "apt"
 depends          "database"
-depends          "glance"
-depends          "keystone", ">= 2012.2.1"
+depends          "openstack-image"
+depends          "openstack-identity", ">= 2012.2.1"
 depends          "mysql"
 depends          "openssh"
 depends          "openstack-common", ">= 0.1.7"
