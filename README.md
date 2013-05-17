@@ -1,7 +1,7 @@
 Description
 ===========
 
-Installs the Openstack volume service (codename: cinder) from packages.
+Installs the OpenStack Block Storage service **Cinder** as part of the OpenStack reference deployment Chef for OpenStack. The http://github.com/mattray/chef-openstack-repo contains documentation for using this cookbook in the context of a full OpenStack deployment. Cinder is currently installed from packages.
 
 http://cinder.openstack.org
 
@@ -75,7 +75,7 @@ Attributes
 Testing
 =====
 
-This cookbook is using [ChefSpec](https://github.com/acrmp/chefspec) for 
+This cookbook is using [ChefSpec](https://github.com/acrmp/chefspec) for
 testing. Run the following before commiting. It will run your tests,
 and check for lint errors.
 
@@ -84,19 +84,23 @@ and check for lint errors.
 License and Author
 ==================
 
-Author:: Justin Shepherd (<justin.shepherd@rackspace.com>)
-Author:: Jason Cannavale (<jason.cannavale@rackspace.com>)
-Author:: Ron Pedde (<ron.pedde@rackspace.com>)
-Author:: Joseph Breu (<joseph.breu@rackspace.com>)
-Author:: William Kelly (<william.kelly@rackspace.com>)
-Author:: Darren Birkett (<darren.birkett@rackspace.co.uk>)
-Author:: Evan Callicoat (<evan.callicoat@rackspace.com>)
-Author:: Jay Pipes (<jaypipes@att.com>)
-Author:: John Dewey (<jdewey@att.com>)
-Author:: Abel Lopez (<al592b@att.com>)
-
-Copyright 2012, Rackspace US, Inc.
-Copyright 2012-2013, AT&T Services, Inc.
+|                      |                                                    |
+|:---------------------|:---------------------------------------------------|
+| **Author**           |  Justin Shepherd (<justin.shepherd@rackspace.com>) |
+| **Author**           |  Jason Cannavale (<jason.cannavale@rackspace.com>) |
+| **Author**           |  Ron Pedde (<ron.pedde@rackspace.com>)             |
+| **Author**           |  Joseph Breu (<joseph.breu@rackspace.com>)         |
+| **Author**           |  William Kelly (<william.kelly@rackspace.com>)     |
+| **Author**           |  Darren Birkett (<darren.birkett@rackspace.co.uk>) |
+| **Author**           |  Evan Callicoat (<evan.callicoat@rackspace.com>)   |
+| **Author**           |  Matt Ray (<matt@opscode.com>)                     |
+| **Author**           |  Jay Pipes (<jaypipes@att.com>)                    |
+| **Author**           |  John Dewey (<jdewey@att.com>)                     |
+| **Author**           |  Abel Lopez (<al592b@att.com>)                     |
+|                      |                                                    |
+| **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
+| **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
+| **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
