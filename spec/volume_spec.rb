@@ -1,20 +1,20 @@
 require "spec_helper"
 
-describe "cinder::volume" do
+describe "openstack-block-storage::volume" do
   describe "ubuntu" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
-      @node.set["cinder"]["syslog"]["use"] = true
-      @chef_run.converge "cinder::volume"
+      @node.set["openstack-block-storage"]["syslog"]["use"] = true
+      @chef_run.converge "openstack-block-storage::volume"
     end
 
     expect_runs_openstack_common_logging_recipe
 
     it "doesn't run logging recipe" do
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      chef_run.converge "cinder::volume"
+      chef_run.converge "openstack-block-storage::volume"
 
       expect(chef_run).not_to include_recipe "openstack-common::logging"
     end

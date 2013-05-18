@@ -1,4 +1,4 @@
-<%= node["cinder"]["custom_template_banner"] %>
+<%= node["openstack-block-storage"]["custom_template_banner"] %>
 
 #############
 # Openstack #
@@ -48,9 +48,9 @@ paste.filter_factory = keystone.middleware.auth_token:filter_factory
 auth_host = <%= @identity_admin_endpoint.host %>
 auth_port = <%= @identity_admin_endpoint.port %>
 auth_protocol = <%= @identity_admin_endpoint.scheme %>
-admin_tenant_name = <%= node["cinder"]["service_tenant_name"] %>
-admin_user = <%= node["cinder"]["service_user"] %>
+admin_tenant_name = <%= node["openstack-block-storage"]["service_tenant_name"] %>
+admin_user = <%= node["openstack-block-storage"]["service_user"] %>
 admin_password = <%= @service_pass %>
 <% if node["openstack"]["auth"]["strategy"] == "pki" -%>
-signing_dir = <%= node["cinder"]["api"]["auth"]["cache_dir"] %>
+signing_dir = <%= node["openstack-block-storage"]["api"]["auth"]["cache_dir"] %>
 <% end -%>

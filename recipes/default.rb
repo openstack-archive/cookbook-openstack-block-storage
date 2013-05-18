@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: cinder
+# Cookbook Name:: openstack-block-storage
 # Recipe:: default
 #
 # Copyright 2012-2013, AT&T Services, Inc.

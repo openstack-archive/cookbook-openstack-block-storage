@@ -1,11 +1,11 @@
 require "spec_helper"
 
-describe "cinder::api" do
+describe "openstack-block-storage::api" do
   describe "redhat" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
-      @chef_run.converge "cinder::api"
+      @chef_run.converge "openstack-block-storage::api"
     end
 
     it "installs cinder api packages" do

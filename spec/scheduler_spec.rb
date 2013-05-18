@@ -1,20 +1,20 @@
 require "spec_helper"
 
-describe "cinder::scheduler" do
+describe "openstack-block-storage::scheduler" do
   describe "ubuntu" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
-      @node.set["cinder"]["syslog"]["use"] = true
-      @chef_run.converge "cinder::scheduler"
+      @node.set["openstack-block-storage"]["syslog"]["use"] = true
+      @chef_run.converge "openstack-block-storage::scheduler"
     end
 
     expect_runs_openstack_common_logging_recipe
 
     it "doesn't run logging recipe" do
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      chef_run.converge "cinder::scheduler"
+      chef_run.converge "openstack-block-storage::scheduler"
 
       expect(chef_run).not_to include_recipe "openstack-common::logging"
     end

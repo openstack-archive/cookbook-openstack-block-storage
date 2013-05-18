@@ -1,4 +1,4 @@
 require "spec_helper"
 
-describe "cinder::default" do
+describe "openstack-block-storage::default" do
 end

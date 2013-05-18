@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "cinder::db" do
+describe "openstack-block-storage::db" do
   it "installs mysql packages" do
     @chef_run = converge
 
@@ -19,6 +19,6 @@ describe "cinder::db" do
     ::Chef::Recipe.any_instance.stub(:db_password).with("cinder").
       and_return "test-pass"
 
-    ::ChefSpec::ChefRunner.new(::UBUNTU_OPTS).converge "cinder::db"
+    ::ChefSpec::ChefRunner.new(::UBUNTU_OPTS).converge "openstack-block-storage::db"
   end
 end

@@ -1,10 +1,10 @@
-<%= node["cinder"]["custom_template_banner"] %>
+<%= node["openstack-block-storage"]["custom_template_banner"] %>
 {
-    "context_is_admin": [<%= node["cinder"]["policy"]["context_is_admin"] %>],
-    "admin_or_owner":  [<%= node["cinder"]["policy"]["admin_or_owner"] %>],
-    "default": [<%= node["cinder"]["policy"]["default"] %>],
+    "context_is_admin": [<%= node["openstack-block-storage"]["policy"]["context_is_admin"] %>],
+    "admin_or_owner":  [<%= node["openstack-block-storage"]["policy"]["admin_or_owner"] %>],
+    "default": [<%= node["openstack-block-storage"]["policy"]["default"] %>],
 
-    "admin_api": [<%= node["cinder"]["policy"]["admin_api"] %>],
+    "admin_api": [<%= node["openstack-block-storage"]["policy"]["admin_api"] %>],
 
     "volume:create": [],
     "volume:get_all": [],

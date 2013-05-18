@@ -1,9 +1,10 @@
 #
-# Cookbook Name:: cinder
+# Cookbook Name:: openstack-block-storage
 # Recipe:: volume
 #
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
+# Copyright 2013, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,11 +23,11 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-if node["cinder"]["syslog"]["use"]
+if node["openstack-block-storage"]["syslog"]["use"]
   include_recipe "openstack-common::logging"
 end
 
-platform_options = node["cinder"]["platform"]
+platform_options = node["openstack-block-storage"]["platform"]
 
 platform_options["cinder_volume_packages"].each do |pkg|
   package pkg do
@@ -44,22 +45,22 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
   end
 end
 
-db_user = node["cinder"]["db"]["username"]
+db_user = node["openstack-block-storage"]["db"]["username"]
 db_pass = db_password "cinder"
 sql_connection = db_uri("volume", db_user, db_pass)
 
-rabbit_server_role = node["cinder"]["rabbit_server_chef_role"]
+rabbit_server_role = node["openstack-block-storage"]["rabbit_server_chef_role"]
 rabbit_info = config_by_role rabbit_server_role, "queue"
 
-rabbit_user = node["cinder"]["rabbit"]["username"]
+rabbit_user = node["openstack-block-storage"]["rabbit"]["username"]
 rabbit_pass = user_password "rabbit"
-rabbit_vhost = node["cinder"]["rabbit"]["vhost"]
+rabbit_vhost = node["openstack-block-storage"]["rabbit"]["vhost"]
 
-glance_api_role = node["cinder"]["glance_api_chef_role"]
+glance_api_role = node["openstack-block-storage"]["glance_api_chef_role"]
 glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
-node.override["cinder"]["netapp"]["dfm_password"] = service_password "netapp"
+node.override["openstack-block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
 
 service "cinder-volume" do
   service_name platform_options["cinder_volume_service"]
@@ -70,8 +71,8 @@ end
 
 template "/etc/cinder/cinder.conf" do
   source "cinder.conf.erb"
-  group  node["cinder"]["group"]
-  owner  node["cinder"]["user"]
+  group  node["openstack-block-storage"]["group"]
+  owner  node["openstack-block-storage"]["user"]
   mode   00644
   variables(
     :sql_connection => sql_connection,

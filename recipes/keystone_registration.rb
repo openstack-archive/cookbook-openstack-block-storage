@@ -1,9 +1,10 @@
 #
-# Cookbook Name:: cinder
+# Cookbook Name:: openstack-block-storage
 # Recipe:: api
 #
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
+# Copyright 2013, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +37,7 @@ keystone_register "Register Cinder Volume Service" do
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
-  endpoint_region node["cinder"]["region"]
+  endpoint_region node["openstack-block-storage"]["region"]
   endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
   endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
   endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
@@ -50,7 +51,7 @@ keystone_register "Register Cinder Volume Endpoint" do
   service_name "cinder"
   service_type "volume"
   service_description "Cinder Volume Service"
-  endpoint_region node["cinder"]["region"]
+  endpoint_region node["openstack-block-storage"]["region"]
   endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
   endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
   endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
@@ -61,8 +62,8 @@ end
 keystone_register "Register Cinder Service User" do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  tenant_name node["cinder"]["service_tenant_name"]
-  user_name node["cinder"]["service_user"]
+  tenant_name node["openstack-block-storage"]["service_tenant_name"]
+  user_name node["openstack-block-storage"]["service_user"]
   user_pass service_pass
   user_enabled "true" # Not required as this is the default
   action :create_user
@@ -71,8 +72,8 @@ end
 keystone_register "Grant service Role to Cinder Service User for Cinder Service Tenant" do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  tenant_name node["cinder"]["service_tenant_name"]
-  user_name node["cinder"]["service_user"]
-  role_name node["cinder"]["service_role"]
+  tenant_name node["openstack-block-storage"]["service_tenant_name"]
+  user_name node["openstack-block-storage"]["service_user"]
+  role_name node["openstack-block-storage"]["service_role"]
   action :grant_role
 end

@@ -1,11 +1,11 @@
 require "spec_helper"
 
-describe "cinder::scheduler" do
+describe "openstack-block-storage::scheduler" do
   describe "redhat" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
-      @chef_run.converge "cinder::scheduler"
+      @chef_run.converge "openstack-block-storage::scheduler"
     end
 
     it "installs cinder api packages" do

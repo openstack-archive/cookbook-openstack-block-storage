@@ -1,11 +1,11 @@
 require "spec_helper"
 
-describe "cinder::volume" do
+describe "openstack-block-storage::volume" do
   describe "redhat" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
-      @chef_run.converge "cinder::volume"
+      @chef_run.converge "openstack-block-storage::volume"
     end
 
     it "installs cinder volume packages" do

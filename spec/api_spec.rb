@@ -1,20 +1,20 @@
 require "spec_helper"
 
-describe "cinder::api" do
+describe "openstack-block-storage::api" do
   describe "ubuntu" do
     before do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
-      @node.set["cinder"]["syslog"]["use"] = true
-      @chef_run.converge "cinder::api"
+      @node.set["openstack-block-storage"]["syslog"]["use"] = true
+      @chef_run.converge "openstack-block-storage::api"
     end
 
     expect_runs_openstack_common_logging_recipe
 
     it "doesn't run logging recipe" do
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      chef_run.converge "cinder::api"
+      chef_run.converge "openstack-block-storage::api"
 
       expect(chef_run).not_to include_recipe "openstack-common::logging"
     end
@@ -61,7 +61,7 @@ describe "cinder::api" do
 
       it "doesn't run logging recipe" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-        chef_run.converge "cinder::api"
+        chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).not_to create_file_with_content @file,
           "log_config = /etc/openstack/logging.conf"
@@ -70,10 +70,10 @@ describe "cinder::api" do
       it "has rbd driver settings" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
-        node.set["cinder"]["volume"] = {
+        node.set["openstack-block-storage"]["volume"] = {
           "volume_driver" => "cinder.volume.driver.RBDDriver"
         }
-        chef_run.converge "cinder::api"
+        chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).to create_file_with_content @file,
           /^rbd_/
@@ -84,10 +84,10 @@ describe "cinder::api" do
       it "has netapp driver settings" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
-        node.set["cinder"]["volume"] = {
+        node.set["openstack-block-storage"]["volume"] = {
           "volume_driver" => "cinder.volume.netapp.NetAppISCSIDriver"
         }
-        chef_run.converge "cinder::api"
+        chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).to create_file_with_content @file,
           /^netapp_/
@@ -120,7 +120,7 @@ describe "cinder::api" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
         node.set["openstack"]["auth"]["strategy"] = "pki"
-        chef_run.converge "cinder::api"
+        chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).to create_file_with_content @file.name,
           "signing_dir = /var/cache/cinder/api"

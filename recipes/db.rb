@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: cinder
+# Cookbook Name:: openstack-block-storage
 # Recipe:: db
 #
 # Copyright 2012-2013, AT&T Services, Inc.
@@ -32,6 +32,6 @@ include_recipe "mysql::ruby"
 db_pass = db_password "cinder"
 
 db_create_with_user("volume",
-  node["cinder"]["db"]["username"],
+  node["openstack-block-storage"]["db"]["username"],
   db_pass
 )

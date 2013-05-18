@@ -1,5 +1,5 @@
 require "spec_helper"
 
-describe "cinder::keystone_registration" do
+describe "openstack-block-storage::keystone_registration" do
   #TODO: implement
 end
