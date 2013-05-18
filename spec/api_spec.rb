@@ -6,7 +6,7 @@ describe "openstack-block-storage::api" do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
-      @node.set["openstack-block-storage"]["syslog"]["use"] = true
+      @node.set["openstack"]["block-storage"]["syslog"]["use"] = true
       @chef_run.converge "openstack-block-storage::api"
     end
 
@@ -70,7 +70,7 @@ describe "openstack-block-storage::api" do
       it "has rbd driver settings" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
-        node.set["openstack-block-storage"]["volume"] = {
+        node.set["openstack"]["block-storage"]["volume"] = {
           "volume_driver" => "cinder.volume.driver.RBDDriver"
         }
         chef_run.converge "openstack-block-storage::api"
@@ -84,7 +84,7 @@ describe "openstack-block-storage::api" do
       it "has netapp driver settings" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
-        node.set["openstack-block-storage"]["volume"] = {
+        node.set["openstack"]["block-storage"]["volume"] = {
           "volume_driver" => "cinder.volume.netapp.NetAppISCSIDriver"
         }
         chef_run.converge "openstack-block-storage::api"

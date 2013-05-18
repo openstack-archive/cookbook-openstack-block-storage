@@ -1,17 +1,17 @@
-<%= node["openstack-block-storage"]["custom_template_banner"] %>
+<%= node["openstack"]["block-storage"]["custom_template_banner"] %>
 
 [DEFAULT]
 
 ######## defined in cinder.openstack.common.cfg:CommonConfigOpts ########
 
-debug=<%= node["openstack-block-storage"]["debug"] %>
+debug=<%= node["openstack"]["block-storage"]["debug"] %>
 #### (BoolOpt) Print debugging output
 
-verbose=<%= node["openstack-block-storage"]["verbose"] %>
+verbose=<%= node["openstack"]["block-storage"]["verbose"] %>
 #### (BoolOpt) Print more verbose output
 
 # lock_path
-lock_path=<%= node["openstack-block-storage"]["lock_path"] %>
+lock_path=<%= node["openstack"]["block-storage"]["lock_path"] %>
 notification_driver=cinder.openstack.common.notifier.rabbit_notifier
 
 # log_config=<None>
@@ -39,7 +39,7 @@ notification_driver=cinder.openstack.common.notifier.rabbit_notifier
 
 # ================= Syslog Options ============================
 
-<% if node["openstack-block-storage"]["syslog"]["use"] %>
+<% if node["openstack"]["block-storage"]["syslog"]["use"] %>
 log_config = /etc/openstack/logging.conf
 <% end %>
 
@@ -67,7 +67,7 @@ sql_connection=<%= @sql_connection %>
 # bindir=$pybasedir/bin
 #### (StrOpt) Directory where cinder binaries are installed
 
-state_path=<%= node["openstack-block-storage"]["volume"]["state_path"] %>
+state_path=<%= node["openstack"]["block-storage"]["volume"]["state_path"] %>
 #### (StrOpt) Top-level directory for maintaining cinder's state
 
 my_ip=<%= node["ipaddress"] %>
@@ -92,7 +92,7 @@ glance_port=<%= @glance_port %>
 # volume_topic=cinder-volume
 #### (StrOpt) the topic volume nodes listen on
 
-api_rate_limit=<%= node["openstack-block-storage"]["api"]["ratelimit"] %>
+api_rate_limit=<%= node["openstack"]["block-storage"]["api"]["ratelimit"] %>
 #### (BoolOpt) whether to rate limit the api
 
 # osapi_volume_ext_list=
@@ -137,7 +137,7 @@ api_rate_limit=<%= node["openstack-block-storage"]["api"]["ratelimit"] %>
 #### (StrOpt) Name of this node.  This can be an opaque identifier.  It is
 ####          not necessarily a hostname, FQDN, or IP address.
 
-storage_availability_zone=<%= node["openstack-block-storage"]["storage_availability_zone"] %>
+storage_availability_zone=<%= node["openstack"]["block-storage"]["storage_availability_zone"] %>
 #### (StrOpt) availability zone of this node
 
 # memcached_servers=<None>
@@ -185,10 +185,10 @@ auth_strategy=keystone
 
 ######## defined in cinder.quota ########
 
-quota_volumes=<%= node["openstack-block-storage"]["quota_volumes"] %>
+quota_volumes=<%= node["openstack"]["block-storage"]["quota_volumes"] %>
 #### (IntOpt) number of volumes allowed per project
 
-quota_gigabytes=<%= node["openstack-block-storage"]["quota_gigabytes"] %>
+quota_gigabytes=<%= node["openstack"]["block-storage"]["quota_gigabytes"] %>
 #### (IntOpt) number of volume gigabytes allowed per project
 
 # reservation_expire=86400
@@ -200,7 +200,7 @@ quota_gigabytes=<%= node["openstack-block-storage"]["quota_gigabytes"] %>
 # max_age=0
 #### (IntOpt) number of seconds between subsequent usage refreshes
 
-quota_driver=<%= node["openstack-block-storage"]["quota_driver"] %>
+quota_driver=<%= node["openstack"]["block-storage"]["quota_driver"] %>
 #### (StrOpt) default driver to use for quota checks
 
 
@@ -503,7 +503,7 @@ rabbit_virtual_host=<%= @rabbit_virtual_host %>
 
 ######## defined in cinder.scheduler.simple ########
 
-max_gigabytes=<%= node["openstack-block-storage"]["max_gigabytes"] %>
+max_gigabytes=<%= node["openstack"]["block-storage"]["max_gigabytes"] %>
 #### (IntOpt) maximum number of volume gigabytes to allow per host
 
 
@@ -516,7 +516,7 @@ max_gigabytes=<%= node["openstack-block-storage"]["max_gigabytes"] %>
 
 ######## defined in cinder.volume.driver ########
 
-volume_group=<%= node["openstack-block-storage"]["volume"]["volume_group"] %>
+volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
 
 # num_shell_tries=3
@@ -536,14 +536,14 @@ volume_group=<%= node["openstack-block-storage"]["volume"]["volume_group"] %>
 
 # iscsi_port=3260
 #### (IntOpt) The port that the iSCSI daemon is listening on
-<% if node["openstack-block-storage"]["volume"]["volume_driver"] == 'cinder.volume.driver.RBDDriver' %>
-rbd_pool=<%= node["openstack-block-storage"]["rbd_pool"] %>
+<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == 'cinder.volume.driver.RBDDriver' %>
+rbd_pool=<%= node["openstack"]["block-storage"]["rbd_pool"] %>
 #### (StrOpt) the RADOS pool in which rbd volumes are stored
 
-rbd_user=<%= node["openstack-block-storage"]["rbd_user"] %>
+rbd_user=<%= node["openstack"]["block-storage"]["rbd_user"] %>
 #### (StrOpt) the RADOS client name for accessing rbd volumes
 
-rbd_secret_uuid=<%= node["openstack-block-storage"]["rbd_secret_uuid"] %>
+rbd_secret_uuid=<%= node["openstack"]["block-storage"]["rbd_secret_uuid"] %>
 #### (StrOpt) the libvirt uuid of the secret for the rbd_uservolumes
 <% end %>
 # volume_tmp_dir=<None>
@@ -553,7 +553,7 @@ rbd_secret_uuid=<%= node["openstack-block-storage"]["rbd_secret_uuid"] %>
 
 ######## defined in cinder.volume.iscsi ########
 
-iscsi_helper=<%= node["openstack-block-storage"]["volume"]["iscsi_helper"] %>
+iscsi_helper=<%= node["openstack"]["block-storage"]["volume"]["iscsi_helper"] %>
 #### (StrOpt) iscsi target user-land tool to use
 
 # volumes_dir=$state_path/volumes
@@ -562,7 +562,7 @@ iscsi_helper=<%= node["openstack-block-storage"]["volume"]["iscsi_helper"] %>
 
 ######## defined in cinder.volume.manager ########
 
-volume_driver=<%= node["openstack-block-storage"]["volume"]["volume_driver"] %>
+volume_driver=<%= node["openstack"]["block-storage"]["volume"]["volume_driver"] %>
 #### (StrOpt) Driver to use for volume creation
 
 # use_local_volumes=true
@@ -574,23 +574,23 @@ volume_driver=<%= node["openstack-block-storage"]["volume"]["volume_driver"] %>
 
 ######## defined in cinder.volume.netapp ########
 
-<% if node["openstack-block-storage"]["volume"]["volume_driver"] == "cinder.volume.netapp.NetAppISCSIDriver" %>
-netapp_wsdl_url=<%= node["openstack-block-storage"]["netapp"]["protocol"] %>://<%= node["openstack-block-storage"]["netapp"]["dfm_hostname"] %>:<%= node["openstack-block-storage"]["netapp"]["dfm_web_port"] %>/dfm.wsdl
+<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == "cinder.volume.netapp.NetAppISCSIDriver" %>
+netapp_wsdl_url=<%= node["openstack"]["block-storage"]["netapp"]["protocol"] %>://<%= node["openstack"]["block-storage"]["netapp"]["dfm_hostname"] %>:<%= node["openstack"]["block-storage"]["netapp"]["dfm_web_port"] %>/dfm.wsdl
 #### (StrOpt) URL of the WSDL file for the DFM server
 
-netapp_login=<%= node["openstack-block-storage"]["netapp"]["dfm_login"] %>
+netapp_login=<%= node["openstack"]["block-storage"]["netapp"]["dfm_login"] %>
 #### (StrOpt) User name for the DFM server
 
-netapp_password=<%= node["openstack-block-storage"]["netapp"]["dfm_password"] %>
+netapp_password=<%= node["openstack"]["block-storage"]["netapp"]["dfm_password"] %>
 #### (StrOpt) Password for the DFM server
 
-netapp_server_hostname=<%= node["openstack-block-storage"]["netapp"]["dfm_hostname"] %>
+netapp_server_hostname=<%= node["openstack"]["block-storage"]["netapp"]["dfm_hostname"] %>
 #### (StrOpt) Hostname for the DFM server
 
-netapp_server_port=<%= node["openstack-block-storage"]["netapp"]["dfm_port"] %>
+netapp_server_port=<%= node["openstack"]["block-storage"]["netapp"]["dfm_port"] %>
 #### (IntOpt) Port number for the DFM server
 
-netapp_storage_service=<%= node["openstack-block-storage"]["netapp"]["storage_service"] %>
+netapp_storage_service=<%= node["openstack"]["block-storage"]["netapp"]["storage_service"] %>
 #### (StrOpt) Storage service to use for provisioning (when
 ####          volume_type=None)
 

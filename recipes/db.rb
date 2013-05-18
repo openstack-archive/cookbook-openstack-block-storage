@@ -32,6 +32,6 @@ include_recipe "mysql::ruby"
 db_pass = db_password "cinder"
 
 db_create_with_user("volume",
-  node["openstack-block-storage"]["db"]["username"],
+  node["openstack"]["block-storage"]["db"]["username"],
   db_pass
 )

@@ -50,27 +50,27 @@ Defaults to the ISCSI (LVM) Driver.
 Attributes
 ==========
 
-* `openstack-block-storage["db"]["username"]` - cinder username for database
-* `openstack-block-storage["rabbit"]["username"]` - Username for cinder rabbit access
-* `openstack-block-storage["rabbit"]["vhost"]` - The rabbit vhost to use
-* `openstack-block-storage["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
-* `openstack-block-storage["service_user"]` - cinder service user in keystone
-* `openstack-block-storage["service_role"]` - role for the cinder service user in keystone
-* `openstack-block-storage["syslog"]["use"]`
-* `openstack-block-storage["syslog"]["facility"]`
-* `openstack-block-storage["syslog"]["config_facility"]`
-* `openstack-block-storage["platform"]` - hash of platform specific package/service names and options
-* `openstack-block-storage["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
-* `openstack-block-storage["volume"]["volume_driver"]` - Driver to use for volume creation
-* `openstack-block-storage["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
-* `openstack-block-storage["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
-* `openstack-block-storage["rbd_pool"]` - RADOS Block Device pool to use
-* `openstack-block-storage["rbd_user"]` - User for Cephx Authentication
-* `openstack-block-storage["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
-* `openstack-block-storage["policy"]["context_is_admin"]` - Define administrators
-* `openstack-block-storage["policy"]["default"]` - default volume operations rule
-* `openstack-block-storage["policy"]["admin_or_owner"]` - Define an admin or owner
-* `openstack-block-storage["policy"]["admin_api"]` - Define api admin
+* `openstack["block-storage"]["db"]["username"]` - cinder username for database
+* `openstack["block-storage"]["rabbit"]["username"]` - Username for cinder rabbit access
+* `openstack["block-storage"]["rabbit"]["vhost"]` - The rabbit vhost to use
+* `openstack["block-storage"]["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
+* `openstack["block-storage"]["service_user"]` - cinder service user in keystone
+* `openstack["block-storage"]["service_role"]` - role for the cinder service user in keystone
+* `openstack["block-storage"]["syslog"]["use"]`
+* `openstack["block-storage"]["syslog"]["facility"]`
+* `openstack["block-storage"]["syslog"]["config_facility"]`
+* `openstack["block-storage"]["platform"]` - hash of platform specific package/service names and options
+* `openstack["block-storage"]["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
+* `openstack["block-storage"]["volume"]["volume_driver"]` - Driver to use for volume creation
+* `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
+* `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
+* `openstack["block-storage"]["rbd_pool"]` - RADOS Block Device pool to use
+* `openstack["block-storage"]["rbd_user"]` - User for Cephx Authentication
+* `openstack["block-storage"]["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
+* `openstack["block-storage"]["policy"]["context_is_admin"]` - Define administrators
+* `openstack["block-storage"]["policy"]["default"]` - default volume operations rule
+* `openstack["block-storage"]["policy"]["admin_or_owner"]` - Define an admin or owner
+* `openstack["block-storage"]["policy"]["admin_api"]` - Define api admin
 
 Testing
 =====

@@ -6,7 +6,7 @@ describe "openstack-block-storage::volume" do
       cinder_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
-      @node.set["openstack-block-storage"]["syslog"]["use"] = true
+      @node.set["openstack"]["block-storage"]["syslog"]["use"] = true
       @chef_run.converge "openstack-block-storage::volume"
     end
 
