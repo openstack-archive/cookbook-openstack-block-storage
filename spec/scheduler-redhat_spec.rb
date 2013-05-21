@@ -3,7 +3,7 @@ require "spec_helper"
 describe "openstack-block-storage::scheduler" do
   describe "redhat" do
     before do
-      cinder_stubs
+      block_storage_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
       @chef_run.converge "openstack-block-storage::scheduler"
     end

@@ -12,16 +12,21 @@ require 'ostruct'
     :log_level => ::LOG_LEVEL
 }
 
-def cinder_stubs
+def block_storage_stubs
   ::Chef::Recipe.any_instance.stub(:config_by_role).
     with("rabbitmq-server", "queue").and_return(
       {'host' => 'rabbit-host', 'port' => 'rabbit-port'}
     )
   ::Chef::Recipe.any_instance.stub(:config_by_role).
     with("glance-api", "glance").and_return []
+  ::Chef::Recipe.any_instance.stub(:secret).
+    with("secrets", "openstack_identity_bootstrap_token").
+    and_return "bootstrap-token"
   ::Chef::Recipe.any_instance.stub(:db_password).and_return String.new
   ::Chef::Recipe.any_instance.stub(:user_password).and_return String.new
   ::Chef::Recipe.any_instance.stub(:service_password).and_return String.new
+  ::Chef::Recipe.any_instance.stub(:service_password).with("cinder").
+    and_return "cinder-pass"
 end
 
 def expect_runs_openstack_common_logging_recipe
@@ -34,20 +39,20 @@ def expect_creates_cinder_conf service, action=:restart
   describe "cinder.conf" do
     before do
       @file = @chef_run.template "/etc/cinder/cinder.conf"
-    end 
+    end
 
     it "has proper owner" do
       expect(@file).to be_owned_by "cinder", "cinder"
-    end 
+    end
 
     it "has proper modes" do
       expect(sprintf("%o", @file.mode)).to eq "644"
-    end 
+    end
 
     it "notifies nova-api-ec2 restart" do
       expect(@file).to notify service, action
     end
-  end 
+  end
 end
 
 def expect_creates_policy_json service, action=:restart

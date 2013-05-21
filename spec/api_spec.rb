@@ -3,7 +3,7 @@ require "spec_helper"
 describe "openstack-block-storage::api" do
   describe "ubuntu" do
     before do
-      cinder_stubs
+      block_storage_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
       @node = @chef_run.node
       @node.set["openstack"]["block-storage"]["syslog"]["use"] = true

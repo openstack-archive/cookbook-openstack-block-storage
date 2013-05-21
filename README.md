@@ -17,8 +17,8 @@ The following cookbooks are dependencies:
 
 * apt
 * database
-* glance
-* keystone
+* openstack-image
+* openstack-identity
 * mysql
 * openssh
 * openstack-common
