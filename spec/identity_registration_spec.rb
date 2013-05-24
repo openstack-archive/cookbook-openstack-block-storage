@@ -2,28 +2,7 @@ require "spec_helper"
 
 describe "openstack-block-storage::identity_registration" do
   before do
-    @identity_register_mock = Class.new do
-      def auth_uri(uri); end
-      def bootstrap_token(token); end
-      def service_name(name); end
-      def service_type(type); end
-      def service_description(desc); end
-
-      def endpoint_region(region); end
-      def endpoint_adminurl(url); end
-      def endpoint_internalurl(url); end
-      def endpoint_publicurl(url); end
-
-      def tenant_name(name); end
-
-      def user_name(user); end
-      def user_pass(pass); end
-      def user_enabled(enabled); end
-
-      def role_name(name); end
-
-      def action(action); end
-    end.new
+    @identity_register_mock = double "identity_register"
   end
 
   it "registers cinder volume service" do
