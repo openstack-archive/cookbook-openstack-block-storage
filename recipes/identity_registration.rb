@@ -69,8 +69,7 @@ openstack_identity_register "Register Cinder Service User" do
   tenant_name service_tenant_name
   user_name service_user
   user_pass service_pass
-  # String until https://review.openstack.org/#/c/29498/ merged
-  user_enabled "true" # Not required as this is the default
+  user_enabled true # Not required as this is the default
 
   action :create_user
 end

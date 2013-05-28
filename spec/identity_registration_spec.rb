@@ -87,7 +87,7 @@ describe "openstack-block-storage::identity_registration" do
         @identity_register_mock.should_receive(:user_pass).
           with "cinder-pass"
         @identity_register_mock.should_receive(:user_enabled).
-          with "true"
+          with true
         @identity_register_mock.should_receive(:action).
           with :create_user
 
