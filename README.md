@@ -17,11 +17,11 @@ The following cookbooks are dependencies:
 
 * apt
 * database
-* openstack-image
+* openstack-common
 * openstack-identity
+* openstack-image
 * mysql
 * openssh
-* openstack-common
 * rabbitmq
 * selinux (Fedora)
 

@@ -18,10 +18,10 @@ end
 
 depends          "apt"
 depends          "database"
-depends          "openstack-image"
-depends          "openstack-identity", ">= 2012.2.1"
+depends          "openstack-common", "~> 0.2.2"
+depends          "openstack-identity", "~> 7.0.0"
+depends          "openstack-image", "~> 7.0.0"
 depends          "mysql"
 depends          "openssh"
-depends          "openstack-common", ">= 0.1.7"
 depends          "rabbitmq"
 depends          "selinux"
