@@ -33,8 +33,6 @@ rabbit_user = node["openstack"]["block-storage"]["rabbit"]["username"]
 rabbit_pass = user_password "rabbit"
 rabbit_vhost = node["openstack"]["block-storage"]["rabbit"]["vhost"]
 
-glance_api_role = node["openstack"]["block-storage"]["glance_api_chef_role"]
-glance = config_by_role glance_api_role, "glance"
 glance_api_endpoint = endpoint "image-api"
 
 template "/etc/cinder/cinder.conf" do

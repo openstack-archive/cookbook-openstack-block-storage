@@ -51,7 +51,6 @@ service "cinder-api" do
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
 
-
 identity_admin_endpoint = endpoint "identity-admin"
 service_pass = service_password "openstack-block-storage"
 

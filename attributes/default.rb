@@ -47,9 +47,6 @@ default["openstack"]["block-storage"]["rabbit_server_chef_role"] = "rabbitmq-ser
 # This is the name of the Chef role that will install the Keystone Service API
 default["openstack"]["block-storage"]["keystone_service_chef_role"] = "keystone"
 
-# This is the name of the Chef role that will install the Glance API
-default["openstack"]["block-storage"]["glance_api_chef_role"] = "glance-api"
-
 # Keystone PKI signing directory. Only written to the filter:authtoken section
 # of the api-paste.ini when node["openstack"]["auth"]["strategy"] == "pki"
 default["openstack"]["block-storage"]["api"]["auth"]["cache_dir"] = "/var/cache/cinder/api"

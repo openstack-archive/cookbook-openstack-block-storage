@@ -1,24 +1,23 @@
 require "chefspec"
-require 'ostruct'
 
 ::LOG_LEVEL = :fatal
 ::REDHAT_OPTS = {
-    :platform  => "redhat",
-    :log_level => ::LOG_LEVEL
+  :platform  => "redhat",
+  :version   => "6.3",
+  :log_level => ::LOG_LEVEL
 }
 ::UBUNTU_OPTS = {
-    :platform  => "ubuntu",
-    :version   => "12.04",
-    :log_level => ::LOG_LEVEL
+  :platform  => "ubuntu",
+  :version   => "12.04",
+  :log_level => ::LOG_LEVEL
 }
 
 def block_storage_stubs
+  ::Chef::Recipe.any_instance.stub(:config_by_role)
   ::Chef::Recipe.any_instance.stub(:config_by_role).
     with("rabbitmq-server", "queue").and_return(
       {'host' => 'rabbit-host', 'port' => 'rabbit-port'}
     )
-  ::Chef::Recipe.any_instance.stub(:config_by_role).
-    with("glance-api", "glance").and_return []
   ::Chef::Recipe.any_instance.stub(:secret).
     with("secrets", "openstack_identity_bootstrap_token").
     and_return "bootstrap-token"
