@@ -39,8 +39,6 @@ directory ::File.dirname(node["openstack"]["block-storage"]["api"]["auth"]["cach
   owner node["openstack"]["block-storage"]["user"]
   group node["openstack"]["block-storage"]["group"]
   mode 00700
-
-  only_if { node["openstack"]["auth"]["strategy"] == "pki" }
 end
 
 service "cinder-api" do

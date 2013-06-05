@@ -26,9 +26,6 @@ describe "openstack-block-storage::api" do
       expect(@chef_run).to upgrade_package "python-mysqldb"
     end
 
-    ##
-    #TODO: ChefSpec needs to handle guards better.  This
-    #      should only be created when pki is enabled.
     describe "/var/cache/cinder" do
       before do
         @dir = @chef_run.directory "/var/cache/cinder"
@@ -116,18 +113,8 @@ describe "openstack-block-storage::api" do
         expect(sprintf("%o", @file.mode)).to eq "644"
       end
 
-      it "has signing_dir with auth_strategy is pki" do
-        chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-        node = chef_run.node
-        node.set["openstack"]["auth"]["strategy"] = "pki"
-        chef_run.converge "openstack-block-storage::api"
-
-        expect(chef_run).to create_file_with_content @file.name,
-          "signing_dir = /var/cache/cinder/api"
-      end
-
-      it "does not have signing_dir when auth strategy is not pki" do
-        expect(@chef_run).not_to create_file_with_content @file.name,
+      it "has signing_dir" do
+        expect(@chef_run).to create_file_with_content @file.name,
           "signing_dir = /var/cache/cinder/api"
       end
 
