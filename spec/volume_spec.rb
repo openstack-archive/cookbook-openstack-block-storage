@@ -28,6 +28,30 @@ describe "openstack-block-storage::volume" do
       expect(@chef_run).to upgrade_package "tgt"
     end
 
+    it "configures netapp dfm password" do
+      ::Chef::Recipe.any_instance.stub(:service_password).with("netapp").
+        and_return "netapp-pass"
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["volume_driver"] = "cinder.volume.netapp.NetAppISCSIDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      n = chef_run.node["openstack"]["block-storage"]["netapp"]["dfm_password"]
+      expect(n).to eq "netapp-pass"
+    end
+
+    it "configures rbd password" do
+      ::Chef::Recipe.any_instance.stub(:service_password).with("rbd").
+        and_return "rbd-pass"
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["volume_driver"] = "cinder.volume.driver.RBDDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      n = chef_run.node["openstack"]["block-storage"]["rbd_secret_uuid"]
+      expect(n).to eq "rbd-pass"
+    end
+
     it "starts cinder volume" do
       expect(@chef_run).to start_service "cinder-volume"
     end

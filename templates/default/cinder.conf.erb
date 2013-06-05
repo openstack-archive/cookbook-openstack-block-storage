@@ -536,7 +536,7 @@ volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 
 # iscsi_port=3260
 #### (IntOpt) The port that the iSCSI daemon is listening on
-<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == 'cinder.volume.driver.RBDDriver' %>
+<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == "cinder.volume.driver.RBDDriver" %>
 rbd_pool=<%= node["openstack"]["block-storage"]["rbd_pool"] %>
 #### (StrOpt) the RADOS pool in which rbd volumes are stored
 

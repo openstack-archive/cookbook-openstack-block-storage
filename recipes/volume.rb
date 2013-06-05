@@ -43,7 +43,11 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
   end
 end
 
-node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
+if node["openstack"]["block-storage"]["volume"]["volume_driver"] == "cinder.volume.netapp.NetAppISCSIDriver"
+  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
+elsif node["openstack"]["block-storage"]["volume"]["volume_driver"] == 'cinder.volume.driver.RBDDriver'
+  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
+end
 
 service "cinder-volume" do
   service_name platform_options["cinder_volume_service"]
