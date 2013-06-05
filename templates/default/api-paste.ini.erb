@@ -11,10 +11,10 @@ use = call:cinder.api:root_app_factory
 /v2: openstack_volume_api_v2
 
 [composite:openstack_volume_api_v1]
-use = call:cinder.api.auth:pipeline_factory
-noauth = faultwrap sizelimit noauth osapi_volume_app_v1
-keystone = faultwrap sizelimit authtoken keystonecontext osapi_volume_app_v1
-keystone_nolimit = faultwrap sizelimit authtoken keystonecontext osapi_volume_app_v1
+use = call:cinder.api.middleware.auth:pipeline_factory
+noauth = faultwrap sizelimit noauth apiv1
+keystone = faultwrap sizelimit authtoken keystonecontext apiv1
+keystone_nolimit = faultwrap sizelimit authtoken keystonecontext apiv1
 
 [composite:openstack_volume_api_v2]
 use = call:cinder.api.middleware.auth:pipeline_factory
@@ -37,7 +37,7 @@ paste.app_factory = cinder.api.v1.router:APIRouter.factory
 [app:apiv2]
 paste.app_factory = cinder.api.v2.router:APIRouter.factory
 
-pipeline:apiversions]
+[pipeline:apiversions]
 pipeline = faultwrap osvolumeversionapp
 
 [app:osvolumeversionapp]
