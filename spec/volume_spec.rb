@@ -1,4 +1,4 @@
-require "spec_helper"
+require_relative "spec_helper"
 
 describe "openstack-block-storage::volume" do
   describe "ubuntu" do
