@@ -58,6 +58,4 @@ auth_protocol = <%= @identity_admin_endpoint.scheme %>
 admin_tenant_name = <%= node["openstack"]["block-storage"]["service_tenant_name"] %>
 admin_user = <%= node["openstack"]["block-storage"]["service_user"] %>
 admin_password = <%= @service_pass %>
-<% if node["openstack"]["auth"]["strategy"] == "pki" -%>
 signing_dir = <%= node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"] %>
-<% end -%>
