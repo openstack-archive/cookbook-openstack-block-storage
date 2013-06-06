@@ -90,7 +90,6 @@ default["openstack"]["block-storage"]["netapp"]["dfm_password"] = nil
 default["openstack"]["block-storage"]["netapp"]["dfm_port"] = "8088"
 default["openstack"]["block-storage"]["netapp"]["dfm_web_port"] = "8080"
 default["openstack"]["block-storage"]["netapp"]["storage_service"] = "storage_service"
-default["openstack"]["block-storage"]["netapp"]["driver"] = "/usr/share/pyshared/cinder/volume/netapp.py"
 
 # logging attribute
 default["openstack"]["block-storage"]["syslog"]["use"] = false
