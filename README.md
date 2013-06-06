@@ -61,7 +61,7 @@ Attributes
 * `openstack["block-storage"]["syslog"]["config_facility"]`
 * `openstack["block-storage"]["platform"]` - hash of platform specific package/service names and options
 * `openstack["block-storage"]["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
-* `openstack["block-storage"]["volume"]["volume_driver"]` - Driver to use for volume creation
+* `openstack["block-storage"]["volume"]["driver"]` - Driver to use for volume creation
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
 * `openstack["block-storage"]["rbd_pool"]` - RADOS Block Device pool to use

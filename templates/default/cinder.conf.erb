@@ -536,7 +536,7 @@ volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 
 # iscsi_port=3260
 #### (IntOpt) The port that the iSCSI daemon is listening on
-<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == "cinder.volume.driver.RBDDriver" %>
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.RBDDriver" %>
 rbd_pool=<%= node["openstack"]["block-storage"]["rbd_pool"] %>
 #### (StrOpt) the RADOS pool in which rbd volumes are stored
 
@@ -562,7 +562,7 @@ iscsi_helper=<%= node["openstack"]["block-storage"]["volume"]["iscsi_helper"] %>
 
 ######## defined in cinder.volume.manager ########
 
-volume_driver=<%= node["openstack"]["block-storage"]["volume"]["volume_driver"] %>
+volume_driver=<%= node["openstack"]["block-storage"]["volume"]["driver"] %>
 #### (StrOpt) Driver to use for volume creation
 
 # use_local_volumes=true
@@ -574,7 +574,7 @@ volume_driver=<%= node["openstack"]["block-storage"]["volume"]["volume_driver"] 
 
 ######## defined in cinder.volume.netapp ########
 
-<% if node["openstack"]["block-storage"]["volume"]["volume_driver"] == "cinder.volume.netapp.NetAppISCSIDriver" %>
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.netapp.NetAppISCSIDriver" %>
 netapp_wsdl_url=<%= node["openstack"]["block-storage"]["netapp"]["protocol"] %>://<%= node["openstack"]["block-storage"]["netapp"]["dfm_hostname"] %>:<%= node["openstack"]["block-storage"]["netapp"]["dfm_web_port"] %>/dfm.wsdl
 #### (StrOpt) URL of the WSDL file for the DFM server
 

@@ -68,7 +68,7 @@ describe "openstack-block-storage::api" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
         node.set["openstack"]["block-storage"]["volume"] = {
-          "volume_driver" => "cinder.volume.driver.RBDDriver"
+          "driver" => "cinder.volume.drivers.RBDDriver"
         }
         chef_run.converge "openstack-block-storage::api"
 
@@ -82,7 +82,7 @@ describe "openstack-block-storage::api" do
         chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
         node = chef_run.node
         node.set["openstack"]["block-storage"]["volume"] = {
-          "volume_driver" => "cinder.volume.netapp.NetAppISCSIDriver"
+          "driver" => "cinder.volume.drivers.netapp.NetAppISCSIDriver"
         }
         chef_run.converge "openstack-block-storage::api"
 

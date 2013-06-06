@@ -32,7 +32,7 @@ describe "openstack-block-storage::volume" do
       ::Chef::Recipe.any_instance.stub(:service_password).with("netapp").
         and_return "netapp-pass"
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["volume_driver"] = "cinder.volume.netapp.NetAppISCSIDriver"
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.NetAppISCSIDriver"
       end
       chef_run.converge "openstack-block-storage::volume"
 
@@ -44,7 +44,7 @@ describe "openstack-block-storage::volume" do
       ::Chef::Recipe.any_instance.stub(:service_password).with("rbd").
         and_return "rbd-pass"
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["volume_driver"] = "cinder.volume.driver.RBDDriver"
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.RBDDriver"
       end
       chef_run.converge "openstack-block-storage::volume"
 
