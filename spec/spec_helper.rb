@@ -2,13 +2,13 @@ require "chefspec"
 
 ::LOG_LEVEL = :fatal
 ::REDHAT_OPTS = {
-  :platform  => "redhat",
-  :version   => "6.3",
+  :platform => "redhat",
+  :version => "6.3",
   :log_level => ::LOG_LEVEL
 }
 ::UBUNTU_OPTS = {
-  :platform  => "ubuntu",
-  :version   => "12.04",
+  :platform => "ubuntu",
+  :version => "12.04",
   :log_level => ::LOG_LEVEL
 }
 
@@ -48,7 +48,7 @@ def expect_creates_cinder_conf service, action=:restart
       expect(sprintf("%o", @file.mode)).to eq "644"
     end
 
-    it "notifies nova-api-ec2 restart" do
+    it "notifies service restart" do
       expect(@file).to notify service, action
     end
   end
@@ -68,7 +68,7 @@ def expect_creates_policy_json service, action=:restart
       expect(sprintf("%o", @file.mode)).to eq "644"
     end
 
-    it "notifies nova-api-ec2 restart" do
+    it "notifies service restart" do
       expect(@file).to notify service, action
     end
   end

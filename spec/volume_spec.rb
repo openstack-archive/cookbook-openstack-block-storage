@@ -1,12 +1,12 @@
 require_relative "spec_helper"
 
 describe "openstack-block-storage::volume" do
+  before { block_storage_stubs }
   describe "ubuntu" do
     before do
-      block_storage_stubs
-      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      @node = @chef_run.node
-      @node.set["openstack"]["block-storage"]["syslog"]["use"] = true
+      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+      end
       @chef_run.converge "openstack-block-storage::volume"
     end
 
@@ -35,8 +35,8 @@ describe "openstack-block-storage::volume" do
         n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.NetAppISCSIDriver"
       end
       chef_run.converge "openstack-block-storage::volume"
-
       n = chef_run.node["openstack"]["block-storage"]["netapp"]["dfm_password"]
+
       expect(n).to eq "netapp-pass"
     end
 
@@ -47,8 +47,8 @@ describe "openstack-block-storage::volume" do
         n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.RBDDriver"
       end
       chef_run.converge "openstack-block-storage::volume"
-
       n = chef_run.node["openstack"]["block-storage"]["rbd_secret_uuid"]
+
       expect(n).to eq "rbd-pass"
     end
 

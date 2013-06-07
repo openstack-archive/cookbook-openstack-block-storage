@@ -1,9 +1,9 @@
 require_relative "spec_helper"
 
 describe "openstack-block-storage::scheduler" do
+  before { block_storage_stubs }
   describe "redhat" do
     before do
-      block_storage_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
       @chef_run.converge "openstack-block-storage::scheduler"
     end

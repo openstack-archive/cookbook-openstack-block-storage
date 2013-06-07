@@ -1,11 +1,11 @@
 require_relative "spec_helper"
 
 describe "openstack-block-storage::cinder-common" do
+  before { block_storage_stubs }
   before do
-    block_storage_stubs
-    @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-    @node = @chef_run.node
-    @node.set["openstack"]["block-storage"]["syslog"]["use"] = true
+    @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+      n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+    end
     @chef_run.converge "openstack-block-storage::cinder-common"
   end
 
@@ -21,6 +21,5 @@ describe "openstack-block-storage::cinder-common" do
     it "has proper modes" do
      expect(sprintf("%o", @file.mode)).to eq "644"
     end
-
   end
 end

@@ -2,11 +2,11 @@ require_relative "spec_helper"
 
 describe "openstack-block-storage::identity_registration" do
   before do
+    block_storage_stubs
     @identity_register_mock = double "identity_register"
   end
 
   it "registers cinder volume service" do
-    block_storage_stubs
     ::Chef::Recipe.any_instance.stub(:openstack_identity_register)
     ::Chef::Recipe.any_instance.should_receive(:openstack_identity_register).
       with("Register Cinder Volume Service") do |&arg|
@@ -39,7 +39,6 @@ describe "openstack-block-storage::identity_registration" do
   end
 
   it "registers cinder volume endpoint" do
-    block_storage_stubs
     ::Chef::Recipe.any_instance.stub(:openstack_identity_register)
     ::Chef::Recipe.any_instance.should_receive(:openstack_identity_register).
       with("Register Cinder Volume Endpoint") do |&arg|
@@ -72,7 +71,6 @@ describe "openstack-block-storage::identity_registration" do
   end
 
   it "registers service user" do
-    block_storage_stubs
     ::Chef::Recipe.any_instance.stub(:openstack_identity_register)
     ::Chef::Recipe.any_instance.should_receive(:openstack_identity_register).
       with("Register Cinder Service User") do |&arg|
@@ -99,7 +97,6 @@ describe "openstack-block-storage::identity_registration" do
   end
 
   it "grants admin role to service user for service tenant" do
-    block_storage_stubs
     ::Chef::Recipe.any_instance.stub(:openstack_identity_register)
     ::Chef::Recipe.any_instance.should_receive(:openstack_identity_register).
       with("Grant service Role to Cinder Service User for Cinder Service Tenant") do |&arg|

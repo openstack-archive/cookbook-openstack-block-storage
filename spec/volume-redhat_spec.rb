@@ -1,9 +1,9 @@
 require_relative "spec_helper"
 
 describe "openstack-block-storage::volume" do
+  before { block_storage_stubs }
   describe "redhat" do
     before do
-      block_storage_stubs
       @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
       @chef_run.converge "openstack-block-storage::volume"
     end
@@ -32,6 +32,7 @@ describe "openstack-block-storage::volume" do
 
     it "has redhat include" do
       file = "/etc/tgt/targets.conf"
+
       expect(@chef_run).to create_file_with_content file,
         "include /var/lib/cinder/volumes/*"
       expect(@chef_run).not_to create_file_with_content file,

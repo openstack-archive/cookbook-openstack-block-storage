@@ -1,12 +1,12 @@
 require_relative "spec_helper"
 
 describe "openstack-block-storage::api" do
+  before { block_storage_stubs }
   describe "ubuntu" do
     before do
-      block_storage_stubs
-      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-      @node = @chef_run.node
-      @node.set["openstack"]["block-storage"]["syslog"]["use"] = true
+      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+      end
       @chef_run.converge "openstack-block-storage::api"
     end
 
@@ -65,11 +65,11 @@ describe "openstack-block-storage::api" do
       end
 
       it "has rbd driver settings" do
-        chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-        node = chef_run.node
-        node.set["openstack"]["block-storage"]["volume"] = {
-          "driver" => "cinder.volume.drivers.RBDDriver"
-        }
+        chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+          n.set["openstack"]["block-storage"]["volume"] = {
+            "driver" => "cinder.volume.drivers.RBDDriver"
+          }
+        end
         chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).to create_file_with_content @file,
@@ -79,11 +79,11 @@ describe "openstack-block-storage::api" do
       end
 
       it "has netapp driver settings" do
-        chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
-        node = chef_run.node
-        node.set["openstack"]["block-storage"]["volume"] = {
-          "driver" => "cinder.volume.drivers.netapp.NetAppISCSIDriver"
-        }
+        chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+          n.set["openstack"]["block-storage"]["volume"] = {
+            "driver" => "cinder.volume.drivers.netapp.NetAppISCSIDriver"
+          }
+        end
         chef_run.converge "openstack-block-storage::api"
 
         expect(chef_run).to create_file_with_content @file,
@@ -95,6 +95,7 @@ describe "openstack-block-storage::api" do
 
     it "runs db migrations" do
       cmd = "cinder-manage db sync"
+
       expect(@chef_run).to execute_command cmd
     end
 
@@ -118,7 +119,7 @@ describe "openstack-block-storage::api" do
           "signing_dir = /var/cache/cinder/api"
       end
 
-      it "notifies nova-api-ec2 restart" do
+      it "notifies cinder-api restart" do
         expect(@file).to notify "service[cinder-api]", :restart
       end
     end
