@@ -4,7 +4,7 @@ maintainer_email "cookbooks@lists.tfoundry.com"
 license          "Apache 2.0"
 description      "The OpenStack Advanced Volume Management service Cinder."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "7.0.1"
+version          "7.0.0"
 
 recipe           "openstack-block-storage::common", "Defines the common pieces of repeated code from the other recipes"
 recipe           "openstack-block-storage::api", "Installs the cinder-api, sets up the cinder database, and cinder service/user/endpoints in keystone"
