@@ -16,11 +16,9 @@ Cookbooks
 The following cookbooks are dependencies:
 
 * apt
-* database
 * openstack-common
 * openstack-identity
 * openstack-image
-* mysql
 * openssh
 * rabbitmq
 * selinux (Fedora)
@@ -32,10 +30,6 @@ api
 ----
 - Installs the cinder-api, sets up the cinder database,
  and cinder service/user/endpoints in keystone
-
-db
---
-- Creates the Cinder database
 
 scheduler
 ----

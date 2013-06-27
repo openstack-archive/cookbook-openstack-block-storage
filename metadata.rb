@@ -8,7 +8,6 @@ version          "7.0.0"
 
 recipe           "openstack-block-storage::common", "Defines the common pieces of repeated code from the other recipes"
 recipe           "openstack-block-storage::api", "Installs the cinder-api, sets up the cinder database, and cinder service/user/endpoints in keystone"
-recipe           "openstack-block-storage::db", "Creates the Cinder database"
 recipe           "openstack-block-storage::keystone_registration", "Registers cinder service/user/endpoints in keystone"
 recipe           "openstack-block-storage::scheduler", "Installs the cinder-scheduler service"
 recipe           "openstack-block-storage::volume", "Installs the cinder-volume service and sets up the iscsi helper"
@@ -18,11 +17,9 @@ recipe           "openstack-block-storage::volume", "Installs the cinder-volume 
 end
 
 depends          "apt"
-depends          "database"
 depends          "openstack-common", "~> 0.3.0"
 depends          "openstack-identity", "~> 7.0.0"
 depends          "openstack-image", "~> 7.0.0"
-depends          "mysql"
 depends          "openssh"
 depends          "rabbitmq"
 depends          "selinux"
