@@ -63,6 +63,9 @@
     },
     "selinux": {
       "locked_version": "0.5.6"
+    },
+    "iptables": {
+      "locked_version": "0.12.0"
     }
   }
 }

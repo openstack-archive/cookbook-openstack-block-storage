@@ -9,6 +9,20 @@ describe "openstack-block-storage::cinder-common" do
     @chef_run.converge "openstack-block-storage::cinder-common"
   end
 
+  describe "/etc/cinder" do
+    before do
+     @dir = @chef_run.directory "/etc/cinder"
+    end
+
+    it "has proper owner" do
+      expect(@dir).to be_owned_by "cinder", "cinder"
+    end
+
+    it "has proper modes" do
+     expect(sprintf("%o", @dir.mode)).to eq "750"
+    end
+  end
+
   describe "cinder.conf" do
     before do
      @file = @chef_run.template "/etc/cinder/cinder.conf"

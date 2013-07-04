@@ -35,6 +35,13 @@ rabbit_vhost = node["openstack"]["block-storage"]["rabbit"]["vhost"]
 
 glance_api_endpoint = endpoint "image-api"
 
+directory "/etc/cinder" do
+  group  node["openstack"]["block-storage"]["group"]
+  owner  node["openstack"]["block-storage"]["user"]
+  mode 00750
+  action :create
+end
+
 template "/etc/cinder/cinder.conf" do
   source "cinder.conf.erb"
   group  node["openstack"]["block-storage"]["group"]
