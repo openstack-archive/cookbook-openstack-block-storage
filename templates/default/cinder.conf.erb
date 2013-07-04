@@ -371,25 +371,34 @@ db_backend=sqlalchemy
 # kombu_ssl_ca_certs=
 #### (StrOpt) SSL certification authority file (valid only if SSL enabled)
 
-rabbit_host=<%= @rabbit_ipaddress %>
+<% if node["openstack"]["block-storage"]["rabbit"]["ha"] -%>
+rabbit_hosts=<%= @rabbit_hosts %>
+#### (ListOpt) RabbitMQ HA cluster host:port pairs
+
+# rabbit_durable_queues=false
+#### (BoolOpt) use durable queues in RabbitMQ
+
+rabbit_ha_queues=True
+#### (BoolOpt) use H/A queues in RabbitMQ (x-ha-policy: all).You need to
+####           wipe RabbitMQ database when changing this option.
+<% else -%>
+rabbit_host=<%= node["openstack"]["block-storage"]["rabbit"]["host"] %>
 #### (StrOpt) The RabbitMQ broker address where a single node is used
 
-rabbit_port=<%= @rabbit_port %>
+rabbit_port=<%= node["openstack"]["block-storage"]["rabbit"]["port"] %>
 #### (IntOpt) The RabbitMQ broker port where a single node is used
-
-# rabbit_hosts=$rabbit_host:$rabbit_port
-#### (ListOpt) RabbitMQ HA cluster host:port pairs
+<% end -%>
 
 # rabbit_use_ssl=false
 #### (BoolOpt) connect over SSL for RabbitMQ
 
-rabbit_userid=<%= @rabbit_user %>
+rabbit_userid=<%= node["openstack"]["block-storage"]["rabbit"]["username"] %>
 #### (StrOpt) the RabbitMQ userid
 
 rabbit_password=<%= @rabbit_password %>
 #### (StrOpt) the RabbitMQ password
 
-rabbit_virtual_host=<%= @rabbit_virtual_host %>
+rabbit_virtual_host=<%= node["openstack"]["block-storage"]["rabbit"]["vhost"] %>
 #### (StrOpt) the RabbitMQ virtual host
 
 # rabbit_retry_interval=1
@@ -402,13 +411,6 @@ rabbit_virtual_host=<%= @rabbit_virtual_host %>
 # rabbit_max_retries=0
 #### (IntOpt) maximum retries with trying to connect to RabbitMQ (the
 ####          default of 0 implies an infinite retry count)
-
-# rabbit_durable_queues=false
-#### (BoolOpt) use durable queues in RabbitMQ
-
-# rabbit_ha_queues=false
-#### (BoolOpt) use H/A queues in RabbitMQ (x-ha-policy: all).You need to
-####           wipe RabbitMQ database when changing this option.
 
 
 ######## defined in cinder.openstack.common.rpc.impl_qpid ########

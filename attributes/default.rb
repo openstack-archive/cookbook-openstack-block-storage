@@ -42,7 +42,7 @@ default["openstack"]["block-storage"]["region"] = "RegionOne"
 
 # The name of the Chef role that knows about the message queue server
 # that Cinder uses
-default["openstack"]["block-storage"]["rabbit_server_chef_role"] = "rabbitmq-server"
+default["openstack"]["block-storage"]["rabbit_server_chef_role"] = node["openstack"]["mq"]["server_role"]
 
 # This is the name of the Chef role that will install the Keystone Service API
 default["openstack"]["block-storage"]["keystone_service_chef_role"] = "keystone"
@@ -73,8 +73,11 @@ default["openstack"]["block-storage"]["quota_driver"] = "cinder.quota.DbQuotaDri
 # and accessed with openstack-common cookbook library's
 # user_password routine.  You are expected to create
 # the user, pass, vhost in a wrapper rabbitmq cookbook.
-default["openstack"]["block-storage"]["rabbit"]["username"] = "rabbit"
-default["openstack"]["block-storage"]["rabbit"]["vhost"] = "/nova"
+default["openstack"]["block-storage"]["rabbit"]["username"] = node["openstack"]["mq"]["user"]
+default["openstack"]["block-storage"]["rabbit"]["vhost"] = node["openstack"]["mq"]["vhost"]
+default["openstack"]["block-storage"]["rabbit"]["port"] = node["openstack"]["mq"]["port"]
+default["openstack"]["block-storage"]["rabbit"]["host"] = node["openstack"]["mq"]["host"]
+default["openstack"]["block-storage"]["rabbit"]["ha"] = false
 
 default["openstack"]["block-storage"]["db"]["username"] = "cinder"
 

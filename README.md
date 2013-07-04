@@ -19,8 +19,6 @@ The following cookbooks are dependencies:
 * openstack-common
 * openstack-identity
 * openstack-image
-* openssh
-* rabbitmq
 * selinux (Fedora)
 
 Usage
@@ -47,6 +45,9 @@ Attributes
 * `openstack["block-storage"]["db"]["username"]` - cinder username for database
 * `openstack["block-storage"]["rabbit"]["username"]` - Username for cinder rabbit access
 * `openstack["block-storage"]["rabbit"]["vhost"]` - The rabbit vhost to use
+* `openstack["block-storage"]["rabbit"]["port"]` - The rabbit port to use
+* `openstack["block-storage"]["rabbit"]["host"]` - The rabbit host to use (must set when `openstack["block-storage"]["rabbit"]["ha"]` false).
+* `openstack["block-storage"]["rabbit"]["ha"]` - Whether or not to use rabbit ha
 * `openstack["block-storage"]["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `openstack["block-storage"]["service_user"]` - cinder service user in keystone
 * `openstack["block-storage"]["service_role"]` - role for the cinder service user in keystone
