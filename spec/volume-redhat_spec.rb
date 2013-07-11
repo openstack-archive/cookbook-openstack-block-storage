@@ -30,6 +30,16 @@ describe "openstack-block-storage::volume" do
       expect(@chef_run).to set_service_to_start_on_boot "tgtd"
     end
 
+    it "installs nfs packages" do
+      chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      expect(chef_run).to upgrade_package "nfs-utils"
+      expect(chef_run).to upgrade_package "nfs-utils-lib"
+    end
+
     it "has redhat include" do
       file = "/etc/tgt/targets.conf"
 

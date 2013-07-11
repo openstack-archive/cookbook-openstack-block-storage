@@ -43,11 +43,41 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
   end
 end
 
-volume_driver = node["openstack"]["block-storage"]["volume"]["driver"]
-if volume_driver == "cinder.volume.drivers.netapp.NetAppISCSIDriver"
-  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
-elsif volume_driver == 'cinder.volume.drivers.RBDDriver'
-  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
+case node["openstack"]["block-storage"]["volume"]["driver"]
+  when "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
+   node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
+
+  when "cinder.volume.drivers.RBDDriver"
+   node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
+
+  when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+    node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = service_password "netapp-filer"
+
+    directory node["openstack"]["block-storage"]["nfs"]["mount_point_base"] do
+      owner node["openstack"]["block-storage"]["user"]
+      group node["openstack"]["block-storage"]["group"]
+      action :create
+    end
+
+    template node["openstack"]["block-storage"]["nfs"]["shares_config"] do
+      source "shares.conf.erb"
+      mode "0600"
+      owner node["openstack"]["block-storage"]["user"]
+      group node["openstack"]["block-storage"]["group"]
+      variables(
+        "host" => node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"],
+        "export" => node["openstack"]["block-storage"]["netapp"]["export"]
+      )
+      notifies :restart, "service[cinder-volume]"
+    end
+
+    platform_options["cinder_nfs_packages"].each do |pkg|
+      package pkg do
+        options platform_options["package_overrides"]
+
+        action :upgrade
+      end
+    end
 end
 
 service "cinder-volume" do

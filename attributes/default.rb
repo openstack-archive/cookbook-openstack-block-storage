@@ -94,6 +94,15 @@ default["openstack"]["block-storage"]["netapp"]["dfm_port"] = "8088"
 default["openstack"]["block-storage"]["netapp"]["dfm_web_port"] = "8080"
 default["openstack"]["block-storage"]["netapp"]["storage_service"] = "storage_service"
 
+# Netapp direct NFS
+default["openstack"]["block-storage"]["netapp"]["netapp_server_port"] = "80"
+default["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"] = nil
+default["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = nil
+default["openstack"]["block-storage"]["netapp"]["netapp_server_login"] = nil
+default["openstack"]["block-storage"]["netapp"]["export"] = nil
+default["openstack"]["block-storage"]["nfs"]["shares_config"] = "/etc/cinder/shares.conf"
+default["openstack"]["block-storage"]["nfs"]["mount_point_base"] = "/mnt/cinder-volumes"
+
 # logging attribute
 default["openstack"]["block-storage"]["syslog"]["use"] = false
 default["openstack"]["block-storage"]["syslog"]["facility"] = "LOG_LOCAL2"
@@ -129,6 +138,7 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
     "cinder_scheduler_service" => "openstack-cinder-scheduler",
     "cinder_iscsitarget_packages" => ["scsi-target-utils"],
     "cinder_iscsitarget_service" => "tgtd",
+    "cinder_nfs_packages" => ["nfs-utils", "nfs-utils-lib"],
     "package_overrides" => ""
   }
 when "ubuntu"
@@ -141,6 +151,7 @@ when "ubuntu"
     "cinder_scheduler_service" => "cinder-scheduler",
     "cinder_iscsitarget_packages" => ["tgt"],
     "cinder_iscsitarget_service" => "tgt",
+    "cinder_nfs_packages" => ["nfs-common"],
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

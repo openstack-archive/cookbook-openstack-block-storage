@@ -28,11 +28,29 @@ describe "openstack-block-storage::volume" do
       expect(@chef_run).to upgrade_package "tgt"
     end
 
+    it "installs nfs packages" do
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      expect(chef_run).to upgrade_package "nfs-common"
+    end
+
+    it "creates the nfs mount point" do
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      expect(chef_run).to create_directory "/mnt/cinder-volumes"
+    end
+
     it "configures netapp dfm password" do
       ::Chef::Recipe.any_instance.stub(:service_password).with("netapp").
         and_return "netapp-pass"
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.NetAppISCSIDriver"
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
       end
       chef_run.converge "openstack-block-storage::volume"
       n = chef_run.node["openstack"]["block-storage"]["netapp"]["dfm_password"]

@@ -605,36 +605,18 @@ netapp_storage_service=<%= node["openstack"]["block-storage"]["netapp"]["storage
 <% end %>
 
 ######## defined in cinder.volume.netapp_nfs ########
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver" %>
 
-# synchronous_snapshot_create=0
-#### (IntOpt) Does snapshot creation call returns immediately
+nfs_mount_point_base=<%= node["openstack"]["block-storage"]["nfs"]["mount_point_base"] %>
+<% node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"].each do |h| %>
+netapp_server_hostname=<%= h %>
+<% end %>
+netapp_server_port=<%= node["openstack"]["block-storage"]["netapp"]["netapp_server_port"] %>
+netapp_login=<%= node["openstack"]["block-storage"]["netapp"]["netapp_server_login"] %>
+netapp_password=<%= node["openstack"]["block-storage"]["netapp"]["netapp_server_password"] %>
+nfs_share_config=<%= node["openstack"]["block-storage"]["nfs"]["shares_config"] %>
 
-# netapp_wsdl_url=<None>
-#### (StrOpt) URL of the WSDL file for the DFM server
-
-# netapp_login=<None>
-#### (StrOpt) User name for the DFM server
-
-# netapp_password=<None>
-#### (StrOpt) Password for the DFM server
-
-# netapp_server_hostname=<None>
-#### (StrOpt) Hostname for the DFM server
-
-# netapp_server_port=8088
-#### (IntOpt) Port number for the DFM server
-
-# netapp_storage_service=<None>
-#### (StrOpt) Storage service to use for provisioning (when
-####          volume_type=None)
-
-# netapp_storage_service_prefix=<None>
-#### (StrOpt) Prefix of storage service name to use for provisioning
-####          (volume_type name will be appended)
-
-# netapp_vfiler=<None>
-#### (StrOpt) Vfiler to use for provisioning
-
+<% end %>
 
 ######## defined in cinder.volume.nexenta.volume ########
 

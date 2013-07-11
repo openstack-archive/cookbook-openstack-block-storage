@@ -66,6 +66,19 @@ Attributes
 * `openstack["block-storage"]["policy"]["default"]` - default volume operations rule
 * `openstack["block-storage"]["policy"]["admin_or_owner"]` - Define an admin or owner
 * `openstack["block-storage"]["policy"]["admin_api"]` - Define api admin
+* `openstack["block-storage"]["netapp"]["protocol"]` - how are we talking to either dfm or filer, http or https
+* `openstack["block-storage"]["netapp"]["dfm_hostname"]` - Host or IP of your dfm server
+* `openstack["block-storage"]["netapp"]["dfm_login"]` - Username for dfm
+* `openstack["block-storage"]["netapp"]["dfm_password"]` - password for the dfm user
+* `openstack["block-storage"]["netapp"]["dfm_port"]` - default port for dfm
+* `openstack["block-storage"]["netapp"]["dfm_web_port"]` - web gui port for wsdl file download
+* `openstack["block-storage"]["netapp"]["storage_service"]` - name of the service in dfpm
+* `openstack["block-storage"]["netapp"]["netapp_server_port"]` - web admin port of the filer itself
+* `openstack["block-storage"]["netapp"]["netapp_server_hostname"]` - hostname of your filer, needs to be resolvable
+* `openstack["block-storage"]["netapp"]["netapp_server_login"]` - Username for netapp filer
+* `openstack["block-storage"]["netapp"]["netapp_server_password"]` - password for user above
+* `openstack["block-storage"]["nfs"]["shares_config"]` - file containing line by line entries of server:export
+* `openstack["block-storage"]["nfs"]["mount_point_base"]` - directory to mount NFS exported shares
 
 Testing
 =====
