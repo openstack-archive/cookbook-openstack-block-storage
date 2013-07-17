@@ -23,7 +23,20 @@ describe "openstack-block-storage::api" do
       expect(@chef_run).to upgrade_package "cinder-common"
       expect(@chef_run).to upgrade_package "cinder-api"
       expect(@chef_run).to upgrade_package "python-cinderclient"
+    end
+
+    it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "python-mysqldb"
+    end
+
+    it "installs postgresql python packages if explicitly told" do
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+      node = chef_run.node
+      node.set["openstack"]["db"]["volume"]["db_type"] = "postgresql"
+      chef_run.converge "openstack-block-storage::api"
+
+      expect(chef_run).to upgrade_package "python-psycopg2"
+      expect(chef_run).not_to upgrade_package "python-mysqldb"
     end
 
     describe "/var/cache/cinder" do

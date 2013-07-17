@@ -11,7 +11,20 @@ describe "openstack-block-storage::api" do
     it "installs cinder api packages" do
       expect(@chef_run).to upgrade_package "openstack-cinder"
       expect(@chef_run).to upgrade_package "python-cinderclient"
+    end
+
+    it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "MySQL-python"
+    end
+
+    it "installs postgresql python packages if explicitly told" do
+      chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
+      node = chef_run.node
+      node.set["openstack"]["db"]["volume"]["db_type"] = "postgresql"
+      chef_run.converge "openstack-block-storage::api"
+
+      expect(chef_run).to upgrade_package "python-psycopg2"
+      expect(chef_run).not_to upgrade_package "MySQL-python"
     end
 
     it "starts cinder api on boot" do
