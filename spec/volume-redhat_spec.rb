@@ -48,9 +48,5 @@ describe "openstack-block-storage::volume" do
       expect(@chef_run).not_to create_file_with_content file,
         "include /etc/tgt/conf.d/*.conf"
     end
-
-    it "has different tgt" do
-      expect(@chef_run).to create_file_with_content "/etc/tgt/targets.conf", "/var/lib/cinder/volumes"
-    end
   end
 end
