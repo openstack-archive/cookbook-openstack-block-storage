@@ -57,7 +57,7 @@ describe "openstack-block-storage::api" do
       expect(@chef_run).to set_service_to_start_on_boot "cinder-api"
     end
 
-    expect_creates_cinder_conf "service[cinder-api]"
+    expect_creates_cinder_conf "service[cinder-api]", "cinder", "cinder"
 
     describe "cinder.conf" do
       before do
@@ -112,7 +112,7 @@ describe "openstack-block-storage::api" do
       expect(@chef_run).to execute_command cmd
     end
 
-    expect_creates_policy_json "service[cinder-api]"
+    expect_creates_policy_json "service[cinder-api]", "cinder", "cinder"
 
     describe "api-paste.ini" do
       before do

@@ -51,11 +51,6 @@ default["openstack"]["block-storage"]["keystone_service_chef_role"] = "keystone"
 # of the api-paste.ini when node["openstack"]["auth"]["strategy"] == "pki"
 default["openstack"]["block-storage"]["api"]["auth"]["cache_dir"] = "/var/cache/cinder/api"
 
-# operating system group name
-default["openstack"]["block-storage"]["group"] = "cinder"
-# operating system user that services will run under
-default["openstack"]["block-storage"]["user"] = "cinder"
-
 # Maximum allocatable gigabytes
 # Should equal total backend storage, default is 10TB
 default["openstack"]["block-storage"]["max_gigabytes"] = "10000"
@@ -129,6 +124,10 @@ default["openstack"]["block-storage"]["policy"]["admin_api"] = '["is_admin:True"
 
 case platform
 when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
+  # operating system user and group names
+  default["openstack"]["block-storage"]["user"] = "cinder"
+  default["openstack"]["block-storage"]["group"] = "cinder"
+
   default["openstack"]["block-storage"]["platform"] = {
     "mysql_python_packages" => ["MySQL-python"],
     "postgresql_python_packages" => ["python-psycopg2"],
@@ -143,7 +142,27 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
     "cinder_nfs_packages" => ["nfs-utils", "nfs-utils-lib"],
     "package_overrides" => ""
   }
+when "suse"
+  # operating system user and group names
+  default["openstack"]["block-storage"]["user"] = "openstack-cinder"
+  default["openstack"]["block-storage"]["group"] = "openstack-cinder"
+  default["openstack"]["block-storage"]["platform"] = {
+    "mysql_python_packages" => ["python-mysql"],
+    "postgresql_python_packages" => ["python-psycopg2"],
+    "cinder_api_packages" => ["openstack-cinder-api"],
+    "cinder_api_service" => "openstack-cinder-api",
+    "cinder_scheduler_packages" => ["openstack-cinder-scheduler"],
+    "cinder_scheduler_service" => "openstack-cinder-scheduler",
+    "cinder_volume_packages" => ["openstack-cinder"],
+    "cinder_volume_service" => "openstack-cinder-volume",
+    "cinder_iscsitarget_packages" => ["tgt"],
+    "cinder_iscsitarget_service" => "tgtd",
+    "cinder_nfs_packages" => ["nfs-utils"]
+  }
 when "ubuntu"
+  # operating system user and group names
+  default["openstack"]["block-storage"]["user"] = "cinder"
+  default["openstack"]["block-storage"]["group"] = "cinder"
   default["openstack"]["block-storage"]["platform"] = {
     "mysql_python_packages" => ["python-mysqldb"],
     "postgresql_python_packages" => ["python-psycopg2"],

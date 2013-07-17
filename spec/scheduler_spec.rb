@@ -45,6 +45,6 @@ describe "openstack-block-storage::scheduler" do
       expect(@chef_run).to set_service_to_start_on_boot "cinder-scheduler"
     end
 
-    expect_creates_cinder_conf "service[cinder-scheduler]"
+    expect_creates_cinder_conf "service[cinder-scheduler]", "cinder", "cinder"
   end
 end
