@@ -5,6 +5,7 @@
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
 # Copyright 2013, Opscode, Inc.
+# Copyright 2013, SUSE Linux Gmbh.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +32,13 @@ platform_options["cinder_volume_packages"].each do |pkg|
   package pkg do
     options platform_options["package_overrides"]
 
+    action :upgrade
+  end
+end
+
+db_type = node['openstack']['db']['volume']['db_type']
+platform_options["#{db_type}_python_packages"].each do |pkg|
+  package pkg do
     action :upgrade
   end
 end
