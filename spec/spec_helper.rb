@@ -1,6 +1,11 @@
 require "chefspec"
 
 ::LOG_LEVEL = :fatal
+::OPENSUSE_OPTS = {
+  :platform  => "opensuse",
+  :version   => "12.3",
+  :log_level => ::LOG_LEVEL
+}
 ::REDHAT_OPTS = {
   :platform => "redhat",
   :version => "6.3",
@@ -34,14 +39,14 @@ def expect_runs_openstack_common_logging_recipe
   end
 end
 
-def expect_creates_cinder_conf service, action=:restart
+def expect_creates_cinder_conf service, user, group, action=:restart
   describe "cinder.conf" do
     before do
       @file = @chef_run.template "/etc/cinder/cinder.conf"
     end
 
     it "has proper owner" do
-      expect(@file).to be_owned_by "cinder", "cinder"
+      expect(@file).to be_owned_by user, group
     end
 
     it "has proper modes" do
@@ -54,14 +59,14 @@ def expect_creates_cinder_conf service, action=:restart
   end
 end
 
-def expect_creates_policy_json service, action=:restart
+def expect_creates_policy_json service, user, group, action=:restart
   describe "policy.json" do
     before do
       @file = @chef_run.template "/etc/cinder/policy.json"
     end
 
     it "has proper owner" do
-      expect(@file).to be_owned_by "cinder", "cinder"
+      expect(@file).to be_owned_by user, group
     end
 
     it "has proper modes" do

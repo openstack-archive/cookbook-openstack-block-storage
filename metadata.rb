@@ -12,7 +12,7 @@ recipe           "openstack-block-storage::keystone_registration", "Registers ci
 recipe           "openstack-block-storage::scheduler", "Installs the cinder-scheduler service"
 recipe           "openstack-block-storage::volume", "Installs the cinder-volume service and sets up the iscsi helper"
 
-%w{ ubuntu fedora redhat centos }.each do |os|
+%w{ ubuntu fedora redhat centos suse }.each do |os|
   supports os
 end
 

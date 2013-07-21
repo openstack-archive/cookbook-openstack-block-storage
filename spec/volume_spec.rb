@@ -91,7 +91,7 @@ describe "openstack-block-storage::volume" do
       expect(@chef_run).to set_service_to_start_on_boot "cinder-volume"
     end
 
-    expect_creates_cinder_conf "service[cinder-volume]"
+    expect_creates_cinder_conf "service[cinder-volume]", "cinder", "cinder"
 
     it "starts iscsi target on boot" do
       expect(@chef_run).to set_service_to_start_on_boot "tgt"
