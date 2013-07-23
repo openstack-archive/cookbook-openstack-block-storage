@@ -9,7 +9,7 @@ describe "openstack-block-storage::volume" do
     end
 
     it "installs cinder volume packages" do
-      expect(@chef_run).to upgrade_package "openstack-cinder"
+      expect(@chef_run).to upgrade_package "openstack-cinder-volume"
     end
 
     it "installs mysql python packages by default" do

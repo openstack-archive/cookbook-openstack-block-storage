@@ -153,7 +153,7 @@ when "suse"
     "cinder_api_service" => "openstack-cinder-api",
     "cinder_scheduler_packages" => ["openstack-cinder-scheduler"],
     "cinder_scheduler_service" => "openstack-cinder-scheduler",
-    "cinder_volume_packages" => ["openstack-cinder"],
+    "cinder_volume_packages" => ["openstack-cinder-volume"],
     "cinder_volume_service" => "openstack-cinder-volume",
     "cinder_iscsitarget_packages" => ["tgt"],
     "cinder_iscsitarget_service" => "tgtd",
