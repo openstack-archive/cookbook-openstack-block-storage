@@ -29,7 +29,8 @@ def block_storage_stubs
     with("guest").
     and_return "rabbit-pass"
   ::Chef::Recipe.any_instance.stub(:service_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:service_password).with("cinder").
+  ::Chef::Recipe.any_instance.stub(:service_password).
+    with("openstack-block-storage").
     and_return "cinder-pass"
 end
 
