@@ -32,6 +32,13 @@ platform_options["cinder_scheduler_packages"].each do |pkg|
   end
 end
 
+# FIXME this can be removed if/when 1:2013.1-0ubuntu2 makes it into precise
+if platform?("ubuntu") && (node["platform_version"].to_f == 12.04)
+  python_pip "stevedore" do
+    action :upgrade
+  end
+end
+
 db_type = node['openstack']['db']['volume']['db_type']
 platform_options["#{db_type}_python_packages"].each do |pkg|
   package pkg do

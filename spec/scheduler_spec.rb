@@ -23,6 +23,18 @@ describe "openstack-block-storage::scheduler" do
       expect(@chef_run).to upgrade_package "cinder-scheduler"
     end
 
+    it "upgrades stevedore" do
+      expect(@chef_run).to upgrade_python_pip "stevedore"
+    end
+
+    it "does not upgrade stevedore" do
+      opts = ::UBUNTU_OPTS.merge(:version => "10.04")
+      chef_run = ::ChefSpec::ChefRunner.new opts
+      chef_run.converge "openstack-block-storage::scheduler"
+
+      expect(chef_run).not_to upgrade_python_pip "stevedore"
+    end
+
     it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "python-mysqldb"
     end

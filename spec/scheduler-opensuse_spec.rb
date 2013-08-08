@@ -12,6 +12,13 @@ describe "openstack-block-storage::scheduler" do
       expect(@chef_run).to upgrade_package "openstack-cinder-scheduler"
     end
 
+    it "does not upgrade stevedore" do
+      chef_run = ::ChefSpec::ChefRunner.new ::OPENSUSE_OPTS
+      chef_run.converge "openstack-block-storage::scheduler"
+
+      expect(chef_run).not_to upgrade_python_pip "stevedore"
+    end
+
     it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "python-mysql"
     end
