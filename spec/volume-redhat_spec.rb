@@ -8,10 +8,6 @@ describe "openstack-block-storage::volume" do
       @chef_run.converge "openstack-block-storage::volume"
     end
 
-    it "installs cinder volume packages" do
-      expect(@chef_run).to upgrade_package "openstack-cinder"
-    end
-
     it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "MySQL-python"
     end

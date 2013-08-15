@@ -131,11 +131,12 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
   default["openstack"]["block-storage"]["platform"] = {
     "mysql_python_packages" => ["MySQL-python"],
     "postgresql_python_packages" => ["python-psycopg2"],
-    "cinder_api_packages" => ["openstack-cinder", "python-cinderclient"],
+    "cinder_common_packages" => ["openstack-cinder"],
+    "cinder_api_packages" => ["python-cinderclient"],
     "cinder_api_service" => "openstack-cinder-api",
-    "cinder_volume_packages" => ["openstack-cinder"],
+    "cinder_volume_packages" => [],
     "cinder_volume_service" => "openstack-cinder-volume",
-    "cinder_scheduler_packages" => ["openstack-cinder"],
+    "cinder_scheduler_packages" => [],
     "cinder_scheduler_service" => "openstack-cinder-scheduler",
     "cinder_iscsitarget_packages" => ["scsi-target-utils"],
     "cinder_iscsitarget_service" => "tgtd",
@@ -149,6 +150,7 @@ when "suse"
   default["openstack"]["block-storage"]["platform"] = {
     "mysql_python_packages" => ["python-mysql"],
     "postgresql_python_packages" => ["python-psycopg2"],
+    "cinder_common_packages" => ["openstack-cinder"],
     "cinder_api_packages" => ["openstack-cinder-api"],
     "cinder_api_service" => "openstack-cinder-api",
     "cinder_scheduler_packages" => ["openstack-cinder-scheduler"],
@@ -166,7 +168,8 @@ when "ubuntu"
   default["openstack"]["block-storage"]["platform"] = {
     "mysql_python_packages" => ["python-mysqldb"],
     "postgresql_python_packages" => ["python-psycopg2"],
-    "cinder_api_packages" => ["cinder-common", "cinder-api", "python-cinderclient"],
+    "cinder_common_packages" => ["cinder-common"],
+    "cinder_api_packages" => ["cinder-api", "python-cinderclient"],
     "cinder_api_service" => "cinder-api",
     "cinder_volume_packages" => ["cinder-volume"],
     "cinder_volume_service" => "cinder-volume",

@@ -8,10 +8,6 @@ describe "openstack-block-storage::scheduler" do
       @chef_run.converge "openstack-block-storage::scheduler"
     end
 
-    it "installs cinder api packages" do
-      expect(@chef_run).to upgrade_package "openstack-cinder"
-    end
-
     it "installs mysql python packages by default" do
       expect(@chef_run).to upgrade_package "MySQL-python"
     end

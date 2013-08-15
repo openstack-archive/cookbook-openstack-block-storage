@@ -12,6 +12,10 @@ describe "openstack-block-storage::cinder-common" do
     @chef_run.converge "openstack-block-storage::cinder-common"
   end
 
+  it "installs the cinder-common package" do
+    expect(@chef_run).to upgrade_package "cinder-common"
+  end
+
   describe "/etc/cinder" do
     before do
      @dir = @chef_run.directory "/etc/cinder"

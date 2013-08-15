@@ -20,7 +20,6 @@ describe "openstack-block-storage::api" do
     end
 
     it "installs cinder api packages" do
-      expect(@chef_run).to upgrade_package "cinder-common"
       expect(@chef_run).to upgrade_package "cinder-api"
       expect(@chef_run).to upgrade_package "python-cinderclient"
     end
