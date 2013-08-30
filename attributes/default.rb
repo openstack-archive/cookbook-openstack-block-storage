@@ -97,6 +97,8 @@ default["openstack"]["block-storage"]["netapp"]["netapp_server_login"] = nil
 default["openstack"]["block-storage"]["netapp"]["export"] = nil
 default["openstack"]["block-storage"]["nfs"]["shares_config"] = "/etc/cinder/shares.conf"
 default["openstack"]["block-storage"]["nfs"]["mount_point_base"] = "/mnt/cinder-volumes"
+default["openstack"]["block-storage"]["nfs"]["nfs_disk_util"] = "df"
+default["openstack"]["block-storage"]["nfs"]["nfs_sparsed_volumes"] = "true"
 
 # logging attribute
 default["openstack"]["block-storage"]["syslog"]["use"] = false
