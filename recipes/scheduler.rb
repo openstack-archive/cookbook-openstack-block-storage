@@ -34,6 +34,7 @@ end
 
 # FIXME this can be removed if/when 1:2013.1-0ubuntu2 makes it into precise
 if platform?("ubuntu") && (node["platform_version"].to_f == 12.04)
+  include_recipe "python"
   python_pip "stevedore" do
     action :upgrade
   end
