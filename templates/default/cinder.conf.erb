@@ -170,6 +170,9 @@ auth_strategy=keystone
 #### (StrOpt) The strategy to use for auth. Supports noauth, keystone, and
 ####          deprecated.
 
+<% if node["openstack"]["block-storage"]["rabbit"]["control_exchange"] %>
+control_exchange=<%=node["openstack"]["block-storage"]["rabbit"]["control_exchange"]%>
+<% end %>
 # control_exchange=cinder
 #### (StrOpt) AMQP exchange to connect to if using RabbitMQ or Qpid
 

@@ -54,3 +54,11 @@ service "cinder-scheduler" do
   action [ :enable, :start ]
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
+
+if node["openstack"]["metering"]
+  cron "cinder-volume-usage-audit" do
+    command "cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+    action :create
+    user node["openstack"]["block-storage"]["user"]
+  end
+end
