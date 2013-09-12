@@ -56,9 +56,19 @@ service "cinder-scheduler" do
 end
 
 if node["openstack"]["metering"]
+  scheduler_role = node["openstack"]["block-storage"]["scheduler_role"]
+  results = search(:node, "roles:#{scheduler_role}")
+  cron_node = results.collect{|a| a.name}.sort[0]
+  Chef::Log.debug("Volume audit cron node: #{cron_node}")
+
   cron "cinder-volume-usage-audit" do
-    command "cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
-    action :create
+    day node["openstack"]["block-storage"]["cron"]["day"] || '*'
+    hour node["openstack"]["block-storage"]["cron"]["hour"] || '*'
+    minute node["openstack"]["block-storage"]["cron"]["minute"]
+    month node["openstack"]["block-storage"]["cron"]["month"] || '*'
+    weekday node["openstack"]["block-storage"]["cron"]["weekday"] || '*'
+    command "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+    action cron_node == node.name ? :create : :delete
     user node["openstack"]["block-storage"]["user"]
   end
 end

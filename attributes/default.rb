@@ -39,6 +39,7 @@ default["openstack"]["block-storage"]["debug"] = "False"
 default["openstack"]["block-storage"]["lock_path"] = "/var/lock/cinder"
 # Availability zone/region for the Openstack"]["Block-Storage service
 default["openstack"]["block-storage"]["region"] = "RegionOne"
+default["openstack"]["block-storage"]["scheduler_role"] = "os-block-storage-scheduler"
 
 # The name of the Chef role that knows about the message queue server
 # that Cinder uses
