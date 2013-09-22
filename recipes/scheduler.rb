@@ -55,6 +55,9 @@ service "cinder-scheduler" do
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
 
+audit_bin_dir = platform?("ubuntu") ? "/usr/bin" : "/usr/local/bin"
+audit_log = node["openstack"]["block-storage"]["cron"]["audit_logfile"]
+
 if node["openstack"]["metering"]
   scheduler_role = node["openstack"]["block-storage"]["scheduler_role"]
   results = search(:node, "roles:#{scheduler_role}")
@@ -67,7 +70,7 @@ if node["openstack"]["metering"]
     minute node["openstack"]["block-storage"]["cron"]["minute"]
     month node["openstack"]["block-storage"]["cron"]["month"] || '*'
     weekday node["openstack"]["block-storage"]["cron"]["weekday"] || '*'
-    command "/usr/local/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log 2>&1"
+    command "#{audit_bin_dir}/cinder-volume-usage-audit > #{audit_log} 2>&1"
     action cron_node == node.name ? :create : :delete
     user node["openstack"]["block-storage"]["user"]
   end

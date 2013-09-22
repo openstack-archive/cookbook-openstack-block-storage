@@ -74,38 +74,34 @@ describe "openstack-block-storage::scheduler" do
       end
       chef_run.converge "openstack-block-storage::scheduler"
       cron = chef_run.cron "cinder-volume-usage-audit"
-      expect(cron.command).to match(/\/usr\/local\/bin\/cinder-volume-usage-audit/)
-      expect(cron.command).to match(/\/var\/log\/cinder\/audit.log/)
-      expect(cron.minute).to eq "00"
-      expect(cron.hour).to eq "*"
-      expect(cron.day).to eq "*"
-      expect(cron.weekday).to eq "*"
-      expect(cron.month).to eq "*"
-      expect(cron.user).to eq "cinder"
+      bin_str="/usr/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log"
+      expect(cron.command).to match(/#{bin_str}/)
+      crontests = [ [:minute, '00'], [:hour, '*'], [:day, '*'],
+                    [:weekday, '*'], [:month, '*'], [:user, 'cinder'] ]
+      crontests.each do |k,v|
+        expect(cron.send(k)).to eq v
+      end
       expect(cron.action).to include :create
     end
 
     it "creates cron metering custom" do
+      crontests = [ [:minute, '50'], [:hour, '23'], [:day, '6'],
+                    [:weekday, '5'], [:month, '11'], [:user, 'foobar'] ]
       ::Chef::Recipe.any_instance.stub(:search).
         with(:node, "roles:os-block-storage-scheduler").
         and_return([OpenStruct.new(:name => "foobar")])
       chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["metering"] = true
-        n.set["openstack"]["block-storage"]["cron"]["minute"] = 50
-        n.set["openstack"]["block-storage"]["cron"]["hour"] = 23
-        n.set["openstack"]["block-storage"]["cron"]["day"] = 6
-        n.set["openstack"]["block-storage"]["cron"]["weekday"] = 5
-        n.set["openstack"]["block-storage"]["cron"]["month"] = 11
+        crontests.each do |k,v|
+          n.set["openstack"]["block-storage"]["cron"][k.to_s] = v
+        end
         n.set["openstack"]["block-storage"]["user"] = "foobar"
       end
       chef_run.converge "openstack-block-storage::scheduler"
       cron = chef_run.cron "cinder-volume-usage-audit"
-      expect(cron.minute).to eq "50"
-      expect(cron.hour).to eq "23"
-      expect(cron.day).to eq "6"
-      expect(cron.weekday).to eq "5"
-      expect(cron.month).to eq "11"
-      expect(cron.user).to eq "foobar"
+      crontests.each do |k,v|
+        expect(cron.send(k)).to eq v
+      end
       expect(cron.action).to include :delete
     end
 

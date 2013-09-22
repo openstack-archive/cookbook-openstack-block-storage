@@ -108,6 +108,7 @@ default["openstack"]["block-storage"]["syslog"]["config_facility"] = "local2"
 
 default["openstack"]["block-storage"]["api"]["ratelimit"] = "True"
 default["openstack"]["block-storage"]["cron"]["minute"] = '00'
+default["openstack"]["block-storage"]["cron"]["audit_logfile"] = "/var/log/cinder/audit.log"
 
 default["openstack"]["block-storage"]["volume"]["state_path"] = "/var/lib/cinder"
 default["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.driver.ISCSIDriver"
