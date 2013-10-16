@@ -7,7 +7,7 @@ describe "openstack-block-storage::cinder-common" do
       n.set["openstack"]["mq"] = {
         "host" => "127.0.0.1"
       }
-      n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+
     end
     @chef_run.converge "openstack-block-storage::cinder-common"
   end
@@ -56,6 +56,21 @@ describe "openstack-block-storage::cinder-common" do
     it "does not have rabbit_ha_queues" do
       expect(@chef_run).not_to create_file_with_content @file.name,
         "rabbit_ha_queues="
+    end
+
+    it "has log_file" do
+      expect(@chef_run).to create_file_with_content @file.name,
+        "log_file = /var/log/cinder/cinder.log"
+    end
+
+    it "has log_config when syslog is true" do
+      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+      end
+      chef_run.converge "openstack-block-storage::cinder-common"
+
+      expect(chef_run).to create_file_with_content @file.name,
+        "log_config = /etc/openstack/logging.conf"
     end
 
     it "has rabbit_port" do

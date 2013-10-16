@@ -2,6 +2,11 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+v7.0.4
+------
+### Improvement
+- Use a default log-file (/var/log/cinder/cinder.log) if syslog is disabled
+
 v7.0.3
 ------
 ### Bug
