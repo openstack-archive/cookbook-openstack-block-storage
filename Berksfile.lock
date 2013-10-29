@@ -2,8 +2,8 @@
   "sha": "ba71763fac936d414bd4a63f004357f86f6e1bfb",
   "sources": {
     "openstack-block-storage": {
-      "locked_version": "7.0.4",
-      "constraint": "= 7.0.4",
+      "locked_version": "7.0.5",
+      "constraint": "= 7.0.5",
       "path": "."
     },
     "openstack-image": {
