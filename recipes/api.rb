@@ -57,6 +57,7 @@ service "cinder-api" do
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
 
+identity_endpoint = endpoint "identity-api"
 identity_admin_endpoint = endpoint "identity-admin"
 service_pass = service_password "openstack-block-storage"
 
@@ -68,6 +69,7 @@ template "/etc/cinder/api-paste.ini" do
   owner  node["openstack"]["block-storage"]["user"]
   mode   00644
   variables(
+    :identity_endpoint => identity_endpoint,
     :identity_admin_endpoint => identity_admin_endpoint,
     :service_pass => service_pass
   )

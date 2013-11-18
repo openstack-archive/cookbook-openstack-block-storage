@@ -2,6 +2,11 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+v7.0.6
+------
+### Bug
+- set auth_uri for authtoken in api-paste.ini (bug #1207504)
+
 v7.0.4
 ------
 ### Improvement

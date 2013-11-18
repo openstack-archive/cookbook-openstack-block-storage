@@ -134,6 +134,26 @@ describe "openstack-block-storage::api" do
       it "notifies cinder-api restart" do
         expect(@file).to notify "service[cinder-api]", :restart
       end
+
+      it "has auth_uri" do
+        expect(@chef_run).to create_file_with_content @file.name,
+          "auth_uri = https://127.0.0.1:5000/v2.0"
+      end
+
+      it "has auth_host" do
+        expect(@chef_run).to create_file_with_content @file.name,
+          "auth_host = 127.0.0.1"
+      end
+
+      it "has auth_port" do
+        expect(@chef_run).to create_file_with_content @file.name,
+          "auth_port = 35357"
+      end
+
+      it "has auth_protocol" do
+        expect(@chef_run).to create_file_with_content @file.name,
+          "auth_protocol = http"
+      end
     end
   end
 end
