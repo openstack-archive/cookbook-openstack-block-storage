@@ -79,6 +79,9 @@ Attributes
 * `openstack["block-storage"]["netapp"]["netapp_server_password"]` - password for user above
 * `openstack["block-storage"]["nfs"]["shares_config"]` - file containing line by line entries of server:export
 * `openstack["block-storage"]["nfs"]["mount_point_base"]` - directory to mount NFS exported shares
+* `openstack["block-storage"]["rpc_thread_pool_size"]` - size of RPC thread pool
+* `openstack["block-storage"]["rpc_conn_pool_size"]` - size of RPC connection pool
+* `openstack["block-storage"]["rpc_response_timeout"]` - seconds to wait for a response from call or multicall
 
 Testing
 =====
@@ -111,11 +114,13 @@ License and Author
 | **Author**           |  Abel Lopez (<al592b@att.com>)                     |
 | **Author**           |  Sean Gallagher (<sean.gallagher@att.com>)         |
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
+| **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, SUSE Linux GmbH               |
+| **Copyright**        |  Copyright (c) 2013, IBM, Corp                     |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

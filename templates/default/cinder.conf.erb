@@ -341,13 +341,16 @@ db_backend=sqlalchemy
 # rpc_backend=cinder.openstack.common.rpc.impl_kombu
 #### (StrOpt) The messaging module to use, defaults to kombu.
 
-# rpc_thread_pool_size=64
+rpc_thread_pool_size=<%= node["openstack"]["block-storage"]["rpc_thread_pool_size"] %>
+
 #### (IntOpt) Size of RPC thread pool
 
-# rpc_conn_pool_size=30
+rpc_conn_pool_size=<%= node["openstack"]["block-storage"]["rpc_conn_pool_size"] %>
+
 #### (IntOpt) Size of RPC connection pool
 
-# rpc_response_timeout=60
+rpc_response_timeout=<%= node["openstack"]["block-storage"]["rpc_response_timeout"] %>
+
 #### (IntOpt) Seconds to wait for a response from call or multicall
 
 # rpc_cast_timeout=30

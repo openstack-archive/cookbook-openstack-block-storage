@@ -6,6 +6,7 @@
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
 # Copyright 2013, Opscode, Inc.
+# Copyright (c) 2013, IBM, Corp
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,6 +65,11 @@ default["openstack"]["block-storage"]["storage_availability_zone"] = "nova"
 default["openstack"]["block-storage"]["quota_volumes"] = "10"
 default["openstack"]["block-storage"]["quota_gigabytes"] = "1000"
 default["openstack"]["block-storage"]["quota_driver"] = "cinder.quota.DbQuotaDriver"
+
+# Common rpc definitions
+default["openstack"]["block-storage"]["rpc_thread_pool_size"] = 64
+default["openstack"]["block-storage"]["rpc_conn_pool_size"] = 30
+default["openstack"]["block-storage"]["rpc_response_timeout"] = 60
 
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
