@@ -1,4 +1,5 @@
 require "chefspec"
+require "chef/application"
 
 ::LOG_LEVEL = :fatal
 ::OPENSUSE_OPTS = {
@@ -32,6 +33,7 @@ def block_storage_stubs
   ::Chef::Recipe.any_instance.stub(:service_password).
     with("openstack-block-storage").
     and_return "cinder-pass"
+  ::Chef::Application.stub(:fatal!)
 end
 
 def expect_runs_openstack_common_logging_recipe

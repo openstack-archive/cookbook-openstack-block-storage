@@ -34,10 +34,12 @@ db_user = node["openstack"]["block-storage"]["db"]["username"]
 db_pass = db_password "cinder"
 sql_connection = db_uri("volume", db_user, db_pass)
 
-if node["openstack"]["block-storage"]["rabbit"]["ha"]
-  rabbit_hosts = rabbit_servers
+if node["openstack"]["block-storage"]["mq"]["service_type"] == "rabbitmq"
+  if node["openstack"]["block-storage"]["rabbit"]["ha"]
+    rabbit_hosts = rabbit_servers
+  end
+  rabbit_pass = user_password node["openstack"]["block-storage"]["rabbit"]["username"]
 end
-rabbit_pass = user_password node["openstack"]["block-storage"]["rabbit"]["username"]
 
 glance_api_endpoint = endpoint "image-api"
 

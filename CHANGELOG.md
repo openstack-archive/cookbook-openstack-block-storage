@@ -2,6 +2,11 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+v7.2.0
+------
+### Add qpid support
+- Add qpid support for cinder. Default is rabbitmq
+
 v7.1.0
 ------
 ### Add new attributes

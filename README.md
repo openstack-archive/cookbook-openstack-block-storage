@@ -43,11 +43,32 @@ Attributes
 ==========
 
 * `openstack["block-storage"]["db"]["username"]` - cinder username for database
-* `openstack["block-storage"]["rabbit"]["username"]` - Username for cinder rabbit access
+
+MQ attributes
+-------------
+* `openstack["block-storage"]["mq"]["service_type"]` - Select qpid or rabbitmq. default rabbitmq
+TODO: move rabbit parameters under openstack["block-storage"]["mq"]
+* `openstack["block-storage"]["rabbit"]["username"]` - Username for nova rabbit access
 * `openstack["block-storage"]["rabbit"]["vhost"]` - The rabbit vhost to use
 * `openstack["block-storage"]["rabbit"]["port"]` - The rabbit port to use
 * `openstack["block-storage"]["rabbit"]["host"]` - The rabbit host to use (must set when `openstack["block-storage"]["rabbit"]["ha"]` false).
 * `openstack["block-storage"]["rabbit"]["ha"]` - Whether or not to use rabbit ha
+
+* `openstack["block-storage"]["mq"]["qpid"]["host"]` - The qpid host to use
+* `openstack["block-storage"]["mq"]["qpid"]["port"]` - The qpid port to use
+* `openstack["block-storage"]["mq"]["qpid"]["qpid_hosts"]` - Qpid hosts. TODO. use only when ha is specified.
+* `openstack["block-storage"]["mq"]["qpid"]["username"]` - Username for qpid connection
+* `openstack["block-storage"]["mq"]["qpid"]["password"]` - Password for qpid connection
+* `openstack["block-storage"]["mq"]["qpid"]["sasl_mechanisms"]` - Space separated list of SASL mechanisms to use for auth
+* `openstack["block-storage"]["mq"]["qpid"]["reconnect_timeout"]` - The number of seconds to wait before deciding that a reconnect attempt has failed.
+* `openstack["block-storage"]["mq"]["qpid"]["reconnect_limit"]` - The limit for the number of times to reconnect before considering the connection to be failed.
+* `openstack["block-storage"]["mq"]["qpid"]["reconnect_interval_min"]` - Minimum number of seconds between connection attempts.
+* `openstack["block-storage"]["mq"]["qpid"]["reconnect_interval_max"]` - Maximum number of seconds between connection attempts.
+* `openstack["block-storage"]["mq"]["qpid"]["reconnect_interval"]` - Equivalent to setting qpid_reconnect_interval_min and qpid_reconnect_interval_max to the same value.
+* `openstack["block-storage"]["mq"]["qpid"]["heartbeat"]` - Seconds between heartbeat messages sent to ensure that the connection is still alive.
+* `openstack["block-storage"]["mq"]["qpid"]["protocol"]` - Protocol to use. Default tcp.
+* `openstack["block-storage"]["mq"]["qpid"]["tcp_nodelay"]` - Disable the Nagle algorithm. default disabled.
+
 * `openstack["block-storage"]["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `openstack["block-storage"]["service_user"]` - cinder service user in keystone
 * `openstack["block-storage"]["service_role"]` - role for the cinder service user in keystone
@@ -115,6 +136,7 @@ License and Author
 | **Author**           |  Sean Gallagher (<sean.gallagher@att.com>)         |
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
 | **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
+| **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |

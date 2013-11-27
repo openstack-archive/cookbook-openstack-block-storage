@@ -71,6 +71,25 @@ default["openstack"]["block-storage"]["rpc_thread_pool_size"] = 64
 default["openstack"]["block-storage"]["rpc_conn_pool_size"] = 30
 default["openstack"]["block-storage"]["rpc_response_timeout"] = 60
 
+# MQ options
+default["openstack"]["block-storage"]["mq"]["service_type"] = node["openstack"]["mq"]["service_type"]
+default["openstack"]["block-storage"]["mq"]["qpid"]["host"] = "127.0.0.1"
+default["openstack"]["block-storage"]["mq"]["qpid"]["port"] = "5672"
+default["openstack"]["block-storage"]["mq"]["qpid"]["qpid_hosts"] = ['127.0.0.1:5672']
+
+default["openstack"]["block-storage"]["mq"]["qpid"]["username"] = ""
+default["openstack"]["block-storage"]["mq"]["qpid"]["password"] = ""
+default["openstack"]["block-storage"]["mq"]["qpid"]["sasl_mechanisms"] = ""
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect"] = true
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_timeout"] = 0
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_limit"] = 0
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval_min"] = 0
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval_max"] = 0
+default["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval"] = 0
+default["openstack"]["block-storage"]["mq"]["qpid"]["heartbeat"] = 60
+default["openstack"]["block-storage"]["mq"]["qpid"]["protocol"] = "tcp"
+default["openstack"]["block-storage"]["mq"]["qpid"]["tcp_nodelay"] = true
+
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
 # user_password routine.  You are expected to create
