@@ -2,37 +2,34 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
-v7.2.0
-------
-### Add qpid support
-- Add qpid support for cinder. Default is rabbitmq
-
-v7.1.0
-------
-### Add new attributes
-- Add new attributes for common rpc configuration
-
-v7.0.6
-------
+## 7.2.1
 ### Bug
-- set auth_uri for authtoken in api-paste.ini (bug #1207504)
+* relax the dependencies to the 7.x series
 
-v7.0.4
-------
+## 7.2.0
 ### Improvement
-- Use a default log-file (/var/log/cinder/cinder.log) if syslog is disabled
+* Add qpid support for cinder. Default is rabbitmq
 
-v7.0.3
-------
+## 7.1.0
+### Improvement
+* Add new attributes for common rpc configuration
+
+## 7.0.6
 ### Bug
-- change audit cronjob binary path depending on platform, refactored some tests
+* set auth_uri for authtoken in api-paste.ini (bug #1207504)
 
-v7.0.2
-------
+## 7.0.4
 ### Improvement
-- ensure cronjob runs on only one node and make cronjob configurable
+* Use a default log-file (/var/log/cinder/cinder.log) if syslog is disabled
 
-v7.0.1
-------
+## 7.0.3
+### Bug
+* change audit cronjob binary path depending on platform, refactored some tests
+
+## 7.0.2
 ### Improvement
-- Add audit cronjob and enable control_exchange, when metering enabled
+* ensure cronjob runs on only one node and make cronjob configurable
+
+## 7.0.1
+### Improvement
+* Add audit cronjob and enable control_exchange, when metering enabled
