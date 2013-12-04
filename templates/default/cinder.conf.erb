@@ -429,7 +429,7 @@ rabbit_virtual_host=<%= node["openstack"]["block-storage"]["rabbit"]["vhost"] %>
 
 ##### QPID #####
 ######## defined in cinder.openstack.common.rpc.impl_qpid ########
-rpc_backend=nova.openstack.common.rpc.impl_qpid
+rpc_backend=cinder.openstack.common.rpc.impl_qpid
 
 qpid_hostname=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["host"] %>
 #### (StrOpt) Qpid broker hostname

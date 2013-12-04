@@ -2,6 +2,10 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+7.2.2
+### Bug
+* fix a bug related to qpid.
+
 ## 7.2.1
 ### Bug
 * relax the dependencies to the 7.x series
