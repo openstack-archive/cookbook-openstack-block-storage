@@ -164,6 +164,7 @@ when 'fedora', 'redhat', 'centos' # :pragma-foodcritic: ~FC024 - won't fix this
 
   default['openstack']['block-storage']['platform'] = {
     'mysql_python_packages' => ['MySQL-python'],
+    'db2_python_packages' => ['db2-odbc', 'python-ibm-db', 'python-ibm-db-sa'],
     'postgresql_python_packages' => ['python-psycopg2'],
     'cinder_common_packages' => ['openstack-cinder'],
     'cinder_api_packages' => ['python-cinderclient'],
