@@ -6,7 +6,7 @@
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
 # Copyright 2013, Opscode, Inc.
-# Copyright (c) 2013, IBM, Corp
+# Copyright 2013, IBM, Corp
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,6 +138,8 @@ default["openstack"]["block-storage"]["cron"]["audit_logfile"] = "/var/log/cinde
 default["openstack"]["block-storage"]["volume"]["state_path"] = "/var/lib/cinder"
 default["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.driver.ISCSIDriver"
 default["openstack"]["block-storage"]["volume"]["volume_group"] = "cinder-volumes"
+default["openstack"]["block-storage"]["volume"]["volume_group_size"] = 40
+default["openstack"]["block-storage"]["volume"]["create_volume_group"] = false
 default["openstack"]["block-storage"]["volume"]["iscsi_helper"] = "tgtadm"
 
 # Ceph/RADOS options

@@ -6,6 +6,7 @@
 # Copyright 2012-2013, AT&T Services, Inc.
 # Copyright 2013, Opscode, Inc.
 # Copyright 2013, SUSE Linux Gmbh.
+# Copyright 2013, IBM, Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,40 +53,73 @@ platform_options["cinder_iscsitarget_packages"].each do |pkg|
 end
 
 case node["openstack"]["block-storage"]["volume"]["driver"]
-  when "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
-   node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
+when "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
+  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
 
-  when "cinder.volume.drivers.RBDDriver"
-   node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
+when "cinder.volume.drivers.RBDDriver"
+  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
 
-  when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
-    node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = service_password "netapp-filer"
+when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+  node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = service_password "netapp-filer"
 
-    directory node["openstack"]["block-storage"]["nfs"]["mount_point_base"] do
-      owner node["openstack"]["block-storage"]["user"]
-      group node["openstack"]["block-storage"]["group"]
-      action :create
+  directory node["openstack"]["block-storage"]["nfs"]["mount_point_base"] do
+    owner node["openstack"]["block-storage"]["user"]
+    group node["openstack"]["block-storage"]["group"]
+    action :create
+  end
+
+  template node["openstack"]["block-storage"]["nfs"]["shares_config"] do
+    source "shares.conf.erb"
+    mode "0600"
+    owner node["openstack"]["block-storage"]["user"]
+    group node["openstack"]["block-storage"]["group"]
+    variables(
+      "host" => node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"],
+      "export" => node["openstack"]["block-storage"]["netapp"]["export"]
+    )
+    notifies :restart, "service[cinder-volume]"
+  end
+
+  platform_options["cinder_nfs_packages"].each do |pkg|
+    package pkg do
+      options platform_options["package_overrides"]
+
+      action :upgrade
+    end
+  end
+
+when "cinder.volume.drivers.lvm.LVMISCSIDriver"
+  if node["openstack"]["block-storage"]["volume"]["create_volume_group"]
+    volume_size = node["openstack"]["block-storage"]["volume"]["volume_group_size"]
+    seek_count = volume_size.to_i * 1024
+    # default volume group is 40G
+    seek_count = 40 * 1024 if seek_count == 0
+    vg_name = node["openstack"]["block-storage"]["volume"]["volume_group"]
+    vg_file = "#{node["openstack"]["block-storage"]["volume"]["state_path"]}/#{vg_name}.img"
+
+    # create volume group
+    execute "Create Cinder volume group" do
+      command "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate #{vg_name} $(losetup --show -f #{vg_file})"
+      action :run
+      not_if "vgs #{vg_name}"
     end
 
-    template node["openstack"]["block-storage"]["nfs"]["shares_config"] do
-      source "shares.conf.erb"
-      mode "0600"
-      owner node["openstack"]["block-storage"]["user"]
-      group node["openstack"]["block-storage"]["group"]
+    service "cinder-group-active" do
+      service_name "cinder-group-active"
+      supports :status => true, :restart => true
+
+      action [ :enable, :start ]
+    end
+
+    template "/etc/init.d/cinder-group-active" do
+      source "cinder-group-active.erb"
+      mode "755"
       variables(
-        "host" => node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"],
-        "export" => node["openstack"]["block-storage"]["netapp"]["export"]
+        "volume_file" => vg_file
       )
-      notifies :restart, "service[cinder-volume]"
+      notifies :restart, "service[cinder-group-active]", :immediately
     end
-
-    platform_options["cinder_nfs_packages"].each do |pkg|
-      package pkg do
-        options platform_options["package_overrides"]
-
-        action :upgrade
-      end
-    end
+  end
 end
 
 service "cinder-volume" do

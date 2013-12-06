@@ -35,7 +35,7 @@ scheduler
 
 volume
 ----
-- Installs the cinder-volume service and sets up the iscsi helper
+- Installs the cinder-volume service, sets up the iscsi helper and create volume group when using the LVMISCSIDriver
 
 Defaults to the ISCSI (LVM) Driver.
 
@@ -79,30 +79,32 @@ TODO: move rabbit parameters under openstack["block-storage"]["mq"]
 * `openstack["block-storage"]["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
 * `openstack["block-storage"]["volume"]["driver"]` - Driver to use for volume creation
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
+* `openstack["block-storage"]["voluem"]["volume_group_size"]` - The size (GB) of volume group (default is 40)
+* `openstack["block-storage"]["voluem"]["create_volume_group"]` - Create volume group or not when using the LVMISCSIDriver (default is false)
 * `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
 * `openstack["block-storage"]["rbd_pool"]` - RADOS Block Device pool to use
 * `openstack["block-storage"]["rbd_user"]` - User for Cephx Authentication
 * `openstack["block-storage"]["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
 * `openstack["block-storage"]["policy"]["context_is_admin"]` - Define administrators
-* `openstack["block-storage"]["policy"]["default"]` - default volume operations rule
+* `openstack["block-storage"]["policy"]["default"]` - Default volume operations rule
 * `openstack["block-storage"]["policy"]["admin_or_owner"]` - Define an admin or owner
 * `openstack["block-storage"]["policy"]["admin_api"]` - Define api admin
-* `openstack["block-storage"]["netapp"]["protocol"]` - how are we talking to either dfm or filer, http or https
+* `openstack["block-storage"]["netapp"]["protocol"]` - How are we talking to either dfm or filer, http or https
 * `openstack["block-storage"]["netapp"]["dfm_hostname"]` - Host or IP of your dfm server
 * `openstack["block-storage"]["netapp"]["dfm_login"]` - Username for dfm
-* `openstack["block-storage"]["netapp"]["dfm_password"]` - password for the dfm user
-* `openstack["block-storage"]["netapp"]["dfm_port"]` - default port for dfm
-* `openstack["block-storage"]["netapp"]["dfm_web_port"]` - web gui port for wsdl file download
-* `openstack["block-storage"]["netapp"]["storage_service"]` - name of the service in dfpm
-* `openstack["block-storage"]["netapp"]["netapp_server_port"]` - web admin port of the filer itself
-* `openstack["block-storage"]["netapp"]["netapp_server_hostname"]` - hostname of your filer, needs to be resolvable
+* `openstack["block-storage"]["netapp"]["dfm_password"]` - Password for the dfm user
+* `openstack["block-storage"]["netapp"]["dfm_port"]` - Default port for dfm
+* `openstack["block-storage"]["netapp"]["dfm_web_port"]` - Web gui port for wsdl file download
+* `openstack["block-storage"]["netapp"]["storage_service"]` - Name of the service in dfpm
+* `openstack["block-storage"]["netapp"]["netapp_server_port"]` - Web admin port of the filer itself
+* `openstack["block-storage"]["netapp"]["netapp_server_hostname"]` - Hostname of your filer, needs to be resolvable
 * `openstack["block-storage"]["netapp"]["netapp_server_login"]` - Username for netapp filer
-* `openstack["block-storage"]["netapp"]["netapp_server_password"]` - password for user above
-* `openstack["block-storage"]["nfs"]["shares_config"]` - file containing line by line entries of server:export
-* `openstack["block-storage"]["nfs"]["mount_point_base"]` - directory to mount NFS exported shares
-* `openstack["block-storage"]["rpc_thread_pool_size"]` - size of RPC thread pool
-* `openstack["block-storage"]["rpc_conn_pool_size"]` - size of RPC connection pool
-* `openstack["block-storage"]["rpc_response_timeout"]` - seconds to wait for a response from call or multicall
+* `openstack["block-storage"]["netapp"]["netapp_server_password"]` - Password for user above
+* `openstack["block-storage"]["nfs"]["shares_config"]` - File containing line by line entries of server:export
+* `openstack["block-storage"]["nfs"]["mount_point_base"]` - Directory to mount NFS exported shares
+* `openstack["block-storage"]["rpc_thread_pool_size"]` - Size of RPC thread pool
+* `openstack["block-storage"]["rpc_conn_pool_size"]` - Size of RPC connection pool
+* `openstack["block-storage"]["rpc_response_timeout"]` - Seconds to wait for a response from call or multicall
 
 Testing
 =====
