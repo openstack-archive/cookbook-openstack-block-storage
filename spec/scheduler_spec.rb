@@ -19,7 +19,7 @@ describe "openstack-block-storage::scheduler" do
       expect(chef_run).not_to include_recipe "openstack-common::logging"
     end
 
-    it "installs cinder api packages" do
+    it "installs cinder scheduler packages" do
       expect(@chef_run).to upgrade_package "cinder-scheduler"
     end
 
