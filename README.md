@@ -137,6 +137,7 @@ License and Author
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
 | **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
 | **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
+| **Author**           |  Chen Zhiwei (zhiwchen@cn.ibm.com>)                |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |

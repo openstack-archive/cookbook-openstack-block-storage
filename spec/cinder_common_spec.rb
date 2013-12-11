@@ -3,7 +3,7 @@ require_relative "spec_helper"
 describe "openstack-block-storage::cinder-common" do
   before { block_storage_stubs }
   before do
-    @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
       n.set["openstack"]["mq"] = {
         "host" => "127.0.0.1"
       }
@@ -22,7 +22,8 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has proper owner" do
-      expect(@dir).to be_owned_by "cinder", "cinder"
+      expect(@dir.owner).to eq("cinder")
+      expect(@dir.group).to eq("cinder")
     end
 
     it "has proper modes" do
@@ -36,7 +37,8 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has proper owner" do
-      expect(@file).to be_owned_by "cinder", "cinder"
+      expect(@file.owner).to eq("cinder")
+      expect(@file.group).to eq("cinder")
     end
 
     it "has proper modes" do
@@ -44,96 +46,80 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has rpc_thread_pool_size" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rpc_thread_pool_size=64"
+      expect(@chef_run).to render_file(@file.name).with_content("rpc_thread_pool_size=64")
     end
 
     it "has rpc_conn_pool_size" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rpc_conn_pool_size=30"
+      expect(@chef_run).to render_file(@file.name).with_content("rpc_conn_pool_size=30")
     end
 
     it "has rpc_response_timeout" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rpc_response_timeout=60"
+      expect(@chef_run).to render_file(@file.name).with_content("rpc_response_timeout=60")
     end
 
     it "has rabbit_host" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rabbit_host=127.0.0.1"
+      expect(@chef_run).to render_file(@file.name).with_content("rabbit_host=127.0.0.1")
     end
 
     it "does not have rabbit_hosts" do
-      expect(@chef_run).not_to create_file_with_content @file.name,
-        "rabbit_hosts="
+      expect(@chef_run).not_to render_file(@file.name).with_content("rabbit_hosts=")
     end
 
     it "does not have rabbit_ha_queues" do
-      expect(@chef_run).not_to create_file_with_content @file.name,
-        "rabbit_ha_queues="
+      expect(@chef_run).not_to render_file(@file.name).with_content("rabbit_ha_queues=")
     end
 
     it "has log_file" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "log_file = /var/log/cinder/cinder.log"
+      expect(@chef_run).to render_file(@file.name).with_content("log_file = /var/log/cinder/cinder.log")
     end
 
     it "has log_config when syslog is true" do
-      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["block-storage"]["syslog"]["use"] = true
       end
       chef_run.converge "openstack-block-storage::cinder-common"
 
-      expect(chef_run).to create_file_with_content @file.name,
-        "log_config = /etc/openstack/logging.conf"
+      expect(chef_run).to render_file(@file.name).with_content("log_config = /etc/openstack/logging.conf")
     end
 
     it "has rabbit_port" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rabbit_port=5672"
+      expect(@chef_run).to render_file(@file.name).with_content("rabbit_port=5672")
     end
 
     it "has rabbit_userid" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rabbit_userid=guest"
+      expect(@chef_run).to render_file(@file.name).with_content("rabbit_userid=guest")
     end
 
     it "has rabbit_password" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rabbit_password=rabbit-pass"
+      expect(@chef_run).to render_file(@file.name).with_content("rabbit_password=rabbit-pass")
     end
 
     it "has rabbit_virtual_host" do
-      expect(@chef_run).to create_file_with_content @file.name,
-        "rabbit_virtual_host=/"
+      expect(@chef_run).to render_file(@file.name).with_content("rabbit_virtual_host=/")
     end
 
     describe "rabbit ha" do
       before do
-        @chef_run = ::ChefSpec::ChefRunner.new(::UBUNTU_OPTS) do |n|
+        @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
           n.set["openstack"]["block-storage"]["rabbit"]["ha"] = true
         end
         @chef_run.converge "openstack-block-storage::cinder-common"
       end
 
       it "has rabbit_hosts" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_hosts=1.1.1.1:5672,2.2.2.2:5672"
+        expect(@chef_run).to render_file(@file.name).with_content("rabbit_hosts=1.1.1.1:5672,2.2.2.2:5672")
       end
 
       it "has rabbit_ha_queues" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_ha_queues=True"
+        expect(@chef_run).to render_file(@file.name).with_content("rabbit_ha_queues=True")
       end
 
       it "does not have rabbit_host" do
-        expect(@chef_run).not_to create_file_with_content @file.name,
-          "rabbit_host=127.0.0.1"
+        expect(@chef_run).not_to render_file(@file.name).with_content("rabbit_host=127.0.0.1")
       end
 
       it "does not have rabbit_port" do
-        expect(@chef_run).not_to create_file_with_content @file.name,
-          "rabbit_port=5672"
+        expect(@chef_run).not_to render_file(@file.name).with_content("rabbit_port=5672")
       end
     end
 
@@ -144,73 +130,59 @@ describe "openstack-block-storage::cinder-common" do
       end
 
       it "has qpid_hostname" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_hostname=127.0.0.1"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_hostname=127.0.0.1")
       end
 
       it "has qpid_port" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_port=5672"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_port=5672")
       end
 
       it "has qpid_username" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_username="
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_username=")
       end
 
       it "has qpid_password" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_password="
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_password=")
       end
 
       it "has qpid_sasl_mechanisms" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_sasl_mechanisms="
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_sasl_mechanisms=")
       end
 
       it "has qpid_reconnect_timeout" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_timeout=0"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect_timeout=0")
       end
 
       it "has qpid_reconnect_limit" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_limit=0"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect_limit=0")
       end
 
       it "has qpid_reconnect_interval_min" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval_min=0"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect_interval_min=0")
       end
 
       it "has qpid_reconnect_interval_max" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval_max=0"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect_interval_max=0")
       end
 
       it "has qpid_reconnect_interval" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval=0"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect_interval=0")
       end
 
       it "has qpid_reconnect" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect=true"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_reconnect=true")
       end
 
       it "has qpid_heartbeat" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_heartbeat=60"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_heartbeat=60")
       end
 
       it "has qpid_protocol" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_protocol=tcp"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_protocol=tcp")
       end
 
       it "has qpid_tcp_nodelay" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_tcp_nodelay=true"
+        expect(@chef_run).to render_file(@file.name).with_content("qpid_tcp_nodelay=true")
       end
     end
   end

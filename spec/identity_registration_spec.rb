@@ -3,7 +3,7 @@ require_relative "spec_helper"
 describe "openstack-block-storage::identity_registration" do
   before do
     block_storage_stubs
-    @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
     @chef_run.converge "openstack-block-storage::identity_registration"
   end
 
@@ -14,15 +14,15 @@ describe "openstack-block-storage::identity_registration" do
     ).to_hash
 
     expect(resource).to include(
-      :auth_uri => "https://127.0.0.1:35357/v2.0",
+      :auth_uri => "http://127.0.0.1:35357/v2.0",
       :bootstrap_token => "bootstrap-token",
       :service_name => "cinder",
       :service_type => "volume",
       :service_description => "Cinder Volume Service",
       :endpoint_region => "RegionOne",
-      :endpoint_adminurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
-      :endpoint_internalurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
-      :endpoint_publicurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_adminurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_internalurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_publicurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
       :action => [:create_service]
     )
   end
@@ -34,15 +34,15 @@ describe "openstack-block-storage::identity_registration" do
     ).to_hash
 
     expect(resource).to include(
-      :auth_uri => "https://127.0.0.1:35357/v2.0",
+      :auth_uri => "http://127.0.0.1:35357/v2.0",
       :bootstrap_token => "bootstrap-token",
       :service_name => "cinder",
       :service_type => "volume",
       :service_description => "Cinder Volume Service",
       :endpoint_region => "RegionOne",
-      :endpoint_adminurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
-      :endpoint_internalurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
-      :endpoint_publicurl => "https://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_adminurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_internalurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
+      :endpoint_publicurl => "http://127.0.0.1:8776/v1/%(tenant_id)s",
       :action => [:create_endpoint]
     )
   end
@@ -54,7 +54,7 @@ describe "openstack-block-storage::identity_registration" do
     ).to_hash
 
     expect(resource).to include(
-      :auth_uri => "https://127.0.0.1:35357/v2.0",
+      :auth_uri => "http://127.0.0.1:35357/v2.0",
       :bootstrap_token => "bootstrap-token",
       :tenant_name => "service",
       :user_name => "cinder",
@@ -71,7 +71,7 @@ describe "openstack-block-storage::identity_registration" do
     ).to_hash
 
     expect(resource).to include(
-      :auth_uri => "https://127.0.0.1:35357/v2.0",
+      :auth_uri => "http://127.0.0.1:35357/v2.0",
       :bootstrap_token => "bootstrap-token",
       :tenant_name => "service",
       :user_name => "cinder",

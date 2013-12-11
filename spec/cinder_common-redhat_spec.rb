@@ -3,7 +3,7 @@ require_relative "spec_helper"
 describe "openstack-block-storage::cinder-common" do
   before { block_storage_stubs }
   before do
-    @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS do |n|
+    @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
       n.set["openstack"]["mq"] = {
         "host" => "127.0.0.1"
       }

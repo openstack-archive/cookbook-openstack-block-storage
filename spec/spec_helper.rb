@@ -1,5 +1,6 @@
 require "chefspec"
 require "chef/application"
+require_relative "support/matcher"
 
 ::LOG_LEVEL = :fatal
 ::OPENSUSE_OPTS = {
@@ -49,7 +50,8 @@ def expect_creates_cinder_conf service, user, group, action=:restart
     end
 
     it "has proper owner" do
-      expect(@file).to be_owned_by user, group
+      expect(@file.owner).to eq(user)
+      expect(@file.group).to eq(group)
     end
 
     it "has proper modes" do
@@ -57,7 +59,7 @@ def expect_creates_cinder_conf service, user, group, action=:restart
     end
 
     it "notifies service restart" do
-      expect(@file).to notify service, action
+      expect(@file).to notify(service).to(action)
     end
   end
 end
@@ -69,7 +71,8 @@ def expect_creates_policy_json service, user, group, action=:restart
     end
 
     it "has proper owner" do
-      expect(@file).to be_owned_by user, group
+      expect(@file.owner).to eq(user)
+      expect(@file.group).to eq(group)
     end
 
     it "has proper modes" do
@@ -77,7 +80,7 @@ def expect_creates_policy_json service, user, group, action=:restart
     end
 
     it "notifies service restart" do
-      expect(@file).to notify service, action
+      expect(@file).to notify(service).to(action)
     end
   end
 end

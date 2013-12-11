@@ -4,7 +4,7 @@ describe "openstack-block-storage::api" do
   before { block_storage_stubs }
   describe "redhat" do
     before do
-      @chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       @chef_run.converge "openstack-block-storage::api"
     end
 
@@ -17,7 +17,7 @@ describe "openstack-block-storage::api" do
     end
 
     it "installs postgresql python packages if explicitly told" do
-      chef_run = ::ChefSpec::ChefRunner.new ::REDHAT_OPTS
+      chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       node = chef_run.node
       node.set["openstack"]["db"]["volume"]["db_type"] = "postgresql"
       chef_run.converge "openstack-block-storage::api"
@@ -27,7 +27,7 @@ describe "openstack-block-storage::api" do
     end
 
     it "starts cinder api on boot" do
-      expect(@chef_run).to set_service_to_start_on_boot "openstack-cinder-api"
+      expect(@chef_run).to enable_service "openstack-cinder-api"
     end
   end
 end

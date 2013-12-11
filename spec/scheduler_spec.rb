@@ -4,7 +4,7 @@ describe "openstack-block-storage::scheduler" do
   before { block_storage_stubs }
   describe "ubuntu" do
     before do
-      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+      @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["block-storage"]["syslog"]["use"] = true
       end
       @chef_run.converge "openstack-block-storage::scheduler"
@@ -13,7 +13,7 @@ describe "openstack-block-storage::scheduler" do
     expect_runs_openstack_common_logging_recipe
 
     it "doesn't run logging recipe" do
-      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       chef_run.converge "openstack-block-storage::scheduler"
 
       expect(chef_run).not_to include_recipe "openstack-common::logging"
@@ -28,7 +28,7 @@ describe "openstack-block-storage::scheduler" do
     end
 
     it "installs postgresql python packages if explicitly told" do
-      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
       node.set["openstack"]["db"]["volume"]["db_type"] = "postgresql"
       chef_run.converge "openstack-block-storage::scheduler"
@@ -42,11 +42,11 @@ describe "openstack-block-storage::scheduler" do
     end
 
     it "starts cinder scheduler on boot" do
-      expect(@chef_run).to set_service_to_start_on_boot "cinder-scheduler"
+      expect(@chef_run).to enable_service "cinder-scheduler"
     end
 
     it "doesn't run logging recipe" do
-      expect(@chef_run).to set_service_to_start_on_boot "cinder-scheduler"
+      expect(@chef_run).to enable_service "cinder-scheduler"
     end
 
     it "doesn't setup cron when no metering" do
@@ -57,7 +57,7 @@ describe "openstack-block-storage::scheduler" do
       ::Chef::Recipe.any_instance.stub(:search).
         with(:node, "roles:os-block-storage-scheduler").
         and_return([OpenStruct.new(:name => "fauxhai.local")])
-      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["metering"] = true
       end
       chef_run.converge "openstack-block-storage::scheduler"
@@ -78,7 +78,7 @@ describe "openstack-block-storage::scheduler" do
       ::Chef::Recipe.any_instance.stub(:search).
         with(:node, "roles:os-block-storage-scheduler").
         and_return([OpenStruct.new(:name => "foobar")])
-      chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS do |n|
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["metering"] = true
         crontests.each do |k,v|
           n.set["openstack"]["block-storage"]["cron"][k.to_s] = v
