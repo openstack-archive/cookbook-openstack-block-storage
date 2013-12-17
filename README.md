@@ -80,6 +80,8 @@ TODO: move rabbit parameters under openstack["block-storage"]["mq"]
 * `openstack["block-storage"]["volume"]["driver"]` - Driver to use for volume creation
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
+* `openstack["block-storage"]["volume"]["iscsi_ip_address"]` - The IP address where the iSCSI daemon is listening on
+* `openstack["block-storage"]["volume"]["iscsi_port"]` - The port where the iSCSI daemon is listening on
 * `openstack["block-storage"]["rbd_pool"]` - RADOS Block Device pool to use
 * `openstack["block-storage"]["rbd_user"]` - User for Cephx Authentication
 * `openstack["block-storage"]["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
