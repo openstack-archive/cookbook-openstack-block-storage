@@ -186,4 +186,20 @@ describe "openstack-block-storage::cinder-common" do
       end
     end
   end
+
+  describe "/var/lock/cinder" do
+    before do
+     @dir = @chef_run.directory "/var/lock/cinder"
+    end
+
+    it "has proper owner" do
+      expect(@dir.owner).to eq("cinder")
+      expect(@dir.group).to eq("cinder")
+    end
+
+    it "has proper modes" do
+     expect(sprintf("%o", @dir.mode)).to eq "700"
+    end
+  end
+
 end

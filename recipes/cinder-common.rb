@@ -63,3 +63,10 @@ template "/etc/cinder/cinder.conf" do
     :glance_port => glance_api_endpoint.port
   )
 end
+
+directory node["openstack"]["block-storage"]["lock_path"] do
+  group  node["openstack"]["block-storage"]["group"]
+  owner  node["openstack"]["block-storage"]["user"]
+  mode  00700
+end
+
