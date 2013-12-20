@@ -115,5 +115,30 @@ describe "openstack-block-storage::volume" do
         expect(@chef_run).not_to render_file(@file.name).with_content("include /var/lib/cinder/volumes/*")
       end
     end
+
+    describe "create_vg" do
+      before do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.lvm.LVMISCSIDriver"
+          n.set["openstack"]["block-storage"]["volume"]["create_volume_group"] = true
+        end
+        stub_command("vgs cinder-volumes").and_return(false)
+        @chef_run.converge "openstack-block-storage::volume"
+      end
+
+      it "cinder vg active" do
+        expect(@chef_run).to enable_service "cinder-group-active"
+      end
+
+      it "create volume group" do
+        volume_size = @chef_run.node["openstack"]["block-storage"]["volume"]["volume_group_size"]
+        seek_count = volume_size.to_i * 1024
+        group_name = @chef_run.node["openstack"]["block-storage"]["volume"]["volume_group"]
+        path = @chef_run.node["openstack"]["block-storage"]["volume"]["state_path"]
+        vg_file = "#{path}/#{group_name}.img"
+        cmd = "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate cinder-volumes $(losetup --show -f #{vg_file})"
+        expect(@chef_run).to run_execute(cmd)
+      end
+    end
   end
 end
