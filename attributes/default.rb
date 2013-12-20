@@ -139,6 +139,8 @@ default["openstack"]["block-storage"]["volume"]["state_path"] = "/var/lib/cinder
 default["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.driver.ISCSIDriver"
 default["openstack"]["block-storage"]["volume"]["volume_group"] = "cinder-volumes"
 default["openstack"]["block-storage"]["volume"]["iscsi_helper"] = "tgtadm"
+default["openstack"]["block-storage"]["volume"]["iscsi_ip_address"] = node["ipaddress"]
+default["openstack"]["block-storage"]["volume"]["iscsi_port"] = "3260"
 
 # Ceph/RADOS options
 default["openstack"]["block-storage"]["rbd_pool"] = "rbd"
