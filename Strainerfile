@@ -1,5 +1,7 @@
 # Strainerfile
-rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/attributes/
+# rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK
+# may want to add rubocop check for Berksfile and Gemfile
 knife test: bundle exec knife cookbook test $COOKBOOK
-foodcritic: bundle exec foodcritic -f any -t ~FC003 -t ~FC023 $SANDBOX/$COOKBOOK
+foodcritic: bundle exec foodcritic -f any -t ~FC003 $SANDBOX/$COOKBOOK
 chefspec: bundle exec rspec $SANDBOX/$COOKBOOK/spec
