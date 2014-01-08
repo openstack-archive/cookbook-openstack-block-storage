@@ -69,6 +69,9 @@ TODO: move rabbit parameters under openstack["block-storage"]["mq"]
 * `openstack["block-storage"]["mq"]["qpid"]["protocol"]` - Protocol to use. Default tcp.
 * `openstack["block-storage"]["mq"]["qpid"]["tcp_nodelay"]` - Disable the Nagle algorithm. default disabled.
 
+Cinder attributes
+-----------------
+
 * `openstack["block-storage"]["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `openstack["block-storage"]["service_user"]` - cinder service user in keystone
 * `openstack["block-storage"]["service_role"]` - role for the cinder service user in keystone
@@ -107,6 +110,24 @@ TODO: move rabbit parameters under openstack["block-storage"]["mq"]
 * `openstack["block-storage"]["rpc_thread_pool_size"]` - Size of RPC thread pool
 * `openstack["block-storage"]["rpc_conn_pool_size"]` - Size of RPC connection pool
 * `openstack["block-storage"]["rpc_response_timeout"]` - Seconds to wait for a response from call or multicall
+
+### Storwize/SVC attributes ###
+* `openstack['block-storage']['san']['san_ip'] - IP address of SAN controller
+* `openstack['block-storage']['san']['san_login'] - Username for SAN controller
+* `openstack['block-storage']['san']['san_private_key'] - Filename of private key to use for SSH authentication
+* `openstack['block-storage']['storwize']['storwize_svc_volpool_name'] - Storage system storage pool for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_rsize'] - Storage system space-efficiency parameter for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_warning'] - Storage system threshold for volume capacity warnings
+* `openstack['block-storage']['storwize']['storwize_svc_vol_autoexpand'] - Storage system autoexpand parameter for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_grainsize'] - Storage system grain size parameter for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_compression'] - Storage system compression option for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_easytier'] - Enable Easy Tier for volumes
+* `openstack['block-storage']['storwize']['storwize_svc_vol_iogrp'] - The I/O group in which to allocate volumes
+* `openstack['block-storage']['storwize']['storwize_svc_flashcopy_timeout'] - Maximum number of seconds to wait for FlashCopy to be prepared
+* `openstack['block-storage']['storwize']['storwize_svc_connection_protocol'] - Connection protocol (iSCSI/FC)
+* `openstack['block-storage']['storwize']['storwize_svc_iscsi_chap_enabled'] - Configure CHAP authentication for iSCSI connections
+* `openstack['block-storage']['storwize']['storwize_svc_multipath_enabled'] - Connect with multipath (FC only; iSCSI multipath is controlled by Nova)
+* `openstack['block-storage']['storwize']['storwize_svc_multihostmap_enabled'] - Allows vdisk to multi host mapping
 
 Testing
 =====

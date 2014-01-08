@@ -5,6 +5,7 @@ This file is used to list changes made in each version of the openstack-block-st
 ## 8.0.0
 ### New version
 * Upgrade to upstream Havana release
+* Add support for Storwize/SVC configuration attributes
 
 ## 7.2.2
 ### Bug
