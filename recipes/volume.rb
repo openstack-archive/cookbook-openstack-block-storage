@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-block-storage
 # Recipe:: volume
@@ -32,7 +33,6 @@ platform_options = node["openstack"]["block-storage"]["platform"]
 platform_options["cinder_volume_packages"].each do |pkg|
   package pkg do
     options platform_options["package_overrides"]
-
     action :upgrade
   end
 end
@@ -47,7 +47,6 @@ end
 platform_options["cinder_iscsitarget_packages"].each do |pkg|
   package pkg do
     options platform_options["package_overrides"]
-
     action :upgrade
   end
 end
@@ -83,7 +82,6 @@ when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
   platform_options["cinder_nfs_packages"].each do |pkg|
     package pkg do
       options platform_options["package_overrides"]
-
       action :upgrade
     end
   end
@@ -107,8 +105,7 @@ when "cinder.volume.drivers.lvm.LVMISCSIDriver"
     service "cinder-group-active" do
       service_name "cinder-group-active"
       supports :status => true, :restart => true
-
-      action [ :enable, :start ]
+      action [:enable, :start]
     end
 
     template "/etc/init.d/cinder-group-active" do
@@ -125,21 +122,18 @@ end
 service "cinder-volume" do
   service_name platform_options["cinder_volume_service"]
   supports :status => true, :restart => true
-
-  action [ :enable, :start ]
+  action [:enable, :start]
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
 
 service "iscsitarget" do
   service_name platform_options["cinder_iscsitarget_service"]
   supports :status => true, :restart => true
-
   action :enable
 end
 
 template "/etc/tgt/targets.conf" do
   source "targets.conf.erb"
   mode   00600
-
   notifies :restart, "service[iscsitarget]", :immediately
 end

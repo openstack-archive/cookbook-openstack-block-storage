@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,4 +70,3 @@ directory node["openstack"]["block-storage"]["lock_path"] do
   owner  node["openstack"]["block-storage"]["user"]
   mode  00700
 end
-

@@ -16,7 +16,11 @@ To run the tests:
 
 ### Attribute Rules ###
 
-There is a [.rubocop.yml](attributes/.rubocop.yml) specific to `attributes`, with the rationale for ignored styles within the file.
+Since there are slight style differences between the coding of attributes, recipes and metadata files there are specific `.rubocop.yml` files for each of:
+
+   [Gemfile and metadata.rb](.rubocop.yml)
+   [attributes/*.rb](attributes/.rubocop.yml)
+   [recipes/.rubocop.yml](recipes/.rubocop.yml)
 
 ## Knife ##
 

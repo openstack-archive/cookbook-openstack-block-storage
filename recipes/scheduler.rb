@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-block-storage
 # Recipe:: scheduler
@@ -42,8 +43,7 @@ end
 service "cinder-scheduler" do
   service_name platform_options["cinder_scheduler_service"]
   supports :status => true, :restart => true
-
-  action [ :enable, :start ]
+  action [:enable, :start]
   subscribes :restart, "template[/etc/cinder/cinder.conf]"
 end
 
@@ -53,7 +53,7 @@ audit_log = node["openstack"]["block-storage"]["cron"]["audit_logfile"]
 if node["openstack"]["metering"]
   scheduler_role = node["openstack"]["block-storage"]["scheduler_role"]
   results = search(:node, "roles:#{scheduler_role}")
-  cron_node = results.collect{|a| a.name}.sort[0]
+  cron_node = results.collect { |a| a.name }.sort[0]
   Chef::Log.debug("Volume audit cron node: #{cron_node}")
 
   cron "cinder-volume-usage-audit" do
