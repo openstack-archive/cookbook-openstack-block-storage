@@ -109,19 +109,19 @@ when "cinder.volume.drivers.lvm.LVMISCSIDriver"
       not_if "vgs #{vg_name}"
     end
 
-    service "cinder-group-active" do
-      service_name "cinder-group-active"
-      supports :status => true, :restart => true
-      action [:enable, :start]
-    end
-
     template "/etc/init.d/cinder-group-active" do
       source "cinder-group-active.erb"
       mode "755"
       variables(
         "volume_file" => vg_file
       )
-      notifies :restart, "service[cinder-group-active]", :immediately
+      notifies :start, "service[cinder-group-active]", :immediately
+    end
+
+    service "cinder-group-active" do
+      service_name "cinder-group-active"
+
+      action [ :enable, :start ]
     end
   end
 end

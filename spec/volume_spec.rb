@@ -161,7 +161,9 @@ describe "openstack-block-storage::volume" do
           n.set["openstack"]["block-storage"]["volume"]["create_volume_group"] = true
         end
         stub_command("vgs cinder-volumes").and_return(false)
+        @filename = "/etc/init.d/cinder-group-active"
         @chef_run.converge "openstack-block-storage::volume"
+        @file = @chef_run.template(@filename)
       end
 
       it "cinder vg active" do
@@ -176,6 +178,14 @@ describe "openstack-block-storage::volume" do
         vg_file = "#{path}/#{group_name}.img"
         cmd = "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate cinder-volumes $(losetup --show -f #{vg_file})"
         expect(@chef_run).to run_execute(cmd)
+      end
+
+      it "notifies cinder group active start" do
+        expect(@file).to notify("service[cinder-group-active]").to(:start)
+      end
+
+      it "creates cinder group active template file" do
+        expect(@chef_run).to create_template(@filename)
       end
     end
   end
