@@ -21,6 +21,7 @@ Since there are slight style differences between the coding of attributes, recip
    [Gemfile and metadata.rb](.rubocop.yml)
    [attributes/*.rb](attributes/.rubocop.yml)
    [recipes/.rubocop.yml](recipes/.rubocop.yml)
+   [spec/.rubocop.yml](spec/.rubocop.yml)
 
 ## Knife ##
 
