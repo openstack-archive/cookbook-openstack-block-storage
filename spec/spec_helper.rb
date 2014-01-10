@@ -1,4 +1,5 @@
 require "chefspec"
+require "chefspec/berkshelf"
 require "chef/application"
 require_relative "support/matcher"
 
