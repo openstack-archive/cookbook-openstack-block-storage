@@ -43,6 +43,8 @@ Attributes
 ==========
 
 * `openstack["block-storage"]["db"]["username"]` - cinder username for database
+TODO: Add DB2 support on other platforms
+* `openstack["block-storage"]["platform"]["db2_python_packages"]` - Array of DB2 python packages, only available on redhat platform
 
 MQ attributes
 -------------
@@ -139,7 +141,7 @@ License and Author
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, SUSE Linux GmbH               |
-| **Copyright**        |  Copyright (c) 2013, IBM, Corp                     |
+| **Copyright**        |  Copyright (c) 2013, IBM, Corp.                    |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
