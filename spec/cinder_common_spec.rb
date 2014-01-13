@@ -1,3 +1,7 @@
+# encoding: UTF-8
+#
+# Cookbook Name:: openstack-block-storage
+
 require_relative "spec_helper"
 
 describe "openstack-block-storage::cinder-common" do
@@ -18,7 +22,7 @@ describe "openstack-block-storage::cinder-common" do
 
   describe "/etc/cinder" do
     before do
-     @dir = @chef_run.directory "/etc/cinder"
+      @dir = @chef_run.directory "/etc/cinder"
     end
 
     it "has proper owner" do
@@ -27,13 +31,13 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has proper modes" do
-     expect(sprintf("%o", @dir.mode)).to eq "750"
+      expect(sprintf("%o", @dir.mode)).to eq "750"
     end
   end
 
   describe "cinder.conf" do
     before do
-     @file = @chef_run.template "/etc/cinder/cinder.conf"
+      @file = @chef_run.template "/etc/cinder/cinder.conf"
     end
 
     it "has proper owner" do
@@ -42,7 +46,7 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has proper modes" do
-     expect(sprintf("%o", @file.mode)).to eq "644"
+      expect(sprintf("%o", @file.mode)).to eq "644"
     end
 
     it "has rpc_thread_pool_size" do
@@ -189,7 +193,7 @@ describe "openstack-block-storage::cinder-common" do
 
   describe "/var/lock/cinder" do
     before do
-     @dir = @chef_run.directory "/var/lock/cinder"
+      @dir = @chef_run.directory "/var/lock/cinder"
     end
 
     it "has proper owner" do
@@ -198,7 +202,7 @@ describe "openstack-block-storage::cinder-common" do
     end
 
     it "has proper modes" do
-     expect(sprintf("%o", @dir.mode)).to eq "700"
+      expect(sprintf("%o", @dir.mode)).to eq "700"
     end
   end
 

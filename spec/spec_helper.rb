@@ -1,3 +1,7 @@
+# encoding: UTF-8
+#
+# Cookbook Name:: openstack-block-storage
+
 require "chefspec"
 require "chefspec/berkshelf"
 require "chef/application"
@@ -21,20 +25,20 @@ require_relative "support/matcher"
 }
 
 def block_storage_stubs
-  ::Chef::Recipe.any_instance.stub(:rabbit_servers).
-    and_return "1.1.1.1:5672,2.2.2.2:5672"
-  ::Chef::Recipe.any_instance.stub(:secret).
-    with("secrets", "openstack_identity_bootstrap_token").
-    and_return "bootstrap-token"
-  ::Chef::Recipe.any_instance.stub(:db_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:user_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:user_password).
-    with("guest").
-    and_return "rabbit-pass"
-  ::Chef::Recipe.any_instance.stub(:service_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:service_password).
-    with("openstack-block-storage").
-    and_return "cinder-pass"
+  ::Chef::Recipe.any_instance.stub(:rabbit_servers)
+    .and_return "1.1.1.1:5672,2.2.2.2:5672"
+  ::Chef::Recipe.any_instance.stub(:secret)
+    .with("secrets", "openstack_identity_bootstrap_token")
+    .and_return "bootstrap-token"
+  ::Chef::Recipe.any_instance.stub(:db_password).and_return ''
+  ::Chef::Recipe.any_instance.stub(:user_password).and_return ''
+  ::Chef::Recipe.any_instance.stub(:user_password)
+    .with("guest")
+    .and_return "rabbit-pass"
+  ::Chef::Recipe.any_instance.stub(:service_password).and_return ''
+  ::Chef::Recipe.any_instance.stub(:service_password)
+    .with("openstack-block-storage")
+    .and_return "cinder-pass"
   ::Chef::Application.stub(:fatal!)
 end
 
@@ -44,7 +48,7 @@ def expect_runs_openstack_common_logging_recipe
   end
 end
 
-def expect_creates_cinder_conf service, user, group, action=:restart
+def expect_creates_cinder_conf(service, user, group, action = :restart)
   describe "cinder.conf" do
     before do
       @file = @chef_run.template "/etc/cinder/cinder.conf"
@@ -65,7 +69,7 @@ def expect_creates_cinder_conf service, user, group, action=:restart
   end
 end
 
-def expect_creates_policy_json service, user, group, action=:restart
+def expect_creates_policy_json(service, user, group, action = :restart)
   describe "policy.json" do
     before do
       @file = @chef_run.template "/etc/cinder/policy.json"

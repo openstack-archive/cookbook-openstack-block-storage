@@ -1,8 +1,9 @@
 # Strainerfile
-rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/Gemfile
-rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/attributes/
-rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/metadata.rb
-rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/recipes/
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/Gemfile --config $SANDBOX/$COOKBOOK/.rubocop.yml
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/metadata.rb --config $SANDBOX/$COOKBOOK/.rubocop.yml
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/attributes/ --config $SANDBOX/$COOKBOOK/attributes/.rubocop.yml
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/recipes/ --config $SANDBOX/$COOKBOOK/recipes/.rubocop.yml
+rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK/spec/ --config $SANDBOX/$COOKBOOK/spec/.rubocop.yml
 # rubocop: bundle exec rubocop $SANDBOX/$COOKBOOK
 # may want to add rubocop check for Berksfile and Gemfile
 knife test: bundle exec knife cookbook test $COOKBOOK
