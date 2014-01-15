@@ -577,7 +577,7 @@ rbd_secret_uuid=<%= node["openstack"]["block-storage"]["rbd_secret_uuid"] %>
 iscsi_helper=<%= node["openstack"]["block-storage"]["volume"]["iscsi_helper"] %>
 #### (StrOpt) iscsi target user-land tool to use
 
-# volumes_dir=$state_path/volumes
+volumes_dir=<%= node['openstack']['block-storage']['volume']['volumes_dir'] %>
 #### (StrOpt) Volume configuration file storage directory
 
 

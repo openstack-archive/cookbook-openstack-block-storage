@@ -58,6 +58,10 @@ describe "openstack-block-storage::cinder-common" do
       expect(@chef_run).to render_file(@file.name).with_content("rpc_backend=cinder.openstack.common.rpc.impl_kombu")
     end
 
+    it "has has volumes_dir set" do
+      expect(@chef_run).to render_file(@file.name).with_content("volumes_dir=/var/lib/cinder/volumes")
+    end
+
     it "has correct volume.driver set" do
       expect(@chef_run).to render_file(@file.name).with_content("volume_driver=cinder.volume.drivers.lvm.LVMISCSIDriver")
     end
