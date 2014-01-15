@@ -694,6 +694,18 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 
 ######## defined in cinder.volume.san ########
 
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
+
+san_ip=<%= node["openstack"]["block-storage"]["san"]["san_ip"] %>
+#### (StrOpt) IP address of SAN controller
+
+san_login=<%= node["openstack"]["block-storage"]["san"]["san_login"] %>
+#### (StrOpt) Username for SAN controller
+
+san_private_key=<%= node["openstack"]["block-storage"]["san"]["san_private_key"] %>
+#### (StrOpt) Filename of private key to use for SSH authentication
+
+<% else %>
 # san_thin_provision=true
 #### (BoolOpt) Use thin provisioning for SAN volumes?
 
@@ -721,7 +733,7 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 
 # san_zfs_volume_base=rpool/
 #### (StrOpt) The ZFS path under which to create zvols for volumes.
-
+<% end %>
 
 ######## defined in cinder.volume.solidfire ########
 
@@ -740,35 +752,57 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 # sf_allow_tenant_qos=true
 #### (BoolOpt) Allow tenants to specify QOS on create
 
-
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
 ######## defined in cinder.volume.storwize_svc ########
 
-# storwize_svc_volpool_name=volpool
+storwize_svc_volpool_name=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_volpool_name"] %>
 #### (StrOpt) Storage system storage pool for volumes
 
-# storwize_svc_vol_rsize=2%
+storwize_svc_vol_rsize=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_rsize"] %>
 #### (StrOpt) Storage system space-efficiency parameter for volumes
 
-# storwize_svc_vol_warning=0
+storwize_svc_vol_warning=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_warning"] %>
 #### (StrOpt) Storage system threshold for volume capacity warnings
 
-# storwize_svc_vol_autoexpand=true
+storwize_svc_vol_autoexpand=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_autoexpand"] %>
 #### (BoolOpt) Storage system autoexpand parameter for volumes (True/False)
 
-# storwize_svc_vol_grainsize=256
+storwize_svc_vol_grainsize=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_grainsize"] %>
 #### (StrOpt) Storage system grain size parameter for volumes
 ####          (32/64/128/256)
 
-# storwize_svc_vol_compression=false
+storwize_svc_vol_compression=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_compression"] %>
 #### (BoolOpt) Storage system compression option for volumes
 
-# storwize_svc_vol_easytier=true
+storwize_svc_vol_easytier=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_easytier"] %>
 #### (BoolOpt) Enable Easy Tier for volumes
 
-# storwize_svc_flashcopy_timeout=120
+# The I/O group in which to allocate volumes (integer value)
+storwize_svc_vol_iogrp=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_vol_iogrp"] %>
+
+storwize_svc_flashcopy_timeout=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_flashcopy_timeout"] %>
 #### (StrOpt) Maximum number of seconds to wait for FlashCopy to be
 ####          prepared. Maximum value is 600 seconds (10 minutes).
 
+# Connection protocol (iSCSI/FC) (string value)
+storwize_svc_connection_protocol=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] %>
+
+<% if node["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] == "iSCSI" %>
+# Configure CHAP authentication for iSCSI connections
+# (Default: Enabled) (boolean value)
+storwize_svc_iscsi_chap_enabled=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_iscsi_chap_enabled"] %>
+
+<% else %>
+
+# Connect with multipath (FC only; iSCSI multipath is
+# controlled by Nova) (boolean value)
+storwize_svc_multipath_enabled=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_multipath_enabled"] %>
+
+<% end %>
+# Allows vdisk to multi host mapping (boolean value)
+storwize_svc_multihostmap_enabled=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_multihostmap_enabled"] %>
+
+<% end %>
 
 ######## defined in cinder.volume.xiv ########
 

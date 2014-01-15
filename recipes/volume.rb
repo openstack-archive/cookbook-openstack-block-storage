@@ -86,6 +86,13 @@ when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
     end
   end
 
+when "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+  file node['openstack']['block-storage']['san']['san_private_key'] do
+    mode "0400"
+    owner node["openstack"]["block-storage"]["user"]
+    group node["openstack"]["block-storage"]["group"]
+end
+
 when "cinder.volume.drivers.lvm.LVMISCSIDriver"
   if node["openstack"]["block-storage"]["volume"]["create_volume_group"]
     volume_size = node["openstack"]["block-storage"]["volume"]["volume_group_size"]

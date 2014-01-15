@@ -87,6 +87,40 @@ describe "openstack-block-storage::volume" do
       expect(n).to eq "rbd-pass"
     end
 
+    it "configures storewize private key" do
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+      end
+      chef_run.converge "openstack-block-storage::volume"
+
+      san_key = chef_run.file chef_run.node["openstack"]["block-storage"]["san"]["san_private_key"]
+      expect(san_key.mode).to eq('0400')
+    end
+
+    it "configures storewize with iscsi" do
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+        n.set["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] = "iSCSI"
+      end
+      conf = "/etc/cinder/cinder.conf"
+      chef_run.converge "openstack-block-storage::volume"
+
+      # Test that the FC specific options are not set when connected via iSCSI
+      expect(chef_run).not_to render_file(conf).with_content("storwize_svc_multipath_enabled")
+    end
+
+    it "configures storewize with fc" do
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+        n.set["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] = "FC"
+      end
+      conf = "/etc/cinder/cinder.conf"
+      chef_run.converge "openstack-block-storage::volume"
+
+      # Test that the iSCSI specific options are not set when connected via FC
+      expect(chef_run).not_to render_file(conf).with_content("storwize_svc_iscsi_chap_enabled")
+    end
+
     it "starts cinder volume" do
       expect(@chef_run).to start_service "cinder-volume"
     end
