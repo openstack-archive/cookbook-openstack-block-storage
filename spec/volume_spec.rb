@@ -64,7 +64,7 @@ describe "openstack-block-storage::volume" do
     end
 
     it "configures netapp dfm password" do
-      ::Chef::Recipe.any_instance.stub(:service_password).with("netapp")
+      ::Chef::Recipe.any_instance.stub(:get_password).with("service", "netapp")
         .and_return "netapp-pass"
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
@@ -76,7 +76,7 @@ describe "openstack-block-storage::volume" do
     end
 
     it "configures rbd password" do
-      ::Chef::Recipe.any_instance.stub(:service_password).with("rbd")
+      ::Chef::Recipe.any_instance.stub(:get_password).with("service", "rbd")
         .and_return "rbd-pass"
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.RBDDriver"

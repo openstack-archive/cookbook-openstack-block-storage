@@ -60,7 +60,7 @@ end
 
 identity_endpoint = endpoint "identity-api"
 identity_admin_endpoint = endpoint "identity-admin"
-service_pass = service_password "openstack-block-storage"
+service_pass = get_password "service", "openstack-block-storage"
 
 execute "cinder-manage db sync"
 
