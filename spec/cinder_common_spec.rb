@@ -49,6 +49,10 @@ describe "openstack-block-storage::cinder-common" do
       expect(sprintf("%o", @file.mode)).to eq "644"
     end
 
+    it "has rpc_backend set" do
+      expect(@chef_run).to render_file(@file.name).with_content("rpc_backend=cinder.openstack.common.rpc.impl_kombu")
+    end
+
     it "has rpc_thread_pool_size" do
       expect(@chef_run).to render_file(@file.name).with_content("rpc_thread_pool_size=64")
     end

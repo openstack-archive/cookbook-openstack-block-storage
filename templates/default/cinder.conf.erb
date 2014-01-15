@@ -338,8 +338,8 @@ db_backend=sqlalchemy
 
 ######## defined in cinder.openstack.common.rpc ########
 
-# rpc_backend=cinder.openstack.common.rpc.impl_kombu
 #### (StrOpt) The messaging module to use, defaults to kombu.
+rpc_backend=<%= node["openstack"]["block_storage"]["rpc_backend"] %>
 
 rpc_thread_pool_size=<%= node["openstack"]["block-storage"]["rpc_thread_pool_size"] %>
 

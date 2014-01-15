@@ -71,6 +71,12 @@ default['openstack']['block-storage']['quota_driver'] = 'cinder.quota.DbQuotaDri
 default['openstack']['block-storage']['rpc_thread_pool_size'] = 64
 default['openstack']['block-storage']['rpc_conn_pool_size'] = 30
 default['openstack']['block-storage']['rpc_response_timeout'] = 60
+case node["openstack"]["mq"]["service_type"]
+when "rabbitmq"
+  default["openstack"]["block_storage"]["rpc_backend"] = "cinder.openstack.common.rpc.impl_kombu"
+when "qpid"
+  default["openstack"]["block_storage"]["rpc_backend"] = "cinder.openstack.common.rpc.impl_qpid"
+end
 
 # MQ options
 default['openstack']['block-storage']['mq']['service_type'] = node['openstack']['mq']['service_type']
