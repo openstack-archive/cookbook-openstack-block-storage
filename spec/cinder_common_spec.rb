@@ -49,6 +49,11 @@ describe "openstack-block-storage::cinder-common" do
       expect(sprintf("%o", @file.mode)).to eq "644"
     end
 
+    it "has name templates" do
+      expect(@chef_run).to render_file(@file.name).with_content("volume_name_template=volume-%s")
+      expect(@chef_run).to render_file(@file.name).with_content("snapshot_name_template=snapshot-%s")
+    end
+
     it "has rpc_backend set" do
       expect(@chef_run).to render_file(@file.name).with_content("rpc_backend=cinder.openstack.common.rpc.impl_kombu")
     end

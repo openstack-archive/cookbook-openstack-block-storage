@@ -265,10 +265,10 @@ db_backend=sqlalchemy
 # enable_new_services=true
 #### (BoolOpt) Services to be added to the available pool on create
 
-# volume_name_template=volume-%s
+volume_name_template=<%= node["openstack"]["block-storage"]["volume_name_template"] %>
 #### (StrOpt) Template string to be used to generate volume names
 
-# snapshot_name_template=snapshot-%s
+snapshot_name_template=<%= node["openstack"]["block-storage"]["snapshot_name_template"] %>
 #### (StrOpt) Template string to be used to generate snapshot names
 
 
