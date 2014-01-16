@@ -25,14 +25,13 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-include_recipe "openstack-block-storage::cinder-common"
+include_recipe 'openstack-block-storage::cinder-common'
 
-platform_options = node["openstack"]["block-storage"]["platform"]
+platform_options = node['openstack']['block-storage']['platform']
 
-platform_options["cinder_api_packages"].each do |pkg|
+platform_options['cinder_api_packages'].each do |pkg|
   package pkg do
-    options platform_options["package_overrides"]
-
+    options platform_options['package_overrides']
     action :upgrade
   end
 end
@@ -44,44 +43,43 @@ platform_options["#{db_type}_python_packages"].each do |pkg|
   end
 end
 
-directory ::File.dirname(node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"]) do
-  owner node["openstack"]["block-storage"]["user"]
-  group node["openstack"]["block-storage"]["group"]
+directory ::File.dirname(node['openstack']['block-storage']['api']['auth']['cache_dir']) do
+  owner node['openstack']['block-storage']['user']
+  group node['openstack']['block-storage']['group']
   mode 00700
 end
 
-service "cinder-api" do
-  service_name platform_options["cinder_api_service"]
-  supports :status => true, :restart => true
-
+service 'cinder-api' do
+  service_name platform_options['cinder_api_service']
+  supports status: true, restart: true
   action :enable
-  subscribes :restart, "template[/etc/cinder/cinder.conf]"
+  subscribes :restart, 'template[/etc/cinder/cinder.conf]'
 end
 
-identity_endpoint = endpoint "identity-api"
-identity_admin_endpoint = endpoint "identity-admin"
-service_pass = get_password "service", "openstack-block-storage"
+identity_endpoint = endpoint 'identity-api'
+identity_admin_endpoint = endpoint 'identity-admin'
+service_pass = get_password 'service', 'openstack-block-storage'
 
-execute "cinder-manage db sync"
+execute 'cinder-manage db sync'
 
-template "/etc/cinder/api-paste.ini" do
-  source "api-paste.ini.erb"
-  group  node["openstack"]["block-storage"]["group"]
-  owner  node["openstack"]["block-storage"]["user"]
-  mode   00644
+template '/etc/cinder/api-paste.ini' do
+  source 'api-paste.ini.erb'
+  group node['openstack']['block-storage']['group']
+  owner node['openstack']['block-storage']['user']
+  mode 00644
   variables(
-    :identity_endpoint => identity_endpoint,
-    :identity_admin_endpoint => identity_admin_endpoint,
-    :service_pass => service_pass
-  )
+    identity_endpoint: identity_endpoint,
+    identity_admin_endpoint: identity_admin_endpoint,
+    service_pass: service_pass
+    )
 
-  notifies :restart, "service[cinder-api]", :immediately
+  notifies :restart, 'service[cinder-api]', :immediately
 end
 
-template "/etc/cinder/policy.json" do
-  source "policy.json.erb"
-  owner  node["openstack"]["block-storage"]["user"]
-  group  node["openstack"]["block-storage"]["group"]
-  mode   00644
-  notifies :restart, "service[cinder-api]"
+template '/etc/cinder/policy.json' do
+  source 'policy.json.erb'
+  owner node['openstack']['block-storage']['user']
+  group node['openstack']['block-storage']['group']
+  mode 00644
+  notifies :restart, 'service[cinder-api]'
 end

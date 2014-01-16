@@ -1,3 +1,4 @@
+# encoding: UTF-8
 name             'openstack-block-storage'
 maintainer       'AT&T Services, Inc.'
 maintainer_email 'cookbooks@lists.tfoundry.com'

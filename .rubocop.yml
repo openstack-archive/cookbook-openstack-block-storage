@@ -1,7 +1,15 @@
-# UTF-8 headers not generally in these files
-Encoding:
-  Enabled: false
+AllCops:
+  Includes:
+    - metadata.rb
+    - Gemfile
+    - attributes/**
+    - recipes/**
+    - spec/**
 
 # ignore long lines
 LineLength:
   Enabled: false
+
+# Allow small arrays before forcing  %w or %W
+WordArray:
+  MinSize: 3

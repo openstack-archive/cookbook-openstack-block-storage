@@ -21,13 +21,13 @@
 # limitations under the License.
 #
 
-include_recipe "openstack-block-storage::cinder-common"
+include_recipe 'openstack-block-storage::cinder-common'
 
-platform_options = node["openstack"]["block-storage"]["platform"]
+platform_options = node['openstack']['block-storage']['platform']
 
-platform_options["cinder_scheduler_packages"].each do |pkg|
+platform_options['cinder_scheduler_packages'].each do |pkg|
   package pkg do
-    options platform_options["package_overrides"]
+    options platform_options['package_overrides']
 
     action :upgrade
   end
@@ -40,30 +40,30 @@ platform_options["#{db_type}_python_packages"].each do |pkg|
   end
 end
 
-service "cinder-scheduler" do
-  service_name platform_options["cinder_scheduler_service"]
-  supports :status => true, :restart => true
+service 'cinder-scheduler' do
+  service_name platform_options['cinder_scheduler_service']
+  supports status: true, restart: true
   action [:enable, :start]
-  subscribes :restart, "template[/etc/cinder/cinder.conf]"
+  subscribes :restart, 'template[/etc/cinder/cinder.conf]'
 end
 
-audit_bin_dir = platform?("ubuntu") ? "/usr/bin" : "/usr/local/bin"
-audit_log = node["openstack"]["block-storage"]["cron"]["audit_logfile"]
+audit_bin_dir = platform?('ubuntu') ? '/usr/bin' : '/usr/local/bin'
+audit_log = node['openstack']['block-storage']['cron']['audit_logfile']
 
-if node["openstack"]["metering"]
-  scheduler_role = node["openstack"]["block-storage"]["scheduler_role"]
+if node['openstack']['metering']
+  scheduler_role = node['openstack']['block-storage']['scheduler_role']
   results = search(:node, "roles:#{scheduler_role}")
-  cron_node = results.collect { |a| a.name }.sort[0]
+  cron_node = results.map { |a| a.name }.sort[0]
   Chef::Log.debug("Volume audit cron node: #{cron_node}")
 
-  cron "cinder-volume-usage-audit" do
-    day node["openstack"]["block-storage"]["cron"]["day"] || '*'
-    hour node["openstack"]["block-storage"]["cron"]["hour"] || '*'
-    minute node["openstack"]["block-storage"]["cron"]["minute"]
-    month node["openstack"]["block-storage"]["cron"]["month"] || '*'
-    weekday node["openstack"]["block-storage"]["cron"]["weekday"] || '*'
+  cron 'cinder-volume-usage-audit' do
+    day node['openstack']['block-storage']['cron']['day'] || '*'
+    hour node['openstack']['block-storage']['cron']['hour'] || '*'
+    minute node['openstack']['block-storage']['cron']['minute']
+    month node['openstack']['block-storage']['cron']['month'] || '*'
+    weekday node['openstack']['block-storage']['cron']['weekday'] || '*'
     command "#{audit_bin_dir}/cinder-volume-usage-audit > #{audit_log} 2>&1"
     action cron_node == node.name ? :create : :delete
-    user node["openstack"]["block-storage"]["user"]
+    user node['openstack']['block-storage']['user']
   end
 end

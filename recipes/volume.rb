@@ -26,13 +26,13 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-include_recipe "openstack-block-storage::cinder-common"
+include_recipe 'openstack-block-storage::cinder-common'
 
-platform_options = node["openstack"]["block-storage"]["platform"]
+platform_options = node['openstack']['block-storage']['platform']
 
-platform_options["cinder_volume_packages"].each do |pkg|
+platform_options['cinder_volume_packages'].each do |pkg|
   package pkg do
-    options platform_options["package_overrides"]
+    options platform_options['package_overrides']
     action :upgrade
   end
 end
@@ -44,103 +44,103 @@ platform_options["#{db_type}_python_packages"].each do |pkg|
   end
 end
 
-platform_options["cinder_iscsitarget_packages"].each do |pkg|
+platform_options['cinder_iscsitarget_packages'].each do |pkg|
   package pkg do
-    options platform_options["package_overrides"]
+    options platform_options['package_overrides']
     action :upgrade
   end
 end
 
-case node["openstack"]["block-storage"]["volume"]["driver"]
-when "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
-  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = get_password "service", "netapp"
+case node['openstack']['block-storage']['volume']['driver']
+when 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
+  node.override['openstack']['block-storage']['netapp']['dfm_password'] = get_password 'service', 'netapp'
 
-when "cinder.volume.drivers.RBDDriver"
-  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = get_password "service", "rbd"
+when 'cinder.volume.drivers.RBDDriver'
+  node.override['openstack']['block-storage']['rbd_secret_uuid'] = get_password 'service', 'rbd'
 
-when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
-  node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = get_password "service", "netapp-filer"
+when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
+  node.override['openstack']['block-storage']['netapp']['netapp_server_password'] = get_password 'service', 'netapp-filer'
 
-  directory node["openstack"]["block-storage"]["nfs"]["mount_point_base"] do
-    owner node["openstack"]["block-storage"]["user"]
-    group node["openstack"]["block-storage"]["group"]
+  directory node['openstack']['block-storage']['nfs']['mount_point_base'] do
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
     action :create
   end
 
-  template node["openstack"]["block-storage"]["nfs"]["shares_config"] do
-    source "shares.conf.erb"
-    mode "0600"
-    owner node["openstack"]["block-storage"]["user"]
-    group node["openstack"]["block-storage"]["group"]
+  template node['openstack']['block-storage']['nfs']['shares_config'] do
+    source 'shares.conf.erb'
+    mode '0600'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
     variables(
-      "host" => node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"],
-      "export" => node["openstack"]["block-storage"]["netapp"]["export"]
+      host: node['openstack']['block-storage']['netapp']['netapp_server_hostname'],
+      export: node['openstack']['block-storage']['netapp']['export']
     )
-    notifies :restart, "service[cinder-volume]"
+    notifies :restart, 'service[cinder-volume]'
   end
 
-  platform_options["cinder_nfs_packages"].each do |pkg|
+  platform_options['cinder_nfs_packages'].each do |pkg|
     package pkg do
-      options platform_options["package_overrides"]
+      options platform_options['package_overrides']
       action :upgrade
     end
   end
 
-when "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+when 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
   file node['openstack']['block-storage']['san']['san_private_key'] do
-    mode "0400"
-    owner node["openstack"]["block-storage"]["user"]
-    group node["openstack"]["block-storage"]["group"]
-end
+    mode '0400'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+  end
 
-when "cinder.volume.drivers.lvm.LVMISCSIDriver"
-  if node["openstack"]["block-storage"]["volume"]["create_volume_group"]
-    volume_size = node["openstack"]["block-storage"]["volume"]["volume_group_size"]
+when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+  if node['openstack']['block-storage']['volume']['create_volume_group']
+    volume_size = node['openstack']['block-storage']['volume']['volume_group_size']
     seek_count = volume_size.to_i * 1024
     # default volume group is 40G
     seek_count = 40 * 1024 if seek_count == 0
-    vg_name = node["openstack"]["block-storage"]["volume"]["volume_group"]
-    vg_file = "#{node["openstack"]["block-storage"]["volume"]["state_path"]}/#{vg_name}.img"
+    vg_name = node['openstack']['block-storage']['volume']['volume_group']
+    vg_file = "#{node['openstack']['block-storage']['volume']['state_path']}/#{vg_name}.img"
 
     # create volume group
-    execute "Create Cinder volume group" do
+    execute 'Create Cinder volume group' do
       command "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate #{vg_name} $(losetup --show -f #{vg_file})"
       action :run
       not_if "vgs #{vg_name}"
     end
 
-    template "/etc/init.d/cinder-group-active" do
-      source "cinder-group-active.erb"
-      mode "755"
+    template '/etc/init.d/cinder-group-active' do
+      source 'cinder-group-active.erb'
+      mode '755'
       variables(
-        "volume_file" => vg_file
+        volume_file: vg_file
       )
-      notifies :start, "service[cinder-group-active]", :immediately
+      notifies :start, 'service[cinder-group-active]', :immediately
     end
 
-    service "cinder-group-active" do
-      service_name "cinder-group-active"
+    service 'cinder-group-active' do
+      service_name 'cinder-group-active'
 
-      action [ :enable, :start ]
+      action [:enable, :start]
     end
   end
 end
 
-service "cinder-volume" do
-  service_name platform_options["cinder_volume_service"]
-  supports :status => true, :restart => true
+service 'cinder-volume' do
+  service_name platform_options['cinder_volume_service']
+  supports status: true, restart: true
   action [:enable, :start]
-  subscribes :restart, "template[/etc/cinder/cinder.conf]"
+  subscribes :restart, 'template[/etc/cinder/cinder.conf]'
 end
 
-service "iscsitarget" do
-  service_name platform_options["cinder_iscsitarget_service"]
-  supports :status => true, :restart => true
+service 'iscsitarget' do
+  service_name platform_options['cinder_iscsitarget_service']
+  supports status: true, restart: true
   action :enable
 end
 
-template "/etc/tgt/targets.conf" do
-  source "targets.conf.erb"
+template '/etc/tgt/targets.conf' do
+  source 'targets.conf.erb'
   mode   00600
-  notifies :restart, "service[iscsitarget]", :immediately
+  notifies :restart, 'service[iscsitarget]', :immediately
 end

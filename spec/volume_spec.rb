@@ -2,189 +2,189 @@
 #
 # Cookbook Name:: openstack-block-storage
 
-require_relative "spec_helper"
+require_relative 'spec_helper'
 
-describe "openstack-block-storage::volume" do
+describe 'openstack-block-storage::volume' do
   before { block_storage_stubs }
-  describe "ubuntu" do
+  describe 'ubuntu' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["syslog"]["use"] = true
+        n.set['openstack']['block-storage']['syslog']['use'] = true
       end
-      @chef_run.converge "openstack-block-storage::volume"
+      @chef_run.converge 'openstack-block-storage::volume'
     end
 
     expect_runs_openstack_common_logging_recipe
 
-    it "doesn't run logging recipe" do
+    it 'does not run logging recipe' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      chef_run.converge "openstack-block-storage::volume"
+      chef_run.converge 'openstack-block-storage::volume'
 
-      expect(chef_run).not_to include_recipe "openstack-common::logging"
+      expect(chef_run).not_to include_recipe 'openstack-common::logging'
     end
 
-    it "installs cinder volume packages" do
-      expect(@chef_run).to upgrade_package "cinder-volume"
+    it 'installs cinder volume packages' do
+      expect(@chef_run).to upgrade_package 'cinder-volume'
     end
 
-    it "installs mysql python packages by default" do
-      expect(@chef_run).to upgrade_package "python-mysqldb"
+    it 'installs mysql python packages by default' do
+      expect(@chef_run).to upgrade_package 'python-mysqldb'
     end
 
-    it "installs postgresql python packages if explicitly told" do
+    it 'installs postgresql python packages if explicitly told' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
-      node.set["openstack"]["db"]["volume"]["db_type"] = "postgresql"
-      chef_run.converge "openstack-block-storage::volume"
+      node.set['openstack']['db']['volume']['db_type'] = 'postgresql'
+      chef_run.converge 'openstack-block-storage::volume'
 
-      expect(chef_run).to upgrade_package "python-psycopg2"
-      expect(chef_run).not_to upgrade_package "python-mysqldb"
+      expect(chef_run).to upgrade_package 'python-psycopg2'
+      expect(chef_run).not_to upgrade_package 'python-mysqldb'
     end
 
-    it "installs cinder iscsi packages" do
-      expect(@chef_run).to upgrade_package "tgt"
+    it 'installs cinder iscsi packages' do
+      expect(@chef_run).to upgrade_package 'tgt'
     end
 
-    it "installs nfs packages" do
+    it 'installs nfs packages' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
-      chef_run.converge "openstack-block-storage::volume"
+      chef_run.converge 'openstack-block-storage::volume'
 
-      expect(chef_run).to upgrade_package "nfs-common"
+      expect(chef_run).to upgrade_package 'nfs-common'
     end
 
-    it "creates the nfs mount point" do
+    it 'creates the nfs mount point' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
-      chef_run.converge "openstack-block-storage::volume"
+      chef_run.converge 'openstack-block-storage::volume'
 
-      expect(chef_run).to create_directory "/mnt/cinder-volumes"
+      expect(chef_run).to create_directory '/mnt/cinder-volumes'
     end
 
-    it "configures netapp dfm password" do
-      ::Chef::Recipe.any_instance.stub(:get_password).with("service", "netapp")
-        .and_return "netapp-pass"
+    it 'configures netapp dfm password' do
+      ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'netapp')
+        .and_return 'netapp-pass'
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
       end
-      chef_run.converge "openstack-block-storage::volume"
-      n = chef_run.node["openstack"]["block-storage"]["netapp"]["dfm_password"]
+      chef_run.converge 'openstack-block-storage::volume'
+      n = chef_run.node['openstack']['block-storage']['netapp']['dfm_password']
 
-      expect(n).to eq "netapp-pass"
+      expect(n).to eq 'netapp-pass'
     end
 
-    it "configures rbd password" do
-      ::Chef::Recipe.any_instance.stub(:get_password).with("service", "rbd")
-        .and_return "rbd-pass"
+    it 'configures rbd password' do
+      ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'rbd')
+        .and_return 'rbd-pass'
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.RBDDriver"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.RBDDriver'
       end
-      chef_run.converge "openstack-block-storage::volume"
-      n = chef_run.node["openstack"]["block-storage"]["rbd_secret_uuid"]
+      chef_run.converge 'openstack-block-storage::volume'
+      n = chef_run.node['openstack']['block-storage']['rbd_secret_uuid']
 
-      expect(n).to eq "rbd-pass"
+      expect(n).to eq 'rbd-pass'
     end
 
-    it "configures storewize private key" do
+    it 'configures storewize private key' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
       end
-      chef_run.converge "openstack-block-storage::volume"
+      chef_run.converge 'openstack-block-storage::volume'
 
-      san_key = chef_run.file chef_run.node["openstack"]["block-storage"]["san"]["san_private_key"]
+      san_key = chef_run.file chef_run.node['openstack']['block-storage']['san']['san_private_key']
       expect(san_key.mode).to eq('0400')
     end
 
-    it "configures storewize with iscsi" do
+    it 'configures storewize with iscsi' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
-        n.set["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] = "iSCSI"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
+        n.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'iSCSI'
       end
-      conf = "/etc/cinder/cinder.conf"
-      chef_run.converge "openstack-block-storage::volume"
+      conf = '/etc/cinder/cinder.conf'
+      chef_run.converge 'openstack-block-storage::volume'
 
       # Test that the FC specific options are not set when connected via iSCSI
-      expect(chef_run).not_to render_file(conf).with_content("storwize_svc_multipath_enabled")
+      expect(chef_run).not_to render_file(conf).with_content('storwize_svc_multipath_enabled')
     end
 
-    it "configures storewize with fc" do
+    it 'configures storewize with fc' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver"
-        n.set["openstack"]["block-storage"]["storwize"]["storwize_svc_connection_protocol"] = "FC"
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
+        n.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'FC'
       end
-      conf = "/etc/cinder/cinder.conf"
-      chef_run.converge "openstack-block-storage::volume"
+      conf = '/etc/cinder/cinder.conf'
+      chef_run.converge 'openstack-block-storage::volume'
 
       # Test that the iSCSI specific options are not set when connected via FC
-      expect(chef_run).not_to render_file(conf).with_content("storwize_svc_iscsi_chap_enabled")
+      expect(chef_run).not_to render_file(conf).with_content('storwize_svc_iscsi_chap_enabled')
     end
 
-    it "starts cinder volume" do
-      expect(@chef_run).to start_service "cinder-volume"
+    it 'starts cinder volume' do
+      expect(@chef_run).to start_service 'cinder-volume'
     end
 
-    it "starts cinder volume on boot" do
-      expect(@chef_run).to enable_service "cinder-volume"
+    it 'starts cinder volume on boot' do
+      expect(@chef_run).to enable_service 'cinder-volume'
     end
 
-    expect_creates_cinder_conf "service[cinder-volume]", "cinder", "cinder"
+    expect_creates_cinder_conf 'service[cinder-volume]', 'cinder', 'cinder'
 
-    it "starts iscsi target on boot" do
-      expect(@chef_run).to enable_service "tgt"
+    it 'starts iscsi target on boot' do
+      expect(@chef_run).to enable_service 'tgt'
     end
 
-    describe "targets.conf" do
+    describe 'targets.conf' do
       before do
-        @file = @chef_run.template "/etc/tgt/targets.conf"
+        @file = @chef_run.template '/etc/tgt/targets.conf'
       end
 
-      it "has proper modes" do
-        expect(sprintf("%o", @file.mode)).to eq "600"
+      it 'has proper modes' do
+        expect(sprintf('%o', @file.mode)).to eq '600'
       end
 
-      it "notifies iscsi restart" do
-        expect(@file).to notify("service[iscsitarget]").to(:restart)
+      it 'notifies iscsi restart' do
+        expect(@file).to notify('service[iscsitarget]').to(:restart)
       end
 
-      it "has ubuntu include" do
-        expect(@chef_run).to render_file(@file.name).with_content("include /etc/tgt/conf.d/*.conf")
-        expect(@chef_run).not_to render_file(@file.name).with_content("include /var/lib/cinder/volumes/*")
+      it 'has ubuntu include' do
+        expect(@chef_run).to render_file(@file.name).with_content('include /etc/tgt/conf.d/*.conf')
+        expect(@chef_run).not_to render_file(@file.name).with_content('include /var/lib/cinder/volumes/*')
       end
     end
 
-    describe "create_vg" do
+    describe 'create_vg' do
       before do
         @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-          n.set["openstack"]["block-storage"]["volume"]["driver"] = "cinder.volume.drivers.lvm.LVMISCSIDriver"
-          n.set["openstack"]["block-storage"]["volume"]["create_volume_group"] = true
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+          n.set['openstack']['block-storage']['volume']['create_volume_group'] = true
         end
-        stub_command("vgs cinder-volumes").and_return(false)
-        @filename = "/etc/init.d/cinder-group-active"
-        @chef_run.converge "openstack-block-storage::volume"
+        stub_command('vgs cinder-volumes').and_return(false)
+        @filename = '/etc/init.d/cinder-group-active'
+        @chef_run.converge 'openstack-block-storage::volume'
         @file = @chef_run.template(@filename)
       end
 
-      it "cinder vg active" do
-        expect(@chef_run).to enable_service "cinder-group-active"
+      it 'cinder vg active' do
+        expect(@chef_run).to enable_service 'cinder-group-active'
       end
 
-      it "create volume group" do
-        volume_size = @chef_run.node["openstack"]["block-storage"]["volume"]["volume_group_size"]
+      it 'create volume group' do
+        volume_size = @chef_run.node['openstack']['block-storage']['volume']['volume_group_size']
         seek_count = volume_size.to_i * 1024
-        group_name = @chef_run.node["openstack"]["block-storage"]["volume"]["volume_group"]
-        path = @chef_run.node["openstack"]["block-storage"]["volume"]["state_path"]
+        group_name = @chef_run.node['openstack']['block-storage']['volume']['volume_group']
+        path = @chef_run.node['openstack']['block-storage']['volume']['state_path']
         vg_file = "#{path}/#{group_name}.img"
         cmd = "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate cinder-volumes $(losetup --show -f #{vg_file})"
         expect(@chef_run).to run_execute(cmd)
       end
 
-      it "notifies cinder group active start" do
-        expect(@file).to notify("service[cinder-group-active]").to(:start)
+      it 'notifies cinder group active start' do
+        expect(@file).to notify('service[cinder-group-active]').to(:start)
       end
 
-      it "creates cinder group active template file" do
+      it 'creates cinder group active template file' do
         expect(@chef_run).to create_template(@filename)
       end
     end

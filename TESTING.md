@@ -14,15 +14,6 @@ To run the tests:
 
 [Rubocop](https://github.com/bbatsov/rubocop) is a static Ruby code analyzer, based on the community [Ruby style guide](https://github.com/bbatsov/ruby-style-guide). We are attempting to adhere to this where applicable, slowly cleaning up the cookbooks until we can turn on Rubocop for gating the commits.
 
-### Attribute Rules ###
-
-Since there are slight style differences between the coding of attributes, recipes and metadata files there are specific `.rubocop.yml` files for each of:
-
-   [Gemfile and metadata.rb](.rubocop.yml)
-   [attributes/*.rb](attributes/.rubocop.yml)
-   [recipes/.rubocop.yml](recipes/.rubocop.yml)
-   [spec/.rubocop.yml](spec/.rubocop.yml)
-
 ## Knife ##
 
 [knife cookbook test](http://docs.opscode.com/chef/knife.html#test) is used to check the cookbook's Ruby and ERB files for basic syntax errors.

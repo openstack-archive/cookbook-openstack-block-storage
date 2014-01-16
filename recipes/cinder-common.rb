@@ -17,56 +17,55 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-if node["openstack"]["block-storage"]["syslog"]["use"]
-  include_recipe "openstack-common::logging"
+if node['openstack']['block-storage']['syslog']['use']
+  include_recipe 'openstack-common::logging'
 end
 
-platform_options = node["openstack"]["block-storage"]["platform"]
+platform_options = node['openstack']['block-storage']['platform']
 
-platform_options["cinder_common_packages"].each do |pkg|
+platform_options['cinder_common_packages'].each do |pkg|
   package pkg do
-    options platform_options["package_overrides"]
-
+    options platform_options['package_overrides']
     action :upgrade
   end
 end
 
-db_user = node["openstack"]["block-storage"]["db"]["username"]
-db_pass = get_password "db", "cinder"
-sql_connection = db_uri("volume", db_user, db_pass)
+db_user = node['openstack']['block-storage']['db']['username']
+db_pass = get_password 'db', 'cinder'
+sql_connection = db_uri('volume', db_user, db_pass)
 
-if node["openstack"]["block-storage"]["mq"]["service_type"] == "rabbitmq"
-  if node["openstack"]["block-storage"]["rabbit"]["ha"]
+if node['openstack']['block-storage']['mq']['service_type'] == 'rabbitmq'
+  if node['openstack']['block-storage']['rabbit']['ha']
     rabbit_hosts = rabbit_servers
   end
-  rabbit_pass = get_password "user", node["openstack"]["block-storage"]["rabbit"]["username"]
+  rabbit_pass = get_password 'user', node['openstack']['block-storage']['rabbit']['username']
 end
 
-glance_api_endpoint = endpoint "image-api"
+glance_api_endpoint = endpoint 'image-api'
 
-directory "/etc/cinder" do
-  group  node["openstack"]["block-storage"]["group"]
-  owner  node["openstack"]["block-storage"]["user"]
+directory '/etc/cinder' do
+  group node['openstack']['block-storage']['group']
+  owner node['openstack']['block-storage']['user']
   mode 00750
   action :create
 end
 
-template "/etc/cinder/cinder.conf" do
-  source "cinder.conf.erb"
-  group  node["openstack"]["block-storage"]["group"]
-  owner  node["openstack"]["block-storage"]["user"]
-  mode   00644
+template '/etc/cinder/cinder.conf' do
+  source 'cinder.conf.erb'
+  group node['openstack']['block-storage']['group']
+  owner node['openstack']['block-storage']['user']
+  mode 00644
   variables(
-    :sql_connection => sql_connection,
-    :rabbit_password => rabbit_pass,
-    :rabbit_hosts => rabbit_hosts,
-    :glance_host => glance_api_endpoint.host,
-    :glance_port => glance_api_endpoint.port
+    sql_connection: sql_connection,
+    rabbit_password: rabbit_pass,
+    rabbit_hosts: rabbit_hosts,
+    glance_host: glance_api_endpoint.host,
+    glance_port: glance_api_endpoint.port
   )
 end
 
-directory node["openstack"]["block-storage"]["lock_path"] do
-  group  node["openstack"]["block-storage"]["group"]
-  owner  node["openstack"]["block-storage"]["user"]
-  mode  00700
+directory node['openstack']['block-storage']['lock_path'] do
+  group node['openstack']['block-storage']['group']
+  owner node['openstack']['block-storage']['user']
+  mode 00700
 end
