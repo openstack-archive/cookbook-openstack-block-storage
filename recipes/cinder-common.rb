@@ -30,15 +30,15 @@ platform_options['cinder_common_packages'].each do |pkg|
   end
 end
 
-db_user = node['openstack']['block-storage']['db']['username']
+db_user = node['openstack']['db']['block-storage']['username']
 db_pass = get_password 'db', 'cinder'
-sql_connection = db_uri('volume', db_user, db_pass)
+sql_connection = db_uri('block-storage', db_user, db_pass)
 
-if node['openstack']['block-storage']['mq']['service_type'] == 'rabbitmq'
-  if node['openstack']['block-storage']['rabbit']['ha']
+if node['openstack']['mq']['block-storage']['service_type'] == 'rabbitmq'
+  if node['openstack']['mq']['block-storage']['rabbit']['ha']
     rabbit_hosts = rabbit_servers
   end
-  rabbit_pass = get_password 'user', node['openstack']['block-storage']['rabbit']['username']
+  rabbit_pass = get_password 'user', node['openstack']['mq']['block-storage']['rabbit']['userid']
 end
 
 glance_api_endpoint = endpoint 'image-api'

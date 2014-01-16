@@ -29,7 +29,7 @@ end
 identity_admin_endpoint = endpoint 'identity-admin'
 bootstrap_token = secret 'secrets', 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
-cinder_api_endpoint = endpoint 'volume-api'
+cinder_api_endpoint = endpoint 'block-storage-api'
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
 service_tenant_name = node['openstack']['block-storage']['service_tenant_name']

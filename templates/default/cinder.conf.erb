@@ -172,8 +172,8 @@ auth_strategy=keystone
 #### (StrOpt) The strategy to use for auth. Supports noauth, keystone, and
 ####          deprecated.
 
-<% if node["openstack"]["block-storage"]["rabbit"]["control_exchange"] %>
-control_exchange=<%=node["openstack"]["block-storage"]["rabbit"]["control_exchange"]%>
+<% if node["openstack"]["mq"]["block-storage"]["rabbit"]["control_exchange"] %>
+control_exchange=<%=node["openstack"]["mq"]["block-storage"]["rabbit"]["control_exchange"]%>
 <% end %>
 # control_exchange=cinder
 #### (StrOpt) AMQP exchange to connect to if using RabbitMQ or Qpid
@@ -362,7 +362,7 @@ rpc_response_timeout=<%= node["openstack"]["block-storage"]["rpc_response_timeou
 ####           receiving exception data from an rpc call.
 
 
-<% if node["openstack"]["block-storage"]["mq"]["service_type"] == "rabbitmq"  %>
+<% if node["openstack"]["mq"]["block-storage"]["service_type"] == "rabbitmq"  %>
 
 # fake_rabbit=false
 #### (BoolOpt) If passed, use a fake RabbitMQ provider
@@ -381,7 +381,7 @@ rpc_response_timeout=<%= node["openstack"]["block-storage"]["rpc_response_timeou
 # kombu_ssl_ca_certs=
 #### (StrOpt) SSL certification authority file (valid only if SSL enabled)
 
-<% if node["openstack"]["block-storage"]["rabbit"]["ha"] -%>
+<% if node["openstack"]["mq"]["block-storage"]["rabbit"]["ha"] -%>
 rabbit_hosts=<%= @rabbit_hosts %>
 #### (ListOpt) RabbitMQ HA cluster host:port pairs
 
@@ -392,23 +392,23 @@ rabbit_ha_queues=True
 #### (BoolOpt) use H/A queues in RabbitMQ (x-ha-policy: all).You need to
 ####           wipe RabbitMQ database when changing this option.
 <% else -%>
-rabbit_host=<%= node["openstack"]["block-storage"]["rabbit"]["host"] %>
+rabbit_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["host"] %>
 #### (StrOpt) The RabbitMQ broker address where a single node is used
 
-rabbit_port=<%= node["openstack"]["block-storage"]["rabbit"]["port"] %>
+rabbit_port=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["port"] %>
 #### (IntOpt) The RabbitMQ broker port where a single node is used
 <% end -%>
 
-# rabbit_use_ssl=false
+rabbit_use_ssl=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["use_ssl"] %>
 #### (BoolOpt) connect over SSL for RabbitMQ
 
-rabbit_userid=<%= node["openstack"]["block-storage"]["rabbit"]["username"] %>
+rabbit_userid=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["userid"] %>
 #### (StrOpt) the RabbitMQ userid
 
 rabbit_password=<%= @rabbit_password %>
 #### (StrOpt) the RabbitMQ password
 
-rabbit_virtual_host=<%= node["openstack"]["block-storage"]["rabbit"]["vhost"] %>
+rabbit_virtual_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["vhost"] %>
 #### (StrOpt) the RabbitMQ virtual host
 
 # rabbit_retry_interval=1
@@ -425,52 +425,52 @@ rabbit_virtual_host=<%= node["openstack"]["block-storage"]["rabbit"]["vhost"] %>
 <% end %>
 
 
-<% if node["openstack"]["block-storage"]["mq"]["service_type"] == "qpid"  %>
+<% if node["openstack"]["mq"]["block-storage"]["service_type"] == "qpid"  %>
 
 ##### QPID #####
 ######## defined in cinder.openstack.common.rpc.impl_qpid ########
 rpc_backend=cinder.openstack.common.rpc.impl_qpid
 
-qpid_hostname=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["host"] %>
+qpid_hostname=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["host"] %>
 #### (StrOpt) Qpid broker hostname
 
-qpid_port=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["port"] %>
+qpid_port=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["port"] %>
 #### (StrOpt) Qpid broker port
 
-qpid_username=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["username"] %>
+qpid_username=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["username"] %>
 #### (StrOpt) Username for qpid connection
 
-qpid_password=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["password"] %>
+qpid_password=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["password"] %>
 #### (StrOpt) Password for qpid connection
 
-qpid_sasl_mechanisms=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["sasl_mechanisms"] %>
+qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["sasl_mechanisms"] %>
 #### (StrOpt) Space separated list of SASL mechanisms to use for auth
 
-qpid_reconnect=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect"] %>
+qpid_reconnect=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect"] %>
 #### (BoolOpt) Automatically reconnect
 
-qpid_reconnect_timeout=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_timeout"] %>
+qpid_reconnect_timeout=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect_timeout"] %>
 #### (IntOpt) Reconnection timeout in seconds
 
-qpid_reconnect_limit=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_limit"] %>
+qpid_reconnect_limit=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect_limit"] %>
 #### (IntOpt) Max reconnections before giving up
 
-qpid_reconnect_interval_min=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval_min"] %>
+qpid_reconnect_interval_min=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect_interval_min"] %>
 #### (IntOpt) Minimum seconds between reconnection attempts
 
-qpid_reconnect_interval_max=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval_max"] %>
+qpid_reconnect_interval_max=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect_interval_max"] %>
 #### (IntOpt) Maximum seconds between reconnection attempts
 
-qpid_reconnect_interval=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["reconnect_interval"] %>
+qpid_reconnect_interval=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["reconnect_interval"] %>
 #### (IntOpt) Equivalent to setting max and min to the same value
 
-qpid_heartbeat=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["heartbeat"] %>
+qpid_heartbeat=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["heartbeat"] %>
 #### (IntOpt) Seconds between connection keepalive heartbeats
 
-qpid_protocol=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["protocol"] %>
+qpid_protocol=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["protocol"] %>
 #### (StrOpt) Transport to use, either 'tcp' or 'ssl'
 
-qpid_tcp_nodelay=<%= node["openstack"]["block-storage"]["mq"]["qpid"]["tcp_nodelay"] %>
+qpid_tcp_nodelay=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["tcp_nodelay"] %>
 #### (BoolOpt) Disable Nagle algorithm
 
 <% end %>

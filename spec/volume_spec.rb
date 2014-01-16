@@ -34,7 +34,7 @@ describe 'openstack-block-storage::volume' do
     it 'installs postgresql python packages if explicitly told' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
-      node.set['openstack']['db']['volume']['db_type'] = 'postgresql'
+      node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
       chef_run.converge 'openstack-block-storage::volume'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'

@@ -82,37 +82,6 @@ when 'qpid'
   default['openstack']['block_storage']['rpc_backend'] = 'cinder.openstack.common.rpc.impl_qpid'
 end
 
-# MQ options
-default['openstack']['block-storage']['mq']['service_type'] = node['openstack']['mq']['service_type']
-default['openstack']['block-storage']['mq']['qpid']['host'] = '127.0.0.1'
-default['openstack']['block-storage']['mq']['qpid']['port'] = '5672'
-default['openstack']['block-storage']['mq']['qpid']['qpid_hosts'] = ['127.0.0.1:5672']
-
-default['openstack']['block-storage']['mq']['qpid']['username'] = ''
-default['openstack']['block-storage']['mq']['qpid']['password'] = ''
-default['openstack']['block-storage']['mq']['qpid']['sasl_mechanisms'] = ''
-default['openstack']['block-storage']['mq']['qpid']['reconnect'] = true
-default['openstack']['block-storage']['mq']['qpid']['reconnect_timeout'] = 0
-default['openstack']['block-storage']['mq']['qpid']['reconnect_limit'] = 0
-default['openstack']['block-storage']['mq']['qpid']['reconnect_interval_min'] = 0
-default['openstack']['block-storage']['mq']['qpid']['reconnect_interval_max'] = 0
-default['openstack']['block-storage']['mq']['qpid']['reconnect_interval'] = 0
-default['openstack']['block-storage']['mq']['qpid']['heartbeat'] = 60
-default['openstack']['block-storage']['mq']['qpid']['protocol'] = 'tcp'
-default['openstack']['block-storage']['mq']['qpid']['tcp_nodelay'] = true
-
-# This user's password is stored in an encrypted databag
-# and accessed with openstack-common cookbook library's
-# get_password routine.  You are expected to create
-# the user, pass, vhost in a wrapper rabbitmq cookbook.
-default['openstack']['block-storage']['rabbit']['username'] = 'guest'
-default['openstack']['block-storage']['rabbit']['vhost'] = '/'
-default['openstack']['block-storage']['rabbit']['port'] = 5672
-default['openstack']['block-storage']['rabbit']['host'] = '127.0.0.1'
-default['openstack']['block-storage']['rabbit']['ha'] = false
-
-default['openstack']['block-storage']['db']['username'] = 'cinder'
-
 default['openstack']['block-storage']['service_tenant_name'] = 'service'
 default['openstack']['block-storage']['service_user'] = 'cinder'
 default['openstack']['block-storage']['service_role'] = 'admin'

@@ -107,6 +107,10 @@ describe 'openstack-block-storage::cinder-common' do
       expect(@chef_run).to render_file(@file.name).with_content('rabbit_port=5672')
     end
 
+    it 'has rabbit_use_ssl' do
+      expect(@chef_run).to render_file(@file.name).with_content('rabbit_use_ssl=false')
+    end
+
     it 'has rabbit_userid' do
       expect(@chef_run).to render_file(@file.name).with_content('rabbit_userid=guest')
     end
@@ -122,7 +126,7 @@ describe 'openstack-block-storage::cinder-common' do
     describe 'rabbit ha' do
       before do
         @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
-          n.set['openstack']['block-storage']['rabbit']['ha'] = true
+          n.set['openstack']['mq']['block-storage']['rabbit']['ha'] = true
         end
         @chef_run.converge 'openstack-block-storage::cinder-common'
       end
@@ -147,7 +151,8 @@ describe 'openstack-block-storage::cinder-common' do
     describe 'qpid' do
       before do
         @file = @chef_run.template '/etc/cinder/cinder.conf'
-        @chef_run.node.set['openstack']['block-storage']['mq']['service_type'] = 'qpid'
+        @chef_run.node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
+        @chef_run.converge 'openstack-block-storage::cinder-common'
       end
 
       it 'has qpid_hostname' do
