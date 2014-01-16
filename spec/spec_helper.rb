@@ -27,17 +27,15 @@ require_relative "support/matcher"
 def block_storage_stubs
   ::Chef::Recipe.any_instance.stub(:rabbit_servers)
     .and_return "1.1.1.1:5672,2.2.2.2:5672"
+  ::Chef::Recipe.any_instance.stub(:get_password).and_return ''
   ::Chef::Recipe.any_instance.stub(:secret)
     .with("secrets", "openstack_identity_bootstrap_token")
     .and_return "bootstrap-token"
-  ::Chef::Recipe.any_instance.stub(:db_password).and_return ''
-  ::Chef::Recipe.any_instance.stub(:user_password).and_return ''
-  ::Chef::Recipe.any_instance.stub(:user_password)
-    .with("guest")
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with("user", "guest")
     .and_return "rabbit-pass"
-  ::Chef::Recipe.any_instance.stub(:service_password).and_return ''
-  ::Chef::Recipe.any_instance.stub(:service_password)
-    .with("openstack-block-storage")
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with("service", "openstack-block-storage")
     .and_return "cinder-pass"
   ::Chef::Application.stub(:fatal!)
 end

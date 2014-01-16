@@ -53,13 +53,13 @@ end
 
 case node["openstack"]["block-storage"]["volume"]["driver"]
 when "cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver"
-  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = service_password "netapp"
+  node.override["openstack"]["block-storage"]["netapp"]["dfm_password"] = get_password "service", "netapp"
 
 when "cinder.volume.drivers.RBDDriver"
-  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = service_password "rbd"
+  node.override["openstack"]["block-storage"]["rbd_secret_uuid"] = get_password "service", "rbd"
 
 when "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver"
-  node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = service_password "netapp-filer"
+  node.override["openstack"]["block-storage"]["netapp"]["netapp_server_password"] = get_password "service", "netapp-filer"
 
   directory node["openstack"]["block-storage"]["nfs"]["mount_point_base"] do
     owner node["openstack"]["block-storage"]["user"]
