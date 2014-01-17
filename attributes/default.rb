@@ -43,6 +43,10 @@ default['openstack']['block-storage']['lock_path'] = '/var/lock/cinder'
 default['openstack']['block-storage']['region'] = 'RegionOne'
 default['openstack']['block-storage']['scheduler_role'] = 'os-block-storage-scheduler'
 
+# Template strings to be used to generate resource names
+default['openstack']['block-storage']['volume_name_template'] = 'volume-%s'
+default['openstack']['block-storage']['snapshot_name_template'] = 'snapshot-%s'
+
 # The name of the Chef role that knows about the message queue server
 # that Cinder uses
 default['openstack']['block-storage']['rabbit_server_chef_role'] = 'os-ops-messaging'

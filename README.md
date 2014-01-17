@@ -45,6 +45,8 @@ Attributes
 * `openstack["block-storage"]["db"]["username"]` - cinder username for database
 TODO: Add DB2 support on other platforms
 * `openstack["block-storage"]["platform"]["db2_python_packages"]` - Array of DB2 python packages, only available on redhat platform
+* `openstack["block-storage"]["volume_name_template"]` - Template string to be used to generate volume names
+* `openstack["block-storage"]["snapshot_name_template"]` - Template string to be used to generate snapshot names
 
 MQ attributes
 -------------
