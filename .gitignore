@@ -1,3 +1,4 @@
 .bundle/
 .cookbooks/
 .kitchen
+Berksfile.lock
