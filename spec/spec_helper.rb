@@ -26,17 +26,22 @@ require_relative 'support/matcher'
 
 def block_storage_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:rabbit_servers)
-    .and_return '1.1.1.1:5672,2.2.2.2:5672'
-  ::Chef::Recipe.any_instance.stub(:get_password).and_return ''
+    .and_return('1.1.1.1:5672,2.2.2.2:5672')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('service', anything)
+    .and_return('')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('db', anything)
+    .and_return('')
   ::Chef::Recipe.any_instance.stub(:secret)
     .with('secrets', 'openstack_identity_bootstrap_token')
-    .and_return 'bootstrap-token'
+    .and_return('bootstrap-token')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'guest')
-    .and_return 'rabbit-pass'
+    .and_return('rabbit-pass')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('service', 'openstack-block-storage')
-    .and_return 'cinder-pass'
+    .and_return('cinder-pass')
   ::Chef::Application.stub(:fatal!)
 end
 
