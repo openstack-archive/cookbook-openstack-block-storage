@@ -79,7 +79,7 @@ describe 'openstack-block-storage::volume' do
       ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'rbd')
         .and_return 'rbd-pass'
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.RBDDriver'
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
       n = chef_run.node['openstack']['block-storage']['rbd_secret_uuid']
