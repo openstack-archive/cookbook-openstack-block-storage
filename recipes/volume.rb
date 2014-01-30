@@ -113,6 +113,7 @@ when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
       source 'cinder-group-active.erb'
       mode '755'
       variables(
+        volume_name: vg_name,
         volume_file: vg_file
       )
       notifies :start, 'service[cinder-group-active]', :immediately
