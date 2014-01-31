@@ -147,8 +147,11 @@ default['openstack']['block-storage']['volume']['iscsi_port'] = '3260'
 
 # Ceph/RADOS options
 default['openstack']['block-storage']['rbd_pool'] = 'rbd'
-default['openstack']['block-storage']['rbd_user'] = nil
+default['openstack']['block-storage']['rbd_user'] = 'cinder'
 default['openstack']['block-storage']['rbd_secret_uuid'] = nil
+# make this a valid uuid for when node['openstack']['developer_mode'] = true
+default['openstack']['block-storage']['rbd_secret_name'] = '00000000-0000-0000-0000-000000000000'
+default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_key'
 
 # Cinder Policy defaults
 default['openstack']['block-storage']['policy']['context_is_admin'] = '["role:admin"]'
@@ -175,6 +178,7 @@ when 'fedora', 'redhat', 'centos' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
     'cinder_iscsitarget_packages' => ['scsi-target-utils'],
     'cinder_iscsitarget_service' => 'tgtd',
+    'cinder_ceph_packages' => ['python-ceph'],
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
     'package_overrides' => ''
   }
@@ -192,6 +196,7 @@ when 'suse'
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
     'cinder_volume_packages' => ['openstack-cinder-volume'],
     'cinder_volume_service' => 'openstack-cinder-volume',
+    'cinder_ceph_packages' => ['python-ceph'],
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgtd',
     'cinder_nfs_packages' => ['nfs-utils']
@@ -210,6 +215,7 @@ when 'ubuntu'
     'cinder_volume_service' => 'cinder-volume',
     'cinder_scheduler_packages' => ['cinder-scheduler'],
     'cinder_scheduler_service' => 'cinder-scheduler',
+    'cinder_ceph_packages' => ['python-ceph'],
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgt',
     'cinder_nfs_packages' => ['nfs-common'],

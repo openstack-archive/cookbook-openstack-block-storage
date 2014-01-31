@@ -56,7 +56,32 @@ when 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
   node.override['openstack']['block-storage']['netapp']['dfm_password'] = get_password 'service', 'netapp'
 
 when 'cinder.volume.drivers.rbd.RBDDriver'
-  node.override['openstack']['block-storage']['rbd_secret_uuid'] = get_password 'service', 'rbd'
+  # this is used in the cinder.conf template
+  node.override['openstack']['block-storage']['rbd_secret_uuid'] = secret 'secrets', node['openstack']['block-storage']['rbd_secret_name']
+
+  rbd_user = node['openstack']['block-storage']['rbd_user']
+  rbd_key = get_password 'service', node['openstack']['block-storage']['rbd_key_name']
+
+  include_recipe 'openstack-common::ceph_client'
+
+  platform_options['cinder_ceph_packages'].each do |pkg|
+    package pkg do
+      options platform_options['package_overrides']
+      action :install
+    end
+  end
+
+  template "/etc/ceph/ceph.client.#{rbd_user}.keyring" do
+    source 'ceph.client.keyring.erb'
+    cookbook 'openstack-common'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    mode '0600'
+    variables(
+      name: rbd_user,
+      key: rbd_key
+    )
+  end
 
 when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
   node.override['openstack']['block-storage']['netapp']['netapp_server_password'] = get_password 'service', 'netapp-filer'

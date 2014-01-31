@@ -75,16 +75,68 @@ describe 'openstack-block-storage::volume' do
       expect(n).to eq 'netapp-pass'
     end
 
-    it 'configures rbd password' do
-      ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'rbd')
-        .and_return 'rbd-pass'
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
+    describe 'RBD Ceph as block-storage backend' do
+      before do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
+          n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
+          # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+          n.set['cpu']['total'] = 1
+        end
+        @chef_run.converge 'openstack-block-storage::volume'
       end
-      chef_run.converge 'openstack-block-storage::volume'
-      n = chef_run.node['openstack']['block-storage']['rbd_secret_uuid']
 
-      expect(n).to eq 'rbd-pass'
+      it 'fetches the rbd_uuid_secret' do
+        n = @chef_run.node['openstack']['block-storage']['rbd_secret_uuid']
+        expect(n).to eq 'b0ff3bba-e07b-49b1-beed-09a45552b1ad'
+      end
+
+      it 'includes the ceph_client recipe' do
+        expect(@chef_run).to include_recipe('openstack-common::ceph_client')
+      end
+
+      it 'installs the python-ceph package by default' do
+        expect(@chef_run).to install_package('python-ceph')
+      end
+
+      it 'honors package option platform overrides for python-ceph' do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
+          n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
+          n.set['openstack']['block-storage']['platform']['package_overrides'] = '-o Dpkg::Options::=\'--force-confold\' -o Dpkg::Options::=\'--force-confdef\' --force-yes'
+        end
+        @chef_run.converge 'openstack-block-storage::volume'
+
+        expect(@chef_run).to install_package('python-ceph').with(options: '-o Dpkg::Options::=\'--force-confold\' -o Dpkg::Options::=\'--force-confdef\' --force-yes')
+      end
+
+      it 'honors package name platform overrides for python-ceph' do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
+          n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
+          n.set['openstack']['block-storage']['platform']['cinder_ceph_packages'] = ['my-ceph', 'my-other-ceph']
+        end
+        @chef_run.converge 'openstack-block-storage::volume'
+
+        %w{my-ceph my-other-ceph}.each do |pkg|
+          expect(@chef_run).to install_package(pkg)
+        end
+      end
+
+      it 'creates a cephx client keyring' do
+        pending 'https://review.openstack.org/#/c/69368/'
+        @file = '/etc/ceph/ceph.client.cinder.keyring'
+        [/^\[client\.cinder\]$/,
+         /key = cephx-key$/].each do |content|
+          expect(@chef_run).to render_file(@file).with_content(content)
+          expect(@chef_run).to create_template(@file).with(
+            cookbook: 'openstack-common',
+            owner: 'cinder',
+            group: 'cinder',
+            mode: 0600
+          )
+        end
+      end
     end
 
     it 'configures storewize private key' do
