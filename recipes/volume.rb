@@ -55,7 +55,7 @@ case node['openstack']['block-storage']['volume']['driver']
 when 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
   node.override['openstack']['block-storage']['netapp']['dfm_password'] = get_password 'service', 'netapp'
 
-when 'cinder.volume.drivers.RBDDriver'
+when 'cinder.volume.drivers.rbd.RBDDriver'
   node.override['openstack']['block-storage']['rbd_secret_uuid'] = get_password 'service', 'rbd'
 
 when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'

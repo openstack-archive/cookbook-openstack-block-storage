@@ -82,7 +82,7 @@ describe 'openstack-block-storage::api' do
       it 'has rbd driver settings' do
         chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
           n.set['openstack']['block-storage']['volume'] = {
-            'driver' => 'cinder.volume.drivers.RBDDriver'
+            'driver' => 'cinder.volume.drivers.rbd.RBDDriver'
           }
         end
         chef_run.converge 'openstack-block-storage::api'
