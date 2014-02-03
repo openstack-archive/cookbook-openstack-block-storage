@@ -12,7 +12,7 @@ verbose=<%= node["openstack"]["block-storage"]["verbose"] %>
 
 # lock_path
 lock_path=<%= node["openstack"]["block-storage"]["lock_path"] %>
-notification_driver=cinder.openstack.common.notifier.rpc_notifier
+notification_driver=<%= node["openstack"]["block-storage"]["notification_driver"] %>
 
 # log_config=<None>
 #### (StrOpt) If this option is specified, the logging configuration file

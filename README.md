@@ -79,6 +79,7 @@ Cinder attributes
 * `openstack["block-storage"]["service_tenant_name"]` - name of tenant to use for the cinder service account in keystone
 * `openstack["block-storage"]["service_user"]` - cinder service user in keystone
 * `openstack["block-storage"]["service_role"]` - role for the cinder service user in keystone
+* `openstack["block-storage"]["notification_driver"]` - Set the notification driver to be used (default to cinder.openstack.common.notifier.rpc_notifier)
 * `openstack["block-storage"]["syslog"]["use"]`
 * `openstack["block-storage"]["syslog"]["facility"]`
 * `openstack["block-storage"]["syslog"]["config_facility"]`

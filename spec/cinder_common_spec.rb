@@ -152,6 +152,7 @@ describe 'openstack-block-storage::cinder-common' do
       before do
         @file = @chef_run.template '/etc/cinder/cinder.conf'
         @chef_run.node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
+        @chef_run.node.set['openstack']['block-storage']['notification_driver'] = 'cinder.test_driver'
         @chef_run.converge 'openstack-block-storage::cinder-common'
       end
 
@@ -209,6 +210,10 @@ describe 'openstack-block-storage::cinder-common' do
 
       it 'has qpid_tcp_nodelay' do
         expect(@chef_run).to render_file(@file.name).with_content('qpid_tcp_nodelay=true')
+      end
+
+      it 'has notification_driver' do
+        expect(@chef_run).to render_file(@file.name).with_content('notification_driver=cinder.test_driver')
       end
     end
   end
