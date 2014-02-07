@@ -6,9 +6,9 @@ require_relative 'spec_helper'
 
 describe 'openstack-block-storage::volume' do
   before { block_storage_stubs }
-  describe 'opensuse' do
+  describe 'suse' do
     before do
-      @chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
       @chef_run.converge 'openstack-block-storage::volume'
     end
 
@@ -21,7 +21,7 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'installs postgresql python packages if explicitly told' do
-      chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS
+      chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
       chef_run.converge 'openstack-block-storage::volume'
@@ -48,7 +48,7 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'installs nfs packages' do
-      chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS do |n|
+      chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS do |n|
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -57,7 +57,7 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).not_to upgrade_package 'nfs-utils-lib'
     end
 
-    it 'has opensuse include' do
+    it 'has suse include' do
       file = '/etc/tgt/targets.conf'
 
       expect(@chef_run).to render_file(file).with_content('include /var/lib/cinder/volumes/*')

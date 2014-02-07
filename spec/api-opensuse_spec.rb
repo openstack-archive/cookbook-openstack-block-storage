@@ -6,9 +6,9 @@ require_relative 'spec_helper'
 
 describe 'openstack-block-storage::api' do
   before { block_storage_stubs }
-  describe 'opensuse' do
+  describe 'suse' do
     before do
-      @chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
       @chef_run.converge 'openstack-block-storage::api'
     end
 
@@ -21,7 +21,7 @@ describe 'openstack-block-storage::api' do
     end
 
     it 'installs postgresql python packages if explicitly told' do
-      chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS
+      chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
       chef_run.converge 'openstack-block-storage::api'
