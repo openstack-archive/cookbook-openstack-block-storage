@@ -808,6 +808,13 @@ storwize_svc_multihostmap_enabled=<%= node["openstack"]["block-storage"]["storwi
 
 <% end %>
 
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver" %>
+
+iscsi_target_prefix=<%= node["openstack"]["block-storage"]["emc"]["iscsi_target_prefix"] %>
+cinder_emc_config_file=<%= node["openstack"]["block-storage"]["emc"]["cinder_emc_config_file"] %>
+
+<% end %>
+
 ######## defined in cinder.volume.xiv ########
 
 # xiv_proxy=xiv_openstack.nova_proxy.XIVNovaProxy

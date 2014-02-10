@@ -139,6 +139,18 @@ default['openstack']['block-storage']['solidfire']['san_password'] = node['opens
 default['openstack']['block-storage']['solidfire']['sf_emulate'] = 'False'
 default['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = nil
 
+# EMC VMAX/VNX tSupport
+# The EmcUserName user's password is stored in an encrypted databag and
+# accessed with openstack-common cookbook library's "get_password" routeine. You
+# are expected to create the user and pass in a wrapper cookbook.
+default['openstack']['block-storage']['emc']['iscsi_target_prefix'] = 'iqn.1992-04.com.emc'
+default['openstack']['block-storage']['emc']['cinder_emc_config_file'] = '/etc/cinder/cinder_emc_config.xml'
+default['openstack']['block-storage']['emc']['StorageType'] = 0
+default['openstack']['block-storage']['emc']['EcomServerIP'] = '127.0.0.1'
+default['openstack']['block-storage']['emc']['EcomServerPort'] = '5988'
+default['openstack']['block-storage']['emc']['EcomUserName'] = 'admin'
+default['openstack']['block-storage']['emc']['MaskingView'] = nil
+
 # logging attribute
 default['openstack']['block-storage']['syslog']['use'] = false
 default['openstack']['block-storage']['syslog']['facility'] = 'LOG_LOCAL2'
@@ -197,6 +209,7 @@ when 'fedora', 'redhat', 'centos' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_iscsitarget_service' => 'tgtd',
     'cinder_ceph_packages' => ['python-ceph'],
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
+    'cinder_emc_packages' => ['pywbem'],
     'package_overrides' => ''
   }
 when 'suse'
@@ -217,7 +230,8 @@ when 'suse'
     'cinder_ceph_packages' => ['python-ceph'],
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgtd',
-    'cinder_nfs_packages' => ['nfs-utils']
+    'cinder_nfs_packages' => ['nfs-utils'],
+    'cinder_emc_packages' => ['python-pywbem']
   }
 when 'ubuntu'
   # operating system user and group names
@@ -238,6 +252,7 @@ when 'ubuntu'
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgt',
     'cinder_nfs_packages' => ['nfs-common'],
+    'cinder_emc_packages' => ['python-pywbem'],
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

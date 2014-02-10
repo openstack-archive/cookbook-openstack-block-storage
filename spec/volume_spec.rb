@@ -45,6 +45,15 @@ describe 'openstack-block-storage::volume' do
       expect(@chef_run).to upgrade_package 'tgt'
     end
 
+    it 'installs emc packages' do
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+      end
+      chef_run.converge 'openstack-block-storage::volume'
+
+      expect(chef_run).to upgrade_package 'python-pywbem'
+    end
+
     it 'installs nfs packages' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
@@ -238,6 +247,59 @@ describe 'openstack-block-storage::volume' do
 
       it 'creates cinder group active template file' do
         expect(@chef_run).to create_template(@filename)
+      end
+    end
+
+    describe 'cinder_emc_config.xml' do
+      before do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+        end
+        @chef_run.converge 'openstack-block-storage::volume'
+        @filename = '/etc/cinder/cinder_emc_config.xml'
+        @file = @chef_run.template(@filename)
+      end
+
+      it 'creates cinder emc config file' do
+        expect(@chef_run).to create_template(@filename)
+      end
+
+      it 'has proper modes' do
+        expect(sprintf('%o', @file.mode)).to eq('644')
+      end
+
+      it 'has StorageType' do
+        expect(@chef_run).to render_file(@file.name).with_content('<StorageType>0</StorageType>')
+      end
+
+      it 'has EcomServerIp' do
+        expect(@chef_run).to render_file(@file.name).with_content('<EcomServerIp>127.0.0.1</EcomServerIp>')
+      end
+
+      it 'has EcomServerPort' do
+        expect(@chef_run).to render_file(@file.name).with_content('<EcomServerPort>5988</EcomServerPort>')
+      end
+
+      it 'has EcomUserName' do
+        expect(@chef_run).to render_file(@file.name).with_content('<EcomUserName>admin</EcomUserName>')
+      end
+
+      it 'has EcomPassword' do
+        expect(@chef_run).to render_file(@file.name).with_content('<EcomPassword>emc_test_pass</EcomPassword>')
+      end
+
+      it 'does not have MaskingView when not specified' do
+        expect(@chef_run).not_to render_file(@file.name).with_content('<MaskingView>')
+      end
+
+      it 'has MaskingView when specified' do
+        @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          n.set['openstack']['block-storage']['emc']['MaskingView'] = 'testMaskingView'
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+        end
+        @chef_run.converge 'openstack-block-storage::volume'
+
+        expect(@chef_run).to render_file(@file.name).with_content('<MaskingView>testMaskingView</MaskingView>')
       end
     end
   end

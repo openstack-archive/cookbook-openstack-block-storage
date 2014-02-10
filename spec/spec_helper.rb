@@ -51,6 +51,9 @@ def block_storage_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('service', 'openstack_image_cephx_key')
     .and_return('cephx-key')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('user', 'admin')
+    .and_return('emc_test_pass')
   ::Chef::Application.stub(:fatal!)
 end
 

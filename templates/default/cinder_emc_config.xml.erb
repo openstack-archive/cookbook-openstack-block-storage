@@ -1,0 +1,10 @@
+<EMC>
+<StorageType><%= node["openstack"]["block-storage"]["emc"]["StorageType"] %></StorageType>
+<EcomServerIp><%= node["openstack"]["block-storage"]["emc"]["EcomServerIP"] %></EcomServerIp>
+<EcomServerPort><%= node["openstack"]["block-storage"]["emc"]["EcomServerPort"] %></EcomServerPort>
+<EcomUserName><%= node["openstack"]["block-storage"]["emc"]["EcomUserName"] %></EcomUserName>
+<EcomPassword><%= @ecom_password %></EcomPassword>
+<% unless node["openstack"]["block-storage"]["emc"]["MaskingView"].nil? %>
+<MaskingView><%= node["openstack"]["block-storage"]["emc"]["MaskingView"] %></MaskingView>
+<% end %>
+</EMC>

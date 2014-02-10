@@ -57,6 +57,15 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).not_to upgrade_package 'nfs-utils-lib'
     end
 
+    it 'installs emc packages' do
+      chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS do |n|
+        n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+      end
+      chef_run.converge 'openstack-block-storage::volume'
+
+      expect(chef_run).to upgrade_package 'python-pywbem'
+    end
+
     it 'has suse include' do
       file = '/etc/tgt/targets.conf'
 

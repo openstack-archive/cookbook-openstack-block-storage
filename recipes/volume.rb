@@ -150,6 +150,25 @@ when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
       action [:enable, :start]
     end
   end
+
+when 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+  platform_options['cinder_emc_packages'].each do |pkg|
+    package pkg do
+      options platform_options['package_overrides']
+      action :upgrade
+    end
+  end
+
+  ecom_password = get_password('user', node['openstack']['block-storage']['emc']['EcomUserName'])
+
+  template node['openstack']['block-storage']['emc']['cinder_emc_config_file'] do
+    source 'cinder_emc_config.xml.erb'
+    variables(
+      ecom_password: ecom_password
+    )
+    mode 00644
+    notifies :restart, 'service[iscsitarget]', :immediately
+  end
 end
 
 service 'cinder-volume' do

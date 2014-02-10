@@ -287,6 +287,23 @@ describe 'openstack-block-storage::cinder-common' do
         expect(@chef_run).to render_file(@file.name).with_content('iscsi_ip_prefix=203.0.113.*')
       end
     end
+
+    describe 'emc settings' do
+      before do
+        @chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+        @chef_run.node.set['openstack']['block-storage']['emc']['iscsi_target_prefix'] = 'test.prefix'
+        @chef_run.node.set['openstack']['block-storage']['emc']['cinder_emc_config_file'] = '/etc/test/config.file'
+        @chef_run.converge 'openstack-block-storage::cinder-common'
+      end
+
+      it 'has emc iscsi_target_prefix' do
+        expect(@chef_run).to render_file(@file.name).with_content('iscsi_target_prefix=test.prefix')
+      end
+
+      it 'has cinder_emc_config_file' do
+        expect(@chef_run).to render_file(@file.name).with_content('cinder_emc_config_file=/etc/test/config.file')
+      end
+    end
   end
 
   describe '/var/lock/cinder' do
@@ -303,5 +320,4 @@ describe 'openstack-block-storage::cinder-common' do
       expect(sprintf('%o', @dir.mode)).to eq '700'
     end
   end
-
 end
