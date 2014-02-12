@@ -29,6 +29,10 @@ api
 - Installs the cinder-api, sets up the cinder database,
  and cinder service/user/endpoints in keystone
 
+client
+----
+- Install the cinder client packages
+
 scheduler
 ----
 - Installs the cinder-scheduler service
@@ -170,7 +174,8 @@ License and Author
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
 | **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
 | **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
-| **Author**           |  Chen Zhiwei (zhiwchen@cn.ibm.com>)                |
+| **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
+| **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
