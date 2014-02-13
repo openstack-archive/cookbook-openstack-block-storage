@@ -86,6 +86,8 @@ Cinder attributes
 * `openstack["block-storage"]["platform"]` - hash of platform specific package/service names and options
 * `openstack["block-storage"]["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
 * `openstack["block-storage"]["volume"]["driver"]` - Driver to use for volume creation
+* `openstack["block-storage"]["volume"]["volume_clear"]` - Defines the method for clearing volumes on a volume delete possible options: 'zero', 'none', 'shred' (https://review.openstack.org/#/c/12521/)
+* `openstack["block-storage"]["volume"]["volume_clear_size"]` - size in MB used to limit the cleared area on deleting a volume, to the first part of the volume only. (default 0 = all MB)
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `openstack["block-storage"]["voluem"]["volume_group_size"]` - The size (GB) of volume group (default is 40)
 * `openstack["block-storage"]["voluem"]["create_volume_group"]` - Create volume group or not when using the LVMISCSIDriver (default is false)
