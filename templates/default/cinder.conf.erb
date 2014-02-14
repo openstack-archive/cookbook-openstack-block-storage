@@ -329,13 +329,6 @@ snapshot_name_template=<%= node["openstack"]["block-storage"]["snapshot_name_tem
 # default_publisher_id=$host
 #### (StrOpt) Default publisher_id for outgoing notifications
 
-
-######## defined in cinder.openstack.common.notifier.rabbit_notifier ########
-
-# notification_topics=notifications
-#### (ListOpt) AMQP topic used for openstack notifications
-
-
 ######## defined in cinder.openstack.common.rpc ########
 
 #### (StrOpt) The messaging module to use, defaults to kombu.
@@ -411,6 +404,9 @@ rabbit_password=<%= @rabbit_password %>
 rabbit_virtual_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["vhost"] %>
 #### (StrOpt) the RabbitMQ virtual host
 
+notification_topics=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["notification_topic"] %>
+#### (ListOpt) AMQP topic used for openstack notifications
+
 # rabbit_retry_interval=1
 #### (IntOpt) how frequently to retry connecting with RabbitMQ
 
@@ -473,6 +469,8 @@ qpid_protocol=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["protocol"] %
 qpid_tcp_nodelay=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["tcp_nodelay"] %>
 #### (BoolOpt) Disable Nagle algorithm
 
+notification_topics=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["notification_topic"] %>
+#### (ListOpt) AMQP topic used for openstack notifications
 <% end %>
 
 

@@ -13,7 +13,7 @@ describe 'openstack-block-storage::cinder-common' do
       }
       # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
       n.set['cpu']['total'] = 1
-
+      n.set['openstack']['mq']['block-storage']['rabbit']['notification_topic'] = 'rabbit_topic'
     end
     @chef_run.converge 'openstack-block-storage::cinder-common'
   end
@@ -127,6 +127,10 @@ describe 'openstack-block-storage::cinder-common' do
       expect(@chef_run).to render_file(@file.name).with_content('rabbit_virtual_host=/')
     end
 
+    it 'has rabbit notification_topics' do
+      expect(@chef_run).to render_file(@file.name).with_content('notification_topics=rabbit_topic')
+    end
+
     describe 'rabbit ha' do
       before do
         @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
@@ -159,6 +163,7 @@ describe 'openstack-block-storage::cinder-common' do
         @file = @chef_run.template '/etc/cinder/cinder.conf'
         @chef_run.node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
         @chef_run.node.set['openstack']['block-storage']['notification_driver'] = 'cinder.test_driver'
+        @chef_run.node.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_topic'
         @chef_run.converge 'openstack-block-storage::cinder-common'
       end
 
@@ -220,6 +225,10 @@ describe 'openstack-block-storage::cinder-common' do
 
       it 'has notification_driver' do
         expect(@chef_run).to render_file(@file.name).with_content('notification_driver=cinder.test_driver')
+      end
+
+      it 'has notification_topics' do
+        expect(@chef_run).to render_file(@file.name).with_content('notification_topics=qpid_topic')
       end
     end
   end
