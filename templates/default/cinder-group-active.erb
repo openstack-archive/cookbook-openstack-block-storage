@@ -13,7 +13,7 @@
 # Short-Description: cinder volume group active script
 ### END INIT INFO
 
-<% if platform?(%w{centos redhat amazon scientific}) %>
+<% if %w{centos redhat amazon scientific}.include? node.platform %>
 . /etc/rc.d/init.d/functions
 <% end %>
 
@@ -23,10 +23,10 @@ start()
   if [ $? -ne 0 ]; then
     echo -n "Activating cinder volume group ..."
     vgcreate <%= @volume_name %> $(losetup --show -f <%= @volume_file %>)
-    <% if platform?(%w{centos redhat amazon scientific}) %>
+    <% if %w{centos redhat amazon scientific}.include? node.platform %>
     success
     echo
-    <% elsif platform?(%w{debian ubuntu}) %>
+    <% elsif %w{debian ubuntu}.include? node.platform %>
     echo "SUCCESS"
     <% end %>
   fi
