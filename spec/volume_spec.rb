@@ -10,6 +10,8 @@ describe 'openstack-block-storage::volume' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set['openstack']['block-storage']['syslog']['use'] = true
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
       end
       @chef_run.converge 'openstack-block-storage::volume'
     end
@@ -17,7 +19,10 @@ describe 'openstack-block-storage::volume' do
     expect_runs_openstack_common_logging_recipe
 
     it 'does not run logging recipe' do
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
+      end
       chef_run.converge 'openstack-block-storage::volume'
 
       expect(chef_run).not_to include_recipe 'openstack-common::logging'
@@ -34,6 +39,8 @@ describe 'openstack-block-storage::volume' do
     it 'installs postgresql python packages if explicitly told' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      node.set['cpu']['total'] = 1
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
       chef_run.converge 'openstack-block-storage::volume'
 
@@ -47,6 +54,8 @@ describe 'openstack-block-storage::volume' do
 
     it 'installs nfs packages' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -56,6 +65,8 @@ describe 'openstack-block-storage::volume' do
 
     it 'creates the nfs mount point' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -67,6 +78,8 @@ describe 'openstack-block-storage::volume' do
       ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'netapp')
         .and_return 'netapp-pass'
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -79,6 +92,8 @@ describe 'openstack-block-storage::volume' do
       ::Chef::Recipe.any_instance.stub(:get_password).with('service', 'rbd')
         .and_return 'rbd-pass'
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -89,6 +104,8 @@ describe 'openstack-block-storage::volume' do
 
     it 'configures storewize private key' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
       end
       chef_run.converge 'openstack-block-storage::volume'
@@ -99,6 +116,8 @@ describe 'openstack-block-storage::volume' do
 
     it 'configures storewize with iscsi' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
         n.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'iSCSI'
       end
@@ -111,6 +130,8 @@ describe 'openstack-block-storage::volume' do
 
     it 'configures storewize with fc' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
         n.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'FC'
       end
@@ -157,6 +178,8 @@ describe 'openstack-block-storage::volume' do
     describe 'create_vg' do
       before do
         @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+          # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+          n.set['cpu']['total'] = 1
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
           n.set['openstack']['block-storage']['volume']['create_volume_group'] = true
         end

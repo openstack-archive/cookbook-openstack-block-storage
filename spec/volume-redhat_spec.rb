@@ -8,7 +8,10 @@ describe 'openstack-block-storage::volume' do
   before { block_storage_stubs }
   describe 'redhat' do
     before do
-      @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
+      end
       @chef_run.converge 'openstack-block-storage::volume'
     end
 
@@ -19,6 +22,8 @@ describe 'openstack-block-storage::volume' do
     it 'installs db2 python packages if explicitly told' do
       chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       node = chef_run.node
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      node.set['cpu']['total'] = 1
       node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
       chef_run.converge 'openstack-block-storage::volume'
 
@@ -30,6 +35,8 @@ describe 'openstack-block-storage::volume' do
     it 'installs postgresql python packages if explicitly told' do
       chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       node = chef_run.node
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      node.set['cpu']['total'] = 1
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
       chef_run.converge 'openstack-block-storage::volume'
 
@@ -57,6 +64,8 @@ describe 'openstack-block-storage::volume' do
     it 'installs nfs packages' do
       chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
         n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
       end
       chef_run.converge 'openstack-block-storage::volume'
 

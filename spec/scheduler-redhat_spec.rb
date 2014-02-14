@@ -8,7 +8,10 @@ describe 'openstack-block-storage::scheduler' do
   before { block_storage_stubs }
   describe 'redhat' do
     before do
-      @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
+      end
       @chef_run.converge 'openstack-block-storage::scheduler'
     end
 
@@ -17,7 +20,10 @@ describe 'openstack-block-storage::scheduler' do
     end
 
     it 'does not upgrade stevedore' do
-      chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
+      chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
+        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+        n.set['cpu']['total'] = 1
+      end
       chef_run.converge 'openstack-block-storage::scheduler'
 
       expect(chef_run).not_to upgrade_python_pip 'stevedore'
@@ -31,6 +37,8 @@ describe 'openstack-block-storage::scheduler' do
       chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      node.set['cpu']['total'] = 1
       chef_run.converge 'openstack-block-storage::scheduler'
 
       ['db2-odbc', 'python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
@@ -42,6 +50,8 @@ describe 'openstack-block-storage::scheduler' do
       chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      node.set['cpu']['total'] = 1
       chef_run.converge 'openstack-block-storage::scheduler'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'

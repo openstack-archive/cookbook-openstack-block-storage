@@ -11,6 +11,8 @@ describe 'openstack-block-storage::cinder-common' do
       n.set['openstack']['mq'] = {
         'host' => '127.0.0.1'
       }
+      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
+      n.set['cpu']['total'] = 1
       n.set['openstack']['block-storage']['syslog']['use'] = true
     end
     @chef_run.converge 'openstack-block-storage::cinder-common'
