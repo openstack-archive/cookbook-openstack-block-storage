@@ -10,8 +10,6 @@ describe 'openstack-block-storage::scheduler' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set['openstack']['block-storage']['syslog']['use'] = true
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
       end
       @chef_run.converge 'openstack-block-storage::scheduler'
     end
@@ -19,10 +17,7 @@ describe 'openstack-block-storage::scheduler' do
     expect_runs_openstack_common_logging_recipe
 
     it 'does not run logging recipe' do
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
-      end
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       chef_run.converge 'openstack-block-storage::scheduler'
 
       expect(chef_run).not_to include_recipe 'openstack-common::logging'
@@ -40,8 +35,6 @@ describe 'openstack-block-storage::scheduler' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-      node.set['cpu']['total'] = 1
       chef_run.converge 'openstack-block-storage::scheduler'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
@@ -69,8 +62,6 @@ describe 'openstack-block-storage::scheduler' do
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'fauxhai.local')])
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
         n.set['openstack']['metering'] = true
       end
       chef_run.converge 'openstack-block-storage::scheduler'
@@ -92,8 +83,6 @@ describe 'openstack-block-storage::scheduler' do
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'foobar')])
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
         n.set['openstack']['metering'] = true
         crontests.each do |k, v|
           n.set['openstack']['block-storage']['cron'][k.to_s] = v

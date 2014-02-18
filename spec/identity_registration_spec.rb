@@ -7,10 +7,7 @@ require_relative 'spec_helper'
 describe 'openstack-block-storage::identity_registration' do
   before do
     block_storage_stubs
-    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-      n.set['cpu']['total'] = 1
-    end
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
     @chef_run.converge 'openstack-block-storage::identity_registration'
   end
 

@@ -10,8 +10,6 @@ describe 'openstack-block-storage::api' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
         n.set['openstack']['block-storage']['syslog']['use'] = true
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
       end
       @chef_run.converge 'openstack-block-storage::api'
     end
@@ -19,10 +17,7 @@ describe 'openstack-block-storage::api' do
     expect_runs_openstack_common_logging_recipe
 
     it 'does not run logging recipe' do
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-        n.set['cpu']['total'] = 1
-      end
+      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       chef_run.converge 'openstack-block-storage::api'
 
       expect(chef_run).not_to include_recipe 'openstack-common::logging'
@@ -41,8 +36,6 @@ describe 'openstack-block-storage::api' do
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-      # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-      node.set['cpu']['total'] = 1
       chef_run.converge 'openstack-block-storage::api'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
@@ -80,10 +73,7 @@ describe 'openstack-block-storage::api' do
       end
 
       it 'does not run logging recipe' do
-        chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-          # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-          n.set['cpu']['total'] = 1
-        end
+        chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
         chef_run.converge 'openstack-block-storage::api'
 
         expect(chef_run).not_to render_file(@file).with_content('log_config = /etc/openstack/logging.conf')
@@ -94,8 +84,6 @@ describe 'openstack-block-storage::api' do
           n.set['openstack']['block-storage']['volume'] = {
             'driver' => 'cinder.volume.drivers.rbd.RBDDriver'
           }
-          # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-          n.set['cpu']['total'] = 1
         end
         chef_run.converge 'openstack-block-storage::api'
 
@@ -108,8 +96,6 @@ describe 'openstack-block-storage::api' do
           n.set['openstack']['block-storage']['volume'] = {
             'driver' => 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
           }
-          # TODO: Remove work around once https://github.com/customink/fauxhai/pull/77 merges
-          n.set['cpu']['total'] = 1
         end
         chef_run.converge 'openstack-block-storage::api'
 
