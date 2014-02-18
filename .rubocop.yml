@@ -1,0 +1,9 @@
+AllCops:
+  Excludes:
+    - metadata.rb
+    - Gemfile
+    - attributes/**
+    - libraries/**
+    - providers/**
+    - recipes/**
+    - spec/**
