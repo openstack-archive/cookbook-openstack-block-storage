@@ -72,10 +72,6 @@ case node["openstack"]["block-storage"]["volume"]["driver"]
       mode "0600"
       owner node["openstack"]["block-storage"]["user"]
       group node["openstack"]["block-storage"]["group"]
-      variables(
-        "host" => node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"],
-        "export" => node["openstack"]["block-storage"]["netapp"]["export"]
-      )
       notifies :restart, "service[cinder-volume]"
     end
 

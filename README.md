@@ -98,6 +98,7 @@ TODO: move rabbit parameters under openstack["block-storage"]["mq"]
 * `openstack["block-storage"]["netapp"]["netapp_server_hostname"]` - hostname of your filer, needs to be resolvable
 * `openstack["block-storage"]["netapp"]["netapp_server_login"]` - Username for netapp filer
 * `openstack["block-storage"]["netapp"]["netapp_server_password"]` - password for user above
+* `openstack["block-storage"]["nfs"]["exports"]` - Array of server:export pairs
 * `openstack["block-storage"]["nfs"]["shares_config"]` - file containing line by line entries of server:export
 * `openstack["block-storage"]["nfs"]["mount_point_base"]` - directory to mount NFS exported shares
 * `openstack["block-storage"]["rpc_thread_pool_size"]` - size of RPC thread pool
