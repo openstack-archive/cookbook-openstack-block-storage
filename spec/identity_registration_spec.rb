@@ -31,6 +31,22 @@ describe 'openstack-block-storage::identity_registration' do
     )
   end
 
+  it 'overrides cinder volume service region' do
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+      n.set['openstack']['block-storage']['region'] = 'serviceRegion'
+    end
+    @chef_run.converge 'openstack-block-storage::identity_registration'
+    resource = @chef_run.find_resource(
+      'openstack-identity_register',
+      'Register Cinder Volume Service'
+    ).to_hash
+
+    expect(resource).to include(
+      endpoint_region: 'serviceRegion',
+      action: [:create_service]
+    )
+  end
+
   it 'registers cinder volume endpoint' do
     resource = @chef_run.find_resource(
       'openstack-identity_register',
@@ -47,6 +63,22 @@ describe 'openstack-block-storage::identity_registration' do
       endpoint_adminurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
       endpoint_internalurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
       endpoint_publicurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+      action: [:create_endpoint]
+    )
+  end
+
+  it 'overrides cinder volume endpoint region' do
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+      n.set['openstack']['block-storage']['region'] = 'volumeRegion'
+    end
+    @chef_run.converge 'openstack-block-storage::identity_registration'
+    resource = @chef_run.find_resource(
+      'openstack-identity_register',
+      'Register Cinder Volume Endpoint'
+    ).to_hash
+
+    expect(resource).to include(
+      endpoint_region: 'volumeRegion',
       action: [:create_endpoint]
     )
   end
