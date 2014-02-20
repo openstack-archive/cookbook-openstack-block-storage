@@ -92,3 +92,9 @@ def expect_creates_policy_json(service, user, group, action = :restart) # ruboco
     end
   end
 end
+
+# README(galstrom21): This will remove any coverage warnings from
+#   dependent cookbooks
+ChefSpec::Coverage.filters << '*/openstack-block-storage'
+
+at_exit { ChefSpec::Coverage.report! }
