@@ -36,6 +36,9 @@ def block_storage_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:secret)
     .with('secrets', 'openstack_identity_bootstrap_token')
     .and_return('bootstrap-token')
+  ::Chef::Recipe.any_instance.stub(:secret)
+    .with('secrets', 'rbd_secret_uuid')
+    .and_return('b0ff3bba-e07b-49b1-beed-09a45552b1ad')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'guest')
     .and_return('rabbit-pass')
@@ -45,6 +48,9 @@ def block_storage_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('service', 'openstack-block-storage')
     .and_return('cinder-pass')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('service', 'openstack_image_cephx_key')
+    .and_return('cephx-key')
   ::Chef::Application.stub(:fatal!)
 end
 
