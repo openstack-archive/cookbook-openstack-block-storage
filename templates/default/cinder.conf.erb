@@ -533,10 +533,13 @@ max_gigabytes=<%= node["openstack"]["block-storage"]["max_gigabytes"] %>
 
 
 ######## defined in cinder.volume.driver ########
-
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.lvm.LVMISCSIDriver" %>
 volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
+volume_clear=<%= node["openstack"]["block-storage"]["volume"]["volume_clear"] %>
+volume_clear_size=<%= node["openstack"]["block-storage"]["volume"]["volume_clear_size"] %>
 
+<% end %>
 # num_shell_tries=3
 #### (IntOpt) number of times to attempt to run flakey shell commands
 

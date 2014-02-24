@@ -225,6 +225,30 @@ describe 'openstack-block-storage::cinder-common' do
         expect(@chef_run).to render_file(@file.name).with_content('notification_topics=qpid_topic')
       end
     end
+
+    describe 'lvm settings' do
+      before do
+        @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+          n.set['openstack']['block-storage']['volume']['volume_group'] = 'test-group'
+          n.set['openstack']['block-storage']['volume']['volume_clear_size'] = 100
+          n.set['openstack']['block-storage']['volume']['volume_clear'] = 'none'
+        end
+        @chef_run.converge 'openstack-block-storage::cinder-common'
+      end
+
+      it 'has volume_group' do
+        expect(@chef_run).to render_file(@file.name).with_content('volume_group=test-group')
+      end
+
+      it 'has volume_clear_size' do
+        expect(@chef_run).to render_file(@file.name).with_content('volume_clear_size=100')
+      end
+
+      it 'has volume_clear' do
+        expect(@chef_run).to render_file(@file.name).with_content('volume_clear=none')
+      end
+    end
   end
 
   describe '/var/lock/cinder' do
