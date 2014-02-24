@@ -281,7 +281,7 @@ snapshot_name_template=<%= node["openstack"]["block-storage"]["snapshot_name_tem
 ######## defined in cinder.openstack.common.log ########
 
 # logdir=<None>
-#### (StrOpt) Log output to a per-service log file in named directory
+### (StrOpt) Log output to a per-service log file in named directory
 
 # logfile=<None>
 #### (StrOpt) Log output to a named file
@@ -697,13 +697,13 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 
 <% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
 
-san_ip=<%= node["openstack"]["block-storage"]["san"]["san_ip"] %>
+san_ip=<%= node["openstack"]["block-storage"]["storwize"]["san_ip"] %>
 #### (StrOpt) IP address of SAN controller
 
-san_login=<%= node["openstack"]["block-storage"]["san"]["san_login"] %>
+san_login=<%= node["openstack"]["block-storage"]["storwize"]["san_login"] %>
 #### (StrOpt) Username for SAN controller
 
-san_private_key=<%= node["openstack"]["block-storage"]["san"]["san_private_key"] %>
+san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_key"] %>
 #### (StrOpt) Filename of private key to use for SSH authentication
 
 <% else %>
@@ -736,23 +736,26 @@ san_private_key=<%= node["openstack"]["block-storage"]["san"]["san_private_key"]
 #### (StrOpt) The ZFS path under which to create zvols for volumes.
 <% end %>
 
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.solidfire.SolidFire" %>
 ######## defined in cinder.volume.solidfire ########
-
-# sf_emulate_512=true
+sf_emulate_512=<%= node["openstack"]["block-storage"]["solidfire"]["sf_emulate"] %>
 #### (BoolOpt) Set 512 byte emulation on volume creation;
 
-# sf_mvip=
-#### (StrOpt) IP address of SolidFire MVIP
+san_ip=<%= node["openstack"]["block-storage"]["solidfire"]["san_ip"] %>
+# #### (StrOpt) IP address of SolidFire MVIP
 
-# sf_login=admin
+san_login=<%= node["openstack"]["block-storage"]["solidfire"]["san_login"] %>
 #### (StrOpt) Username for SF Cluster Admin
 
-# sf_password=
+san_password=<%= @solidfire_pass %>
 #### (StrOpt) Password for SF Cluster Admin
 
-# sf_allow_tenant_qos=true
-#### (BoolOpt) Allow tenants to specify QOS on create
+<% unless node["openstack"]["block-storage"]["solidfire"]['iscsi_ip_prefix'].nil? %>
+iscsi_ip_prefix=<%= node["openstack"]["block-storage"]["solidfire"]["iscsi_ip_prefix"] %>
+<% end %>
+<% end %>
 
+#### (BoolOpt) Allow tenants to specify QOS on create
 <% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
 ######## defined in cinder.volume.storwize_svc ########
 

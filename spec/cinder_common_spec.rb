@@ -249,6 +249,44 @@ describe 'openstack-block-storage::cinder-common' do
         expect(@chef_run).to render_file(@file.name).with_content('volume_clear=none')
       end
     end
+
+    describe 'solidfire settings' do
+      before do
+        @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.solidfire.SolidFire'
+          n.set['openstack']['block-storage']['solidfire']['sf_emulate'] = 'test'
+          n.set['openstack']['block-storage']['solidfire']['san_ip'] = '203.0.113.10'
+          n.set['openstack']['block-storage']['solidfire']['san_login'] = 'solidfire_admin'
+        end
+        @chef_run.converge 'openstack-block-storage::cinder-common'
+      end
+
+      it 'has solidfire sf_emulate set' do
+        expect(@chef_run).to render_file(@file.name).with_content('sf_emulate_512=test')
+      end
+
+      it 'has solidfire san_ip set' do
+        expect(@chef_run).to render_file(@file.name).with_content('san_ip=203.0.113.10')
+      end
+
+      it 'has solidfire san_login' do
+        expect(@chef_run).to render_file(@file.name).with_content('san_login=solidfire_admin')
+      end
+
+      it 'has solidfire password' do
+        expect(@chef_run).to render_file(@file.name).with_content('san_password=solidfire_testpass')
+      end
+
+      it 'does not have iscsi_ip_prefix not specified' do
+        expect(@chef_run).to_not render_file(@file.name).with_content('iscsi_ip_prefix')
+      end
+
+      it 'does have iscsi_ip_prefix when specified' do
+        @chef_run.node.set['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = '203.0.113.*'
+
+        expect(@chef_run).to render_file(@file.name).with_content('iscsi_ip_prefix=203.0.113.*')
+      end
+    end
   end
 
   describe '/var/lock/cinder' do

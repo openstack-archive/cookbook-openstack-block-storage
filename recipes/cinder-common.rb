@@ -41,6 +41,10 @@ if node['openstack']['mq']['block-storage']['service_type'] == 'rabbitmq'
   rabbit_pass = get_password 'user', node['openstack']['mq']['block-storage']['rabbit']['userid']
 end
 
+if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.solidfire.SolidFire'
+  solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
+end
+
 glance_api_endpoint = endpoint 'image-api'
 
 directory '/etc/cinder' do
@@ -60,7 +64,8 @@ template '/etc/cinder/cinder.conf' do
     rabbit_password: rabbit_pass,
     rabbit_hosts: rabbit_hosts,
     glance_host: glance_api_endpoint.host,
-    glance_port: glance_api_endpoint.port
+    glance_port: glance_api_endpoint.port,
+    solidfire_pass: solidfire_pass
   )
 end
 
