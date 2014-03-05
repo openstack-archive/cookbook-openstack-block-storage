@@ -116,7 +116,7 @@ describe 'openstack-block-storage::cinder-common' do
     end
 
     it 'has rabbit_password' do
-      expect(@chef_run).to render_file(@file.name).with_content('rabbit_password=rabbit-pass')
+      expect(@chef_run).to render_file(@file.name).with_content('rabbit_password=mq-pass')
     end
 
     it 'has rabbit_virtual_host' do
@@ -154,10 +154,14 @@ describe 'openstack-block-storage::cinder-common' do
 
     describe 'qpid' do
       before do
-        @file = @chef_run.template '/etc/cinder/cinder.conf'
-        @chef_run.node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
-        @chef_run.node.set['openstack']['block-storage']['notification_driver'] = 'cinder.test_driver'
-        @chef_run.node.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_topic'
+        @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
+          n.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
+          n.set['openstack']['block-storage']['notification_driver'] = 'cinder.test_driver'
+          n.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_topic'
+          # we set username here since the attribute in common currently
+          # defaults to ''
+          n.set['openstack']['mq']['block-storage']['qpid']['username'] = 'guest'
+        end
         @chef_run.converge 'openstack-block-storage::cinder-common'
       end
 
@@ -170,11 +174,11 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       it 'has qpid_username' do
-        expect(@chef_run).to render_file(@file.name).with_content('qpid_username=')
+        expect(@chef_run).to render_file(@file.name).with_content('qpid_username=guest')
       end
 
       it 'has qpid_password' do
-        expect(@chef_run).to render_file(@file.name).with_content('qpid_password=')
+        expect(@chef_run).to render_file(@file.name).with_content('qpid_password=mq-pass')
       end
 
       it 'has qpid_sasl_mechanisms' do

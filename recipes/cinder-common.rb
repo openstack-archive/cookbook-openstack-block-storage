@@ -34,11 +34,15 @@ db_user = node['openstack']['db']['block-storage']['username']
 db_pass = get_password 'db', 'cinder'
 sql_connection = db_uri('block-storage', db_user, db_pass)
 
-if node['openstack']['mq']['block-storage']['service_type'] == 'rabbitmq'
+mq_service_type = node['openstack']['mq']['block-storage']['service_type']
+
+if mq_service_type == 'rabbitmq'
   if node['openstack']['mq']['block-storage']['rabbit']['ha']
     rabbit_hosts = rabbit_servers
   end
-  rabbit_pass = get_password 'user', node['openstack']['mq']['block-storage']['rabbit']['userid']
+  mq_password = get_password 'user', node['openstack']['mq']['block-storage']['rabbit']['userid']
+elsif mq_service_type == 'qpid'
+  mq_password = get_password 'user', node['openstack']['mq']['block-storage']['qpid']['username']
 end
 
 if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.solidfire.SolidFire'
@@ -61,7 +65,8 @@ template '/etc/cinder/cinder.conf' do
   mode 00644
   variables(
     sql_connection: sql_connection,
-    rabbit_password: rabbit_pass,
+    mq_service_type: mq_service_type,
+    mq_password: mq_password,
     rabbit_hosts: rabbit_hosts,
     glance_host: glance_api_endpoint.host,
     glance_port: glance_api_endpoint.port,

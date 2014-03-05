@@ -41,7 +41,7 @@ def block_storage_stubs # rubocop:disable MethodLength
     .and_return('b0ff3bba-e07b-49b1-beed-09a45552b1ad')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'guest')
-    .and_return('rabbit-pass')
+    .and_return('mq-pass')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'solidfire_admin')
     .and_return('solidfire_testpass')

@@ -355,7 +355,7 @@ rpc_response_timeout=<%= node["openstack"]["block-storage"]["rpc_response_timeou
 ####           receiving exception data from an rpc call.
 
 
-<% if node["openstack"]["mq"]["block-storage"]["service_type"] == "rabbitmq"  %>
+<% if @mq_service_type == "rabbitmq"  %>
 
 # fake_rabbit=false
 #### (BoolOpt) If passed, use a fake RabbitMQ provider
@@ -398,7 +398,7 @@ rabbit_use_ssl=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["use_ssl"]
 rabbit_userid=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["userid"] %>
 #### (StrOpt) the RabbitMQ userid
 
-rabbit_password=<%= @rabbit_password %>
+rabbit_password=<%= @mq_password %>
 #### (StrOpt) the RabbitMQ password
 
 rabbit_virtual_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["vhost"] %>
@@ -421,7 +421,7 @@ notification_topics=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["noti
 <% end %>
 
 
-<% if node["openstack"]["mq"]["block-storage"]["service_type"] == "qpid"  %>
+<% if @mq_service_type == "qpid"  %>
 
 ##### QPID #####
 ######## defined in cinder.openstack.common.rpc.impl_qpid ########
@@ -436,7 +436,7 @@ qpid_port=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["port"] %>
 qpid_username=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["username"] %>
 #### (StrOpt) Username for qpid connection
 
-qpid_password=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["password"] %>
+qpid_password=<%= @mq_password %>
 #### (StrOpt) Password for qpid connection
 
 qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["sasl_mechanisms"] %>
