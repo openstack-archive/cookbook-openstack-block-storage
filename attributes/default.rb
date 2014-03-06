@@ -151,6 +151,17 @@ default['openstack']['block-storage']['emc']['EcomServerPort'] = '5988'
 default['openstack']['block-storage']['emc']['EcomUserName'] = 'admin'
 default['openstack']['block-storage']['emc']['MaskingView'] = nil
 
+# VMware Support
+default['openstack']['block-storage']['vmware']['vmware_host_ip'] = ''
+default['openstack']['block-storage']['vmware']['vmware_host_username'] = ''
+default['openstack']['block-storage']['vmware']['vmware_host_password'] = ''
+default['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = nil
+default['openstack']['block-storage']['vmware']['vmware_api_retry_count'] = 10
+default['openstack']['block-storage']['vmware']['vmware_task_poll_interval'] = 5
+default['openstack']['block-storage']['vmware']['vmware_volume_folder'] = 'cinder-volumes'
+default['openstack']['block-storage']['vmware']['vmware_image_transfer_timeout_secs'] = 7200
+default['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] = 100
+
 # logging attribute
 default['openstack']['block-storage']['syslog']['use'] = false
 default['openstack']['block-storage']['syslog']['facility'] = 'LOG_LOCAL2'

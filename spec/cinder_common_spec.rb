@@ -304,6 +304,42 @@ describe 'openstack-block-storage::cinder-common' do
         expect(@chef_run).to render_file(@file.name).with_content('cinder_emc_config_file=/etc/test/config.file')
       end
     end
+
+    describe 'vmware vmdk settings' do
+      before do
+        @chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
+        @chef_run.converge 'openstack-block-storage::cinder-common'
+      end
+
+      [
+        /^vmware_host_ip = $/,
+        /^vmware_host_username = $/,
+        /^vmware_host_password = $/,
+        /^vmware_api_retry_count = 10$/,
+        /^vmware_task_poll_interval = 5$/,
+        /^vmware_volume_folder = cinder-volumes/,
+        /^vmware_image_transfer_timeout_secs = 7200$/,
+        /^vmware_max_objects_retrieval = 100$/
+      ].each do |content|
+        it "has a #{content.source[1...-1]} line" do
+          expect(@chef_run).to render_file(@file.name).with_content(content)
+        end
+      end
+
+      it 'has no wsdl_location line' do
+        expect(@chef_run).not_to render_file(@file.name).with_content('vmware_wsdl_location = ')
+      end
+
+      it 'has wsdl_location line' do
+        chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
+          n.set['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = 'http://127.0.0.1/wsdl'
+        end
+        filename = '/etc/cinder/cinder.conf'
+        chef_run.converge 'openstack-block-storage::cinder-common'
+        expect(chef_run).to render_file(filename).with_content('vmware_wsdl_location = http://127.0.0.1/wsdl')
+      end
+    end
   end
 
   describe '/var/lock/cinder' do

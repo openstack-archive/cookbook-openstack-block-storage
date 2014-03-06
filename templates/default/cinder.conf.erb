@@ -861,3 +861,50 @@ cinder_emc_config_file=<%= node["openstack"]["block-storage"]["emc"]["cinder_emc
 
 # zadara_vpsa_allow_nonexistent_delete=true
 #### (BoolOpt) Don't halt on deletion of non-existing volumes
+
+<% if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver' %>
+#
+# Options defined in cinder.volume.drivers.vmware.vmdk
+#
+
+# IP address for connecting to VMware ESX/VC server. (string
+# value)
+vmware_host_ip = <%= node['openstack']['block-storage']['vmware']['vmware_host_ip'] %>
+
+# Username for authenticating with VMware ESX/VC server.
+# (string value)
+vmware_host_username = <%= node['openstack']['block-storage']['vmware']['vmware_host_username'] %>
+
+# Password for authenticating with VMware ESX/VC server.
+# (string value)
+vmware_host_password = <%= node['openstack']['block-storage']['vmware']['vmware_host_password'] %>
+
+<% if node['openstack']['block-storage']['vmware']['vmware_wsdl_location'] -%>
+# Optional VIM service WSDL Location e.g
+# http://<server>/vimService.wsdl. Optional over-ride to
+# default location for bug work-arounds. (string value)
+vmware_wsdl_location = <%= node['openstack']['block-storage']['vmware']['vmware_wsdl_location'] %>
+<% end %>
+
+# Number of times VMware ESX/VC server API must be retried
+# upon connection related issues. (integer value)
+vmware_api_retry_count = <%= node['openstack']['block-storage']['vmware']['vmware_api_retry_count'] %>
+
+# The interval (in seconds) for polling remote tasks invoked
+# on VMware ESX/VC server. (integer value)
+vmware_task_poll_interval = <%= node['openstack']['block-storage']['vmware']['vmware_task_poll_interval'] %>
+
+# Name for the folder in the VC datacenter that will contain
+# cinder volumes. (string value)
+vmware_volume_folder = <%= node['openstack']['block-storage']['vmware']['vmware_volume_folder'] %>
+
+# Timeout in seconds for VMDK volume transfer between Cinder
+# and Glance. (integer value)
+vmware_image_transfer_timeout_secs = <%= node['openstack']['block-storage']['vmware']['vmware_image_transfer_timeout_secs'] %>
+
+# Max number of objects to be retrieved per batch. Query
+# results will be obtained in batches from the server and not
+# in one shot. Server may still limit the count to something
+# less than the configured value. (integer value)
+vmware_max_objects_retrieval = <%= node['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] %>
+<% end %>
