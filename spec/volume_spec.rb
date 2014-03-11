@@ -93,6 +93,8 @@ describe 'openstack-block-storage::volume' do
           n.set['cpu']['total'] = 1
         end
         @chef_run.converge 'openstack-block-storage::volume'
+        @filename = '/etc/ceph/ceph.client.cinder.keyring'
+        @file = @chef_run.template(@filename)
       end
 
       it 'fetches the rbd_uuid_secret' do
@@ -112,11 +114,11 @@ describe 'openstack-block-storage::volume' do
         @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
           n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
-          n.set['openstack']['block-storage']['platform']['package_overrides'] = '-o Dpkg::Options::=\'--force-confold\' -o Dpkg::Options::=\'--force-confdef\' --force-yes'
+          n.set['openstack']['block-storage']['platform']['package_overrides'] = '--override1 --override2'
         end
         @chef_run.converge 'openstack-block-storage::volume'
 
-        expect(@chef_run).to install_package('python-ceph').with(options: '-o Dpkg::Options::=\'--force-confold\' -o Dpkg::Options::=\'--force-confdef\' --force-yes')
+        expect(@chef_run).to install_package('python-ceph').with(options: '--override1 --override2')
       end
 
       it 'honors package name platform overrides for python-ceph' do
@@ -132,19 +134,15 @@ describe 'openstack-block-storage::volume' do
         end
       end
 
-      it 'creates a cephx client keyring' do
-        pending 'https://review.openstack.org/#/c/69368/'
-        @file = '/etc/ceph/ceph.client.cinder.keyring'
+      it 'creates a cephx client keyring correctly' do
         [/^\[client\.cinder\]$/,
-         /key = cephx-key$/].each do |content|
-          expect(@chef_run).to render_file(@file).with_content(content)
-          expect(@chef_run).to create_template(@file).with(
-            cookbook: 'openstack-common',
-            owner: 'cinder',
-            group: 'cinder',
-            mode: 0600
-          )
+         /^  key = cephx-key$/].each do |content|
+          expect(@chef_run).to render_file(@filename).with_content(content)
         end
+        expect(@chef_run).to create_template(@filename).with(cookbook: 'openstack-common')
+        expect(@file.owner).to eq('cinder')
+        expect(@file.group).to eq('cinder')
+        expect(sprintf('%o', @file.mode)).to eq '600'
       end
     end
 
