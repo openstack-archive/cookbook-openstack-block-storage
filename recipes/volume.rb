@@ -118,6 +118,14 @@ when 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
     group node['openstack']['block-storage']['group']
   end
 
+when 'cinder.volume.drivers.gpfs.GPFSDriver'
+  directory node['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] do
+    mode '0755'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    recursive true
+  end
+
 when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
   if node['openstack']['block-storage']['volume']['create_volume_group']
     volume_size = node['openstack']['block-storage']['volume']['volume_group_size']

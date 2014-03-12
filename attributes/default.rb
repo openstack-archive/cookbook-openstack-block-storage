@@ -164,6 +164,14 @@ default['openstack']['block-storage']['vmware']['vmware_volume_folder'] = 'cinde
 default['openstack']['block-storage']['vmware']['vmware_image_transfer_timeout_secs'] = 7200
 default['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] = 100
 
+# IBM GPFS Support
+default['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = node['openstack']['block-storage']['gpfs']['gpfs_mount_point_base']
+default['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = node['openstack']['block-storage']['gpfs']['gpfs_images_dir']
+default['openstack']['block-storage']['gpfs']['gpfs_images_share_mode'] = 'copy_on_write'
+default['openstack']['block-storage']['gpfs']['gpfs_sparse_volumes'] = true
+default['openstack']['block-storage']['gpfs']['gpfs_max_clone_depth'] = 8
+default['openstack']['block-storage']['gpfs']['gpfs_storage_pool'] = 'system'
+
 # logging attribute
 default['openstack']['block-storage']['syslog']['use'] = false
 default['openstack']['block-storage']['syslog']['facility'] = 'LOG_LOCAL2'

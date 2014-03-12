@@ -79,5 +79,56 @@ describe 'openstack-block-storage::volume' do
       expect(@chef_run).to render_file(file).with_content('include /var/lib/cinder/volumes/*')
       expect(@chef_run).not_to render_file(file).with_content('include /etc/tgt/conf.d/*.conf')
     end
+
+    describe 'IBM GPFS volume driver' do
+      before do
+        @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.gpfs.GPFSDriver'
+          n.set['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = 'volumes'
+        end
+
+        @conf = '/etc/cinder/cinder.conf'
+        @chef_run.converge 'openstack-block-storage::volume'
+      end
+
+      it 'verifies gpfs_mount_point_base' do
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_mount_point_base = volumes$/)
+      end
+
+      it 'verifies gpfs_images_dir' do
+        @chef_run.node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'images'
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_images_dir = images$/)
+      end
+
+      it 'verifies gpfs_images_share_mode is default' do
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_images_share_mode = copy_on_write$/)
+      end
+
+      it 'verifies gpfs_sparse_volumes is default' do
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_sparse_volumes = true$/)
+      end
+
+      it 'verifies gpfs_max_clone_depth is default' do
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_max_clone_depth = 8$/)
+      end
+
+      it 'verifies gpfs_storage_pool is default' do
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_storage_pool = system$/)
+      end
+
+      it 'verifies gpfs volume directory is created with owner and mode set correctly' do
+        expect(@chef_run).to create_directory('volumes').with(
+           owner: 'cinder',
+           group: 'cinder',
+           mode: '0755'
+        )
+      end
+    end
   end
 end
