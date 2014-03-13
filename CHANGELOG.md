@@ -2,6 +2,9 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+## 8.3.0
+* Rename openstack-metering to openstack-telemetry
+
 ## 8.2.0
 * VMware VMDK driver support
 

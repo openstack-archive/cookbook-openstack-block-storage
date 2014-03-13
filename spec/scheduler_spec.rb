@@ -62,7 +62,7 @@ describe 'openstack-block-storage::scheduler' do
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'fauxhai.local')])
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['metering'] = true
+        n.set['openstack']['telemetry'] = true
       end
       chef_run.converge 'openstack-block-storage::scheduler'
       cron = chef_run.cron 'cinder-volume-usage-audit'
@@ -83,7 +83,7 @@ describe 'openstack-block-storage::scheduler' do
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'foobar')])
       chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['metering'] = true
+        n.set['openstack']['telemetry'] = true
         crontests.each do |k, v|
           n.set['openstack']['block-storage']['cron'][k.to_s] = v
         end

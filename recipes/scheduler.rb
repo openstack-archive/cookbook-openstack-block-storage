@@ -50,7 +50,7 @@ end
 audit_bin_dir = platform?('ubuntu') ? '/usr/bin' : '/usr/local/bin'
 audit_log = node['openstack']['block-storage']['cron']['audit_logfile']
 
-if node['openstack']['metering']
+if node['openstack']['telemetry']
   scheduler_role = node['openstack']['block-storage']['scheduler_role']
   results = search(:node, "roles:#{scheduler_role}")
   cron_node = results.map { |a| a.name }.sort[0]
