@@ -60,6 +60,8 @@ default['openstack']['block-storage']['keystone_service_chef_role'] = 'keystone'
 # of the api-paste.ini when node['openstack']['auth']['strategy'] == 'pki'
 default['openstack']['block-storage']['api']['auth']['cache_dir'] = '/var/cache/cinder/api'
 
+default['openstack']['block-storage']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
+
 # Maximum allocatable gigabytes
 # Should equal total backend storage, default is 10TB
 default['openstack']['block-storage']['max_gigabytes'] = '10000'

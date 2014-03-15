@@ -50,7 +50,8 @@ Attributes
 TODO: Add DB2 support on other platforms
 * `openstack["block-storage"]["platform"]["db2_python_packages"]` - Array of DB2 python packages, only available on redhat platform
 * `openstack["block-storage"]["volume_name_template"]` - Template string to be used to generate volume names
-* `openstack["block-storage"]["snapshot_name_template"]` - Template string to be used to generate snapshot names
+*  `openstack["block-storage"]["snapshot_name_template"]` - Template string to be used to generate snapshot names
+* `openstack['block-storage']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0 inherited from common cookbook. The default auth API version used to interact with identity service.
 
 MQ attributes
 -------------
@@ -189,12 +190,13 @@ License and Author
 | **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
 | **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
 | **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |
+| **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)                 |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, SUSE Linux GmbH               |
-| **Copyright**        |  Copyright (c) 2013, IBM, Corp.                    |
+| **Copyright**        |  Copyright (c) 2013-2014, IBM, Corp.               |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

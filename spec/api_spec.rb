@@ -149,6 +149,15 @@ describe 'openstack-block-storage::api' do
       it 'has auth_protocol' do
         expect(@chef_run).to render_file(@file.name).with_content('auth_protocol = http')
       end
+
+      it 'has no auth_version when auth_version is v2.0' do
+        expect(@chef_run).not_to render_file(@file.name).with_content('auth_version = v2.0')
+      end
+
+      it 'has auth_version when auth version is not v2.0' do
+        @chef_run.node.set['openstack']['block-storage']['api']['auth']['version'] = 'v3.0'
+        expect(@chef_run).to render_file(@file.name).with_content('auth_version = v3.0')
+      end
     end
   end
 end
