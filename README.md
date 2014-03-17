@@ -162,6 +162,15 @@ Cinder attributes
 * `openstack['block-storage']['gpfs']['gpfs_max_clone_depth']` - Maximum clone indirections allowed when creating volume file snapshots clones; zero indicates unlimited clone depth (integer, defalut 0)
 * `openstack['block-storage']['gpfs']['gpfs_storage_pool']` - GPFS storage pool that volumes are assigned to (string value)
 
+### IBMNAS (SONAS/Storwize V7000 Unified) attributes ###
+* `openstack['block-storage']['ibmnas']['nas_ip']` - Management IP address of IBMNAS storage
+* `openstack['block-storage']['ibmnas']['nas_login']` - Username for IBMNAS storage system
+* `openstack['block-storage']['ibmnas']['nas_access_ip']` - Hostname/Public IP address to access shares
+* `openstack['block-storage']['ibmnas']['export']` - Storage system shares/export path parameter
+* `openstack['block-storage']['ibmnas']['shares_config']` - File that contains list of IBMNAS Shares
+* `openstack['block-storage']['ibmnas']['mount_point_base']` - Storage system autoexpand parameter for volumes
+* `openstack['block-storage']['ibmnas']['nfs_sparsed_volumes']` - Storage system volume creation method
+
 Testing
 =====
 

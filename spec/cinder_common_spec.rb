@@ -295,6 +295,47 @@ describe 'openstack-block-storage::cinder-common' do
         end
       end
 
+      describe 'ibmnas settings' do
+        before do
+          chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_ip'] = '127.0.0.1'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_login'] = 'ibmnas_admin'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_ssh_port'] = '22'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['shares_config'] = '/etc/cinder/nfs_shares.conf'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['mount_point_base'] = '/mnt/cinder-volumes'
+          chef_run.node.set['openstack']['block-storage']['ibmnas']['nfs_sparsed_volumes'] = 'true'
+          chef_run.converge 'openstack-block-storage::cinder-common'
+        end
+
+        it 'has ibmnas nas_ip' do
+          expect(chef_run).to render_file(file.name).with_content('nas_ip=127.0.0.1')
+        end
+
+        it 'has ibmnas nas_login' do
+          expect(chef_run).to render_file(file.name).with_content('nas_login=ibmnas_admin')
+        end
+
+        it 'has ibmnas nas_password' do
+          expect(chef_run).to render_file(file.name).with_content('nas_password=test_pass')
+        end
+
+        it 'has ibmnas nas_ssh_port' do
+          expect(chef_run).to render_file(file.name).with_content('nas_ssh_port=22')
+        end
+
+        it 'has ibmnas shares_config' do
+          expect(chef_run).to render_file(file.name).with_content('shares_config=/etc/cinder/nfs_shares.conf')
+        end
+
+        it 'has ibmnas mount_point_base' do
+          expect(chef_run).to render_file(file.name).with_content('mount_point_base=/mnt/cinder-volumes')
+        end
+
+        it 'has ibmnas nfs_sparsed_volumes' do
+          expect(chef_run).to render_file(file.name).with_content('nfs_sparsed_volumes=true')
+        end
+      end
+
       describe 'vmware vmdk settings' do
         before do
           chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'

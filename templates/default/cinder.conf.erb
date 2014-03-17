@@ -672,6 +672,20 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 
 ######## defined in cinder.volume.nfs ########
 
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver" %>
+
+nfs_shares_config=<%= node["openstack"]["block-storage"]["ibmnas"]["shares_config"] %>
+#### (StrOpt) File with the list of available nfs shares
+
+nfs_mount_point_base=<%= node["openstack"]["block-storage"]["ibmnas"]["mount_point_base"] %>
+#### (StrOpt) Base dir where nfs expected to be mounted
+
+nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["ibmnas"]["nfs_sparsed_volumes"] %>
+#### (BoolOpt) Create volumes as sparsed files which take no space.If set
+####           to False volume is created as regular file.In such case
+####           volume creation takes a lot of time.
+
+<% else %>
 # nfs_shares_config=<None>
 #### (StrOpt) File with the list of available nfs shares
 
@@ -685,6 +699,7 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 #### (BoolOpt) Create volumes as sparsed files which take no space.If set
 ####           to False volume is created as regular file.In such case
 ####           volume creation takes a lot of time.
+<% end %>
 
 
 ######## defined in cinder.volume.san ########
@@ -807,6 +822,22 @@ storwize_svc_multihostmap_enabled=<%= node["openstack"]["block-storage"]["storwi
 iscsi_target_prefix=<%= node["openstack"]["block-storage"]["emc"]["iscsi_target_prefix"] %>
 cinder_emc_config_file=<%= node["openstack"]["block-storage"]["emc"]["cinder_emc_config_file"] %>
 
+<% end %>
+
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver" %>
+######## defined in cinder.volume.ibm.ibmnas ########
+
+nas_ip=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_ip"] %>
+#### (StrOpt) IP address of IBMNAS storage
+
+nas_login=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_login"] %>
+#### (StrOpt) Username for IBMNAS Cluster
+
+nas_password=<%= @ibmnas_pass %>
+#### (StrOpt) Password for IBMNAS Cluster
+
+nas_ssh_port=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_ssh_port"] %>
+#### (StrOpt) IP address of IBMNAS storage
 <% end %>
 
 ######## defined in cinder.volume.xiv ########

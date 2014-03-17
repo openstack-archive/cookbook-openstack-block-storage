@@ -47,6 +47,8 @@ end
 
 if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.solidfire.SolidFire'
   solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
+elsif node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+  ibmnas_pass = get_password 'user', node['openstack']['block-storage']['ibmnas']['nas_login']
 end
 
 glance_api_endpoint = endpoint 'image-api'
@@ -71,6 +73,7 @@ template '/etc/cinder/cinder.conf' do
     rabbit_hosts: rabbit_hosts,
     glance_host: glance_api_endpoint.host,
     glance_port: glance_api_endpoint.port,
+    ibmnas_pass: ibmnas_pass,
     solidfire_pass: solidfire_pass,
     volume_api_address: cinder_api_endpoint.host
   )

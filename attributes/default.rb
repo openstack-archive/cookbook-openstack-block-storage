@@ -97,6 +97,11 @@ default['openstack']['block-storage']['san']['san_login'] = 'admin'
 default['openstack']['block-storage']['san']['san_private_key'] = '/v7000_rsa'
 default['openstack']['block-storage']['san']['san_password'] = 'san_password'
 
+# NFS support
+default['openstack']['block-storage']['nfs']['nas_ip'] = '127.0.0.1'
+default['openstack']['block-storage']['nfs']['nas_login'] = 'admin'
+default['openstack']['block-storage']['nfs']['nas_ssh_port'] = '22'
+
 # Netapp support
 default['openstack']['block-storage']['netapp']['protocol'] = 'http'
 default['openstack']['block-storage']['netapp']['dfm_hostname'] = nil
@@ -172,6 +177,17 @@ default['openstack']['block-storage']['gpfs']['gpfs_images_share_mode'] = 'copy_
 default['openstack']['block-storage']['gpfs']['gpfs_sparse_volumes'] = true
 default['openstack']['block-storage']['gpfs']['gpfs_max_clone_depth'] = 8
 default['openstack']['block-storage']['gpfs']['gpfs_storage_pool'] = 'system'
+
+# IBMNAS (SONAS, Storwize V7000 Unified) Support
+# The attribute "nas_password" is stored in databag and
+# accessed with openstack-common cookbook library's "get_password" routeine.
+default['openstack']['block-storage']['ibmnas']['nas_ip'] = node['openstack']['block-storage']['nfs']['nas_ip']
+default['openstack']['block-storage']['ibmnas']['nas_login'] = node['openstack']['block-storage']['nfs']['nas_login']
+default['openstack']['block-storage']['ibmnas']['shares_config'] = '/etc/cinder/nfs_shares.conf'
+default['openstack']['block-storage']['ibmnas']['mount_point_base'] = '/mnt/cinder-volumes'
+default['openstack']['block-storage']['ibmnas']['nfs_sparsed_volumes'] = 'true'
+default['openstack']['block-storage']['ibmnas']['nas_access_ip'] = nil
+default['openstack']['block-storage']['ibmnas']['export'] = nil
 
 # logging attribute
 default['openstack']['block-storage']['syslog']['use'] = false

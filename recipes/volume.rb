@@ -126,6 +126,34 @@ when 'cinder.volume.drivers.gpfs.GPFSDriver'
     recursive true
   end
 
+when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+  directory node['openstack']['block-storage']['ibmnas']['mount_point_base'] do
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    mode '0755'
+    recursive true
+    action :create
+  end
+
+  platform_options['cinder_nfs_packages'].each do |pkg|
+    package pkg do
+      options platform_options['package_overrides']
+      action :upgrade
+    end
+  end
+
+  template node['openstack']['block-storage']['ibmnas']['shares_config'] do
+    source 'nfs_shares.conf.erb'
+    mode '0600'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    variables(
+      host: node['openstack']['block-storage']['ibmnas']['nas_access_ip'],
+      export: node['openstack']['block-storage']['ibmnas']['export']
+    )
+    notifies :restart, 'service[cinder-volume]'
+  end
+
 when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
   if node['openstack']['block-storage']['volume']['create_volume_group']
     volume_size = node['openstack']['block-storage']['volume']['volume_group_size']

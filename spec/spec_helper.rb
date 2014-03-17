@@ -60,6 +60,9 @@ shared_context 'block-storage-stubs' do
     Chef::Recipe.any_instance.stub(:get_password)
       .with('user', 'admin')
       .and_return('emc_test_pass')
+    Chef::Recipe.any_instance.stub(:get_password)
+      .with('user', 'ibmnas_admin')
+      .and_return('test_pass')
     Chef::Application.stub(:fatal!)
   end
 end

@@ -57,6 +57,37 @@ describe 'openstack-block-storage::volume' do
       end
     end
 
+    context 'IBMNAS Driver' do
+      let(:file) { chef_run.template('/etc/cinder/nfs_shares.conf') }
+      before do
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+        node.set['openstack']['block-storage']['ibmnas']['nas_access_ip'] = '127.0.0.1'
+        node.set['openstack']['block-storage']['ibmnas']['export'] = '/ibm/fs/export'
+      end
+
+      it 'creates IBMNAS shares_config file' do
+        expect(chef_run).to create_template(file.name).with(
+           owner: 'cinder',
+           group: 'cinder',
+           mode: '0600'
+        )
+        expect(chef_run).to render_file(file.name).with_content('127.0.0.1:/ibm/fs/export')
+      end
+
+      it 'installs nfs packages' do
+        expect(chef_run).to upgrade_package 'nfs-utils'
+        expect(chef_run).to upgrade_package 'nfs-utils-lib'
+      end
+
+      it 'creates the nfs mount point' do
+        expect(chef_run).to create_directory('/mnt/cinder-volumes').with(
+           owner: 'cinder',
+           group: 'cinder',
+           mode: '0755'
+        )
+      end
+    end
+
     context 'NFS Driver' do
       before do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
