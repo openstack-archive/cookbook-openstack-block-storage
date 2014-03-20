@@ -5,33 +5,30 @@
 require_relative 'spec_helper'
 
 describe 'openstack-block-storage::api' do
-  before { block_storage_stubs }
   describe 'suse' do
-    before do
-      @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
-      @chef_run.converge 'openstack-block-storage::api'
-    end
+    let(:runner) { ChefSpec::Runner.new(SUSE_OPTS) }
+    let(:node) { runner.node }
+    let(:chef_run) { runner.converge(described_recipe) }
+
+    include_context 'block-storage-stubs'
 
     it 'installs cinder api packages' do
-      expect(@chef_run).to upgrade_package 'openstack-cinder-api'
+      expect(chef_run).to upgrade_package 'openstack-cinder-api'
     end
 
     it 'installs mysql python packages by default' do
-      expect(@chef_run).to upgrade_package 'python-mysql'
+      expect(chef_run).to upgrade_package 'python-mysql'
     end
 
     it 'installs postgresql python packages if explicitly told' do
-      chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
-      node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-      chef_run.converge 'openstack-block-storage::api'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
       expect(chef_run).not_to upgrade_package 'python-mysql'
     end
 
     it 'starts cinder api on boot' do
-      expect(@chef_run).to enable_service 'openstack-cinder-api'
+      expect(chef_run).to enable_service 'openstack-cinder-api'
     end
 
     expect_creates_policy_json(

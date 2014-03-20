@@ -2,9 +2,7 @@
 require_relative 'spec_helper'
 
 describe 'openstack-block-storage::client' do
-
   describe 'redhat' do
-
     let(:runner) { ChefSpec::Runner.new(REDHAT_OPTS) }
     let(:node) { runner.node }
     let(:chef_run) do

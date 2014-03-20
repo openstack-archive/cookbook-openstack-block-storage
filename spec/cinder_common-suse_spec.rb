@@ -5,18 +5,15 @@
 require_relative 'spec_helper'
 
 describe 'openstack-block-storage::cinder-common' do
-  before { block_storage_stubs }
-  before do
-    @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS do |n|
-      n.set['openstack']['mq'] = {
-        'host' => '127.0.0.1'
-      }
-      n.set['openstack']['block-storage']['syslog']['use'] = true
-    end
-    @chef_run.converge 'openstack-block-storage::cinder-common'
-  end
+  describe 'suse' do
+    let(:runner) { ChefSpec::Runner.new(SUSE_OPTS) }
+    let(:node) { runner.node }
+    let(:chef_run) { runner.converge(described_recipe) }
 
-  it 'installs the openstack-cinder package' do
-    expect(@chef_run).to upgrade_package 'openstack-cinder'
+    include_context 'block-storage-stubs'
+
+    it 'installs the openstack-cinder package' do
+      expect(chef_run).to upgrade_package 'openstack-cinder'
+    end
   end
 end
