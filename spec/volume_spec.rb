@@ -106,11 +106,13 @@ describe 'openstack-block-storage::volume' do
         expect(@chef_run).to include_recipe('openstack-common::ceph_client')
       end
 
-      it 'installs the python-ceph package by default' do
-        expect(@chef_run).to install_package('python-ceph')
+      it 'installs the needed ceph packages by default' do
+        %w{ python-ceph ceph-common }.each do |pkg|
+          expect(@chef_run).to install_package(pkg)
+        end
       end
 
-      it 'honors package option platform overrides for python-ceph' do
+      it 'honors package option platform overrides for cinder_ceph_packages' do
         @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
           n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
@@ -118,10 +120,12 @@ describe 'openstack-block-storage::volume' do
         end
         @chef_run.converge 'openstack-block-storage::volume'
 
-        expect(@chef_run).to install_package('python-ceph').with(options: '--override1 --override2')
+        %w{ python-ceph ceph-common }.each do |pkg|
+          expect(@chef_run).to install_package(pkg).with(options: '--override1 --override2')
+        end
       end
 
-      it 'honors package name platform overrides for python-ceph' do
+      it 'honors package name platform overrides for cinder_ceph_packages' do
         @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
           n.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
