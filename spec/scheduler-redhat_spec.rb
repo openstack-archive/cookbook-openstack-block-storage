@@ -33,7 +33,7 @@ describe 'openstack-block-storage::scheduler' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
       chef_run.converge 'openstack-block-storage::scheduler'
 
-      ['db2-odbc', 'python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
+      ['python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
         expect(chef_run).to upgrade_package pkg
       end
     end
