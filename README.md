@@ -119,6 +119,8 @@ Cinder attributes
 * `openstack["block-storage"]["netapp"]["netapp_server_password"]` - Password for user above
 * `openstack["block-storage"]["nfs"]["shares_config"]` - File containing line by line entries of server:export
 * `openstack["block-storage"]["nfs"]["mount_point_base"]` - Directory to mount NFS exported shares
+* `openstack["block-storage"]["control_exchange"]` - The AMQP exchange to connect to if using RabbitMQ or Qpid, defaults to cinder
+* `openstack["block-storage"]["rpc_backend"]` - The messaging module to use, defaults to kombu.
 * `openstack["block-storage"]["rpc_thread_pool_size"]` - Size of RPC thread pool
 * `openstack["block-storage"]["rpc_conn_pool_size"]` - Size of RPC connection pool
 * `openstack["block-storage"]["rpc_response_timeout"]` - Seconds to wait for a response from call or multicall

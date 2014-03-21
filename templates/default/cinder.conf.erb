@@ -172,13 +172,6 @@ auth_strategy=keystone
 #### (StrOpt) The strategy to use for auth. Supports noauth, keystone, and
 ####          deprecated.
 
-<% if node["openstack"]["mq"]["block-storage"]["rabbit"]["control_exchange"] %>
-control_exchange=<%=node["openstack"]["mq"]["block-storage"]["rabbit"]["control_exchange"]%>
-<% end %>
-# control_exchange=cinder
-#### (StrOpt) AMQP exchange to connect to if using RabbitMQ or Qpid
-
-
 ######## defined in cinder.policy ########
 
 # policy_file=policy.json
@@ -331,8 +324,11 @@ snapshot_name_template=<%= node["openstack"]["block-storage"]["snapshot_name_tem
 
 ######## defined in cinder.openstack.common.rpc ########
 
-#### (StrOpt) The messaging module to use, defaults to kombu.
 rpc_backend=<%= node["openstack"]["block_storage"]["rpc_backend"] %>
+#### (StrOpt) The messaging module to use, defaults to kombu.
+
+control_exchange=<%=node['openstack']['block-storage']['control_exchange']%>
+#### (StrOpt) AMQP exchange to connect to if using RabbitMQ or Qpid
 
 rpc_thread_pool_size=<%= node["openstack"]["block-storage"]["rpc_thread_pool_size"] %>
 

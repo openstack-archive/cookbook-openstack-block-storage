@@ -5,6 +5,7 @@ This file is used to list changes made in each version of the openstack-block-st
 ## 8.4.1
 ### Bug
 * Fix the DB2 ODBC driver issue
+* Move control_exchange outside of 'rabbit'
 
 ## 8.4.0
 ### Blue print
