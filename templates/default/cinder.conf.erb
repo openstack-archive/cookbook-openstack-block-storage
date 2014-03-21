@@ -425,8 +425,6 @@ notification_topics=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["noti
 
 ##### QPID #####
 ######## defined in cinder.openstack.common.rpc.impl_qpid ########
-rpc_backend=cinder.openstack.common.rpc.impl_qpid
-
 qpid_hostname=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["host"] %>
 #### (StrOpt) Qpid broker hostname
 
