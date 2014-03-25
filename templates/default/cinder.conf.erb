@@ -622,6 +622,14 @@ netapp_storage_service=<%= node["openstack"]["block-storage"]["netapp"]["storage
 #### (StrOpt) Vfiler to use for provisioning
 <% end %>
 
+######## gluster ########
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.glusterfs.GlusterfsDriver" %>
+
+glusterfs_mount_point_base=<%= node["openstack"]["block-storage"]["glusterfs"]["mount_point_base"] %>
+glusterfs_shares_config=<%= node["openstack"]["block-storage"]["glusterfs"]["shares_config"] %>
+
+<% end %>
+
 ######## defined in cinder.volume.netapp_nfs ########
 <% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver" %>
 

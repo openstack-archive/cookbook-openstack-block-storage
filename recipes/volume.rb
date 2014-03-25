@@ -98,7 +98,7 @@ when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
     owner node['openstack']['block-storage']['user']
     group node['openstack']['block-storage']['group']
     variables(
-      host: node['openstack']['block-storage']['netapp']['netapp_server_hostname'],
+      hosts: node['openstack']['block-storage']['netapp']['netapp_server_hostname'],
       export: node['openstack']['block-storage']['netapp']['export']
     )
     notifies :restart, 'service[cinder-volume]'
@@ -109,6 +109,27 @@ when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       options platform_options['package_overrides']
       action :upgrade
     end
+  end
+
+# GlusterFS
+when 'cinder.volume.drivers.glusterfs.GlusterfsDriver'
+
+  directory node['openstack']['block-storage']['glusterfs']['mount_point_base'] do
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    action :create
+  end
+
+  template node['openstack']['block-storage']['glusterfs']['shares_config'] do
+    source 'shares.conf.erb'
+    mode '0600'
+    owner node['openstack']['block-storage']['user']
+    group node['openstack']['block-storage']['group']
+    variables(
+      hosts: node['openstack']['block-storage']['glusterfs']['glusterfs_server_hostnames'],
+      export: node['openstack']['block-storage']['glusterfs']['export']
+    )
+    notifies :restart, 'service[cinder-volume]'
   end
 
 when 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
