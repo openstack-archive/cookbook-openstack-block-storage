@@ -96,6 +96,12 @@ default['openstack']['block-storage']['san']['san_login'] = 'admin'
 default['openstack']['block-storage']['san']['san_private_key'] = '/v7000_rsa'
 default['openstack']['block-storage']['san']['san_password'] = 'san_password'
 
+# GlusterFS support
+default['openstack']['block-storage']['glusterfs']['mount_point_base'] = '/mnt/cinder-volumes'
+default['openstack']['block-storage']['glusterfs']['shares_config'] = '/etc/cinder/shares.conf'
+default['openstack']['block-storage']['glusterfs']['glusterfs_server_hostnames'] = nil
+default['openstack']['block-storage']['glusterfs']['export'] = nil
+
 # Netapp support
 default['openstack']['block-storage']['netapp']['protocol'] = 'http'
 default['openstack']['block-storage']['netapp']['dfm_hostname'] = nil
