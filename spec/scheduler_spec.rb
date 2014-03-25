@@ -5,66 +5,49 @@
 require_relative 'spec_helper'
 
 describe 'openstack-block-storage::scheduler' do
-  before { block_storage_stubs }
   describe 'ubuntu' do
-    before do
-      @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['block-storage']['syslog']['use'] = true
-      end
-      @chef_run.converge 'openstack-block-storage::scheduler'
-    end
+    let(:runner) { ChefSpec::Runner.new(UBUNTU_OPTS) }
+    let(:node) { runner.node }
+    let(:chef_run) { runner.converge(described_recipe) }
 
-    expect_runs_openstack_common_logging_recipe
+    include_context 'block-storage-stubs'
+    include_examples 'common-logging'
 
-    it 'does not run logging recipe' do
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      chef_run.converge 'openstack-block-storage::scheduler'
-
-      expect(chef_run).not_to include_recipe 'openstack-common::logging'
-    end
+    expect_creates_cinder_conf 'service[cinder-scheduler]', 'cinder', 'cinder'
 
     it 'installs cinder scheduler packages' do
-      expect(@chef_run).to upgrade_package 'cinder-scheduler'
+      expect(chef_run).to upgrade_package 'cinder-scheduler'
+    end
+
+    it 'starts cinder scheduler' do
+      expect(chef_run).to start_service 'cinder-scheduler'
+    end
+
+    it 'starts cinder scheduler on boot' do
+      expect(chef_run).to enable_service 'cinder-scheduler'
     end
 
     it 'installs mysql python packages by default' do
-      expect(@chef_run).to upgrade_package 'python-mysqldb'
+      expect(chef_run).to upgrade_package 'python-mysqldb'
     end
 
     it 'installs postgresql python packages if explicitly told' do
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      node = chef_run.node
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-      chef_run.converge 'openstack-block-storage::scheduler'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
       expect(chef_run).not_to upgrade_package 'python-mysqldb'
     end
 
-    it 'starts cinder scheduler' do
-      expect(@chef_run).to start_service 'cinder-scheduler'
-    end
-
-    it 'starts cinder scheduler on boot' do
-      expect(@chef_run).to enable_service 'cinder-scheduler'
-    end
-
-    it 'does not run logging recipe' do
-      expect(@chef_run).to enable_service 'cinder-scheduler'
-    end
-
     it 'does not setup cron when no metering' do
-      expect(@chef_run.cron('cinder-volume-usage-audit')).to be_nil
+      expect(chef_run.cron('cinder-volume-usage-audit')).to be_nil
     end
 
     it 'creates cron metering default' do
       ::Chef::Recipe.any_instance.stub(:search)
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'fauxhai.local')])
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['telemetry'] = true
-      end
-      chef_run.converge 'openstack-block-storage::scheduler'
+      node.set['openstack']['telemetry'] = true
+
       cron = chef_run.cron 'cinder-volume-usage-audit'
       bin_str = '/usr/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log'
       expect(cron.command).to match(/#{bin_str}/)
@@ -82,21 +65,17 @@ describe 'openstack-block-storage::scheduler' do
       ::Chef::Recipe.any_instance.stub(:search)
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'foobar')])
-      chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-        n.set['openstack']['telemetry'] = true
-        crontests.each do |k, v|
-          n.set['openstack']['block-storage']['cron'][k.to_s] = v
-        end
-        n.set['openstack']['block-storage']['user'] = 'foobar'
+      node.set['openstack']['telemetry'] = true
+      crontests.each do |k, v|
+        node.set['openstack']['block-storage']['cron'][k.to_s] = v
       end
-      chef_run.converge 'openstack-block-storage::scheduler'
+      node.set['openstack']['block-storage']['user'] = 'foobar'
+
       cron = chef_run.cron 'cinder-volume-usage-audit'
       crontests.each do |k, v|
         expect(cron.send(k)).to eq v
       end
       expect(cron.action).to include :delete
     end
-
-    expect_creates_cinder_conf 'service[cinder-scheduler]', 'cinder', 'cinder'
   end
 end
