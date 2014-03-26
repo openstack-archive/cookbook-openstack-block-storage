@@ -39,8 +39,9 @@ default['openstack']['block-storage']['debug'] = 'False'
 
 # Default lock_path
 default['openstack']['block-storage']['lock_path'] = '/var/lock/cinder'
-# Default notification_driver
+# Default notification_driver and control exchange
 default['openstack']['block-storage']['notification_driver'] = 'cinder.openstack.common.notifier.rpc_notifier'
+default['openstack']['block-storage']['control_exchange'] = 'cinder'
 # Availability zone/region for the OpenStack Block-Storage service
 default['openstack']['block-storage']['region'] = node['openstack']['region']
 default['openstack']['block-storage']['scheduler_role'] = 'os-block-storage-scheduler'
