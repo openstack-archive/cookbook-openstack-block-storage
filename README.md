@@ -1,14 +1,14 @@
 Description
 ===========
 
-Installs the OpenStack Block Storage service **Cinder** as part of the OpenStack reference deployment Chef for OpenStack. The https://github.com/stackforge/openstack-chef-repo contains documentation for using this cookbook in the context of a full OpenStack deployment. Cinder is currently installed from packages.
+Installs the OpenStack Block Storage service **Cinder** as part of the OpenStack reference deployment Chef for OpenStack. The https://github.com/stackforge/openstack-chef-repo contains documentation for using this cookbook in the context of a full OpenStack deployment. Cinder is currently installed from packages. This version is for deploying the 'Havana' release, the 'master' branch is currently working on the 'Icehouse' release.
 
 http://cinder.openstack.org
 
 Requirements
 ============
 
-* Chef 0.10.0 or higher required (for Chef environment use).
+* Chef 11 or higher is required.
 
 Cookbooks
 ---------
@@ -19,6 +19,7 @@ The following cookbooks are dependencies:
 * openstack-common
 * openstack-identity
 * openstack-image
+* python
 * selinux (Fedora)
 
 Usage
