@@ -57,7 +57,7 @@ when 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
 
 when 'cinder.volume.drivers.rbd.RBDDriver'
   # this is used in the cinder.conf template
-  node.override['openstack']['block-storage']['rbd_secret_uuid'] = secret 'secrets', node['openstack']['block-storage']['rbd_secret_name']
+  node.override['openstack']['block-storage']['rbd_secret_uuid'] = get_secret node['openstack']['block-storage']['rbd_secret_name']
 
   rbd_user = node['openstack']['block-storage']['rbd_user']
   rbd_key = get_password 'service', node['openstack']['block-storage']['rbd_key_name']
