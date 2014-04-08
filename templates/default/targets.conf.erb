@@ -1,9 +1,9 @@
 <%= node["openstack"]["block-storage"]["custom_template_banner"] %>
 
-<% if %w{redhat centos fedora suse}.include?(node["platform"]) %>
+<% if %w{rhel fedora suse}.include?(node["platform_family"]) %>
 include <%= node['openstack']['block-storage']['volume']['volumes_dir'] %>/*
 <% end %>
-<% if %w{debian ubuntu}.include?(node["platform"]) %>
+<% if %w{debian}.include?(node["platform_family"]) %>
 include /etc/tgt/conf.d/*.conf
 <% end %>
 default-driver iscsi
