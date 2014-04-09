@@ -50,6 +50,7 @@ if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.driv
 end
 
 glance_api_endpoint = endpoint 'image-api'
+cinder_api_endpoint = endpoint 'block-storage-api'
 
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
@@ -70,7 +71,8 @@ template '/etc/cinder/cinder.conf' do
     rabbit_hosts: rabbit_hosts,
     glance_host: glance_api_endpoint.host,
     glance_port: glance_api_endpoint.port,
-    solidfire_pass: solidfire_pass
+    solidfire_pass: solidfire_pass,
+    volume_api_address: cinder_api_endpoint.host
   )
 end
 

@@ -215,7 +215,7 @@ quota_driver=<%= node["openstack"]["block-storage"]["quota_driver"] %>
 ####          periodic task scheduler to reduce stampeding. (Disable by
 ####          setting to 0)
 
-# osapi_volume_listen=0.0.0.0
+osapi_volume_listen=<%= @volume_api_address %>
 #### (StrOpt) IP address for OpenStack Volume API to listen
 
 # osapi_volume_listen_port=8776
