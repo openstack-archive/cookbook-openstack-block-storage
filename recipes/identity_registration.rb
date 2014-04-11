@@ -36,6 +36,15 @@ service_tenant_name = node['openstack']['block-storage']['service_tenant_name']
 service_user = node['openstack']['block-storage']['service_user']
 service_role = node['openstack']['block-storage']['service_role']
 
+openstack_identity_register 'Register Service Tenant' do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  tenant_name service_tenant_name
+  tenant_description 'Service Tenant'
+
+  action :create_tenant
+end
+
 openstack_identity_register 'Register Cinder Volume Service' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token

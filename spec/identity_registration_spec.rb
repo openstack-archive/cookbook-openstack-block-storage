@@ -12,6 +12,17 @@ describe 'openstack-block-storage::identity_registration' do
 
     include_context 'block-storage-stubs'
 
+    it 'registers service tenant' do
+      expect(chef_run).to create_tenant_openstack_identity_register(
+        'Register Service Tenant'
+      ).with(
+        auth_uri: 'http://127.0.0.1:35357/v2.0',
+        bootstrap_token: 'bootstrap-token',
+        tenant_name: 'service',
+        tenant_description: 'Service Tenant'
+      )
+    end
+
     it 'registers cinder volume service' do
       expect(chef_run).to create_service_openstack_identity_register(
         'Register Cinder Volume Service'
