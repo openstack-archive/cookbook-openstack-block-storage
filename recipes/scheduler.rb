@@ -47,7 +47,7 @@ service 'cinder-scheduler' do
   subscribes :restart, 'template[/etc/cinder/cinder.conf]'
 end
 
-audit_bin_dir = platform?('ubuntu') ? '/usr/bin' : '/usr/local/bin'
+audit_bin_dir = platform_family?('debian') ? '/usr/bin' : '/usr/local/bin'
 audit_log = node['openstack']['block-storage']['cron']['audit_logfile']
 
 if node['openstack']['telemetry']

@@ -209,8 +209,8 @@ default['openstack']['block-storage']['policy']['default'] = '["rule:admin_or_ow
 default['openstack']['block-storage']['policy']['admin_or_owner'] = '["is_admin:True"], ["project_id:%(project_id)s"]'
 default['openstack']['block-storage']['policy']['admin_api'] = '["is_admin:True"]'
 
-case platform
-when 'fedora', 'redhat', 'centos' # :pragma-foodcritic: ~FC024 - won't fix this
+case platform_family
+when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
   default['openstack']['block-storage']['user'] = 'cinder'
   default['openstack']['block-storage']['group'] = 'cinder'
@@ -255,7 +255,7 @@ when 'suse'
     'cinder_nfs_packages' => ['nfs-utils'],
     'cinder_emc_packages' => ['python-pywbem']
   }
-when 'ubuntu'
+when 'debian'
   # operating system user and group names
   default['openstack']['block-storage']['user'] = 'cinder'
   default['openstack']['block-storage']['group'] = 'cinder'
