@@ -215,12 +215,11 @@ quota_driver=<%= node["openstack"]["block-storage"]["quota_driver"] %>
 ####          periodic task scheduler to reduce stampeding. (Disable by
 ####          setting to 0)
 
-osapi_volume_listen=<%= @volume_api_address %>
+osapi_volume_listen=<%= @volume_api_bind_address %>
 #### (StrOpt) IP address for OpenStack Volume API to listen
 
-# osapi_volume_listen_port=8776
 #### (IntOpt) port for os volume api to listen
-
+osapi_volume_listen_port=<%= @volume_api_bind_port %>
 
 ######## defined in cinder.test ########
 
