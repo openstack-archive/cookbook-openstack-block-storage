@@ -75,7 +75,8 @@ template '/etc/cinder/cinder.conf' do
     glance_port: glance_api_endpoint.port,
     ibmnas_pass: ibmnas_pass,
     solidfire_pass: solidfire_pass,
-    volume_api_address: cinder_api_endpoint.host
+    volume_api_bind_address: cinder_api_endpoint.host,
+    volume_api_bind_port: cinder_api_endpoint.port
   )
 end
 
