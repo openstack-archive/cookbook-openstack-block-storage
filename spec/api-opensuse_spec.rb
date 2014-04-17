@@ -31,8 +31,6 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to enable_service 'openstack-cinder-api'
     end
 
-    expect_creates_policy_json(
-      'service[cinder-api]', 'openstack-cinder', 'openstack-cinder')
     expect_creates_cinder_conf(
       'service[cinder-api]', 'openstack-cinder', 'openstack-cinder')
   end

@@ -77,11 +77,3 @@ template '/etc/cinder/api-paste.ini' do
 
   notifies :restart, 'service[cinder-api]', :immediately
 end
-
-template '/etc/cinder/policy.json' do
-  source 'policy.json.erb'
-  owner node['openstack']['block-storage']['user']
-  group node['openstack']['block-storage']['group']
-  mode 00644
-  notifies :restart, 'service[cinder-api]'
-end

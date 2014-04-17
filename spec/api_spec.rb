@@ -92,8 +92,6 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to run_execute('cinder-manage db sync')
     end
 
-    expect_creates_policy_json 'service[cinder-api]', 'cinder', 'cinder'
-
     describe 'api-paste.ini' do
       let(:file) { chef_run.template('/etc/cinder/api-paste.ini') }
 

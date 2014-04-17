@@ -219,12 +219,6 @@ default['openstack']['block-storage']['rbd_secret_uuid'] = nil
 default['openstack']['block-storage']['rbd_secret_name'] = '00000000-0000-0000-0000-000000000000'
 default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_key'
 
-# Cinder Policy defaults
-default['openstack']['block-storage']['policy']['context_is_admin'] = '["role:admin"]'
-default['openstack']['block-storage']['policy']['default'] = '["rule:admin_or_owner"]'
-default['openstack']['block-storage']['policy']['admin_or_owner'] = '["is_admin:True"], ["project_id:%(project_id)s"]'
-default['openstack']['block-storage']['policy']['admin_api'] = '["is_admin:True"]'
-
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names

@@ -102,10 +102,6 @@ Cinder attributes
 * `openstack["block-storage"]["rbd_pool"]` - RADOS Block Device pool to use
 * `openstack["block-storage"]["rbd_user"]` - User for Cephx Authentication
 * `openstack["block-storage"]["rbd_secret_uuid"]` - Secret UUID for Cephx Authentication
-* `openstack["block-storage"]["policy"]["context_is_admin"]` - Define administrators
-* `openstack["block-storage"]["policy"]["default"]` - Default volume operations rule
-* `openstack["block-storage"]["policy"]["admin_or_owner"]` - Define an admin or owner
-* `openstack["block-storage"]["policy"]["admin_api"]` - Define api admin
 * `openstack["block-storage"]["netapp"]["protocol"]` - How are we talking to either dfm or filer, http or https
 * `openstack["block-storage"]["netapp"]["dfm_hostname"]` - Host or IP of your dfm server
 * `openstack["block-storage"]["netapp"]["dfm_login"]` - Username for dfm

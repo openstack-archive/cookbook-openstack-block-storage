@@ -113,22 +113,3 @@ def expect_creates_cinder_conf(service, user, group, action = :restart) # ruboco
     end
   end
 end
-
-def expect_creates_policy_json(service, user, group, action = :restart) # rubocop:disable MethodLength
-  describe 'policy.json' do
-    let(:file) { chef_run.template('/etc/cinder/policy.json') }
-
-    it 'has proper owner' do
-      expect(file.owner).to eq(user)
-      expect(file.group).to eq(group)
-    end
-
-    it 'has proper modes' do
-      expect(sprintf('%o', file.mode)).to eq '644'
-    end
-
-    it 'notifies service restart' do
-      expect(file).to notify(service).to(action)
-    end
-  end
-end
