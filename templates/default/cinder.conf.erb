@@ -703,7 +703,7 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["ibmnas"]["nfs_sparse
 
 ######## defined in cinder.volume.san ########
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver" %>
 
 san_ip=<%= node["openstack"]["block-storage"]["storwize"]["san_ip"] %>
 #### (StrOpt) IP address of SAN controller
@@ -764,7 +764,7 @@ iscsi_ip_prefix=<%= node["openstack"]["block-storage"]["solidfire"]["iscsi_ip_pr
 <% end %>
 
 #### (BoolOpt) Allow tenants to specify QOS on create
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.storwize_svc.StorwizeSVCDriver" %>
+<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver" %>
 ######## defined in cinder.volume.storwize_svc ########
 
 storwize_svc_volpool_name=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_volpool_name"] %>

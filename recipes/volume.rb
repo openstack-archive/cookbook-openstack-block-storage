@@ -111,7 +111,7 @@ when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
     end
   end
 
-when 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
+when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
   file node['openstack']['block-storage']['san']['san_private_key'] do
     mode '0400'
     owner node['openstack']['block-storage']['user']

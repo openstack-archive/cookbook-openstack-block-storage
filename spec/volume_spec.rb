@@ -164,7 +164,7 @@ describe 'openstack-block-storage::volume' do
     context 'Storewize Driver' do
       let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
       before do
-        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.storwize_svc.StorwizeSVCDriver'
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
       end
 
       it 'configures storewize private key' do
