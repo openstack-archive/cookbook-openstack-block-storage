@@ -53,7 +53,7 @@ describe 'openstack-block-storage::cinder-common' do
             .with('image-api')
             .and_return(double(host: 'glance_host_value', port: 'glance_port_value'))
           Chef::Recipe.any_instance.stub(:endpoint)
-            .with('block-storage-api')
+            .with('block-storage-api-bind')
             .and_return(double(host: 'cinder_host_value', port: 'cinder_port_value'))
           Chef::Recipe.any_instance.stub(:get_password)
             .with('user', anything)

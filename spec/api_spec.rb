@@ -128,7 +128,7 @@ describe 'openstack-block-storage::api' do
               .with('identity-api')
               .and_return(endpoint)
             Chef::Recipe.any_instance.stub(:endpoint)
-              .with('block-storage-api')
+              .with('block-storage-api-bind')
               .and_return(endpoint)
             Chef::Recipe.any_instance.stub(:auth_uri_transform)
               .and_return('auth_uri_transform')
