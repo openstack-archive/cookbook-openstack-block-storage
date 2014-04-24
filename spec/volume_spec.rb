@@ -56,17 +56,22 @@ describe 'openstack-block-storage::volume' do
       let(:file) { chef_run.template('/etc/cinder/nfs_shares.conf') }
       before do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
-        node.set['openstack']['block-storage']['ibmnas']['nas_access_ip'] = '127.0.0.1'
-        node.set['openstack']['block-storage']['ibmnas']['export'] = '/ibm/fs/export'
       end
 
-      it 'creates IBMNAS shares_config file' do
-        expect(chef_run).to create_template(file.name).with(
+      context 'IBMNAS shares_config file' do
+        it 'creates the file' do
+          expect(chef_run).to create_template(file.name).with(
            owner: 'cinder',
            group: 'cinder',
            mode: '0600'
         )
-        expect(chef_run).to render_file(file.name).with_content('127.0.0.1:/ibm/fs/export')
+        end
+
+        it 'sets the ibmnas access_ip attribute' do
+          node.set['openstack']['block-storage']['ibmnas']['nas_access_ip'] = '127.0.0.1'
+          node.set['openstack']['block-storage']['ibmnas']['export'] = '/ibm/fs/export'
+          expect(chef_run).to render_file(file.name).with_content('127.0.0.1:/ibm/fs/export')
+        end
       end
 
       it 'installs nfs packages' do
@@ -94,6 +99,36 @@ describe 'openstack-block-storage::volume' do
 
         it 'creates the nfs mount point' do
           expect(chef_run).to create_directory '/mnt/cinder-volumes'
+        end
+
+        context 'shares config file' do
+          let(:shares_config_file) { 'nfs_shares_config_file' }
+          let(:file) { chef_run.template(shares_config_file) }
+
+          before do
+            node.set['openstack']['block-storage']['nfs']['shares_config'] = shares_config_file
+          end
+
+          it 'creates the file' do
+            node.set['openstack']['block-storage']['user'] = 'test_user'
+            node.set['openstack']['block-storage']['group'] = 'test_group'
+
+            expect(chef_run).to create_template(file.name).with(
+              owner: 'test_user',
+              group: 'test_group',
+              mode: '0600'
+            )
+          end
+
+          it 'sets netapp server hostname export settings' do
+            netapp_server_hostname = %w(hostname1 hostname2)
+            node.set['openstack']['block-storage']['netapp']['netapp_server_hostname'] = netapp_server_hostname
+            node.set['openstack']['block-storage']['netapp']['export'] = 'netapp_export_value'
+
+            netapp_server_hostname.each do |hostname|
+              expect(chef_run).to render_file(file.name).with_content(/^#{hostname}:netapp_export_value$/)
+            end
+          end
         end
       end
 
@@ -207,8 +242,10 @@ describe 'openstack-block-storage::volume' do
       end
 
       it 'has ubuntu include' do
+        node.set['openstack']['block-storage']['volume']['volumes_dir'] = 'volumes_dir_value'
+
         expect(chef_run).to render_file(file.name).with_content('include /etc/tgt/conf.d/*.conf')
-        expect(chef_run).not_to render_file(file.name).with_content('include /var/lib/cinder/volumes/*')
+        expect(chef_run).not_to render_file(file.name).with_content('include volumes_dir_value/*')
       end
     end
 
@@ -241,6 +278,29 @@ describe 'openstack-block-storage::volume' do
       it 'creates cinder group active template file' do
         expect(chef_run).to create_template(file.name)
       end
+
+      describe 'template contents' do
+        let(:volume_group_value) { 'volume_group_value' }
+        before do
+          node.set['openstack']['block-storage']['volume']['volume_group'] = volume_group_value
+          stub_command("vgs #{volume_group_value}").and_return(true)
+        end
+
+        it 'calls vgs with the volume name attribute' do
+          expect(chef_run).to render_file(file.name).with_content(%r(vgs #{volume_group_value} > /dev/null 2>&1))
+        end
+
+        it 'calls vgcreate with the volume name and volume file attributes' do
+          node.set['openstack']['block-storage']['volume']['state_path'] = 'state_path_value'
+          volume_file = "state_path_value/#{volume_group_value}.img"
+          expect(chef_run).to render_file(file.name).with_content(/vgcreate #{volume_group_value} \$\(losetup --show -f #{volume_file}\)/)
+        end
+
+        it 'has ubuntu settings' do
+          expect(chef_run).to render_file(file.name).with_content(/^\s*echo "SUCCESS"/)
+          expect(chef_run).not_to render_file(file.name).with_content(/^\s*success$/)
+        end
+      end
     end
 
     describe 'cinder_emc_config.xml' do
@@ -257,34 +317,39 @@ describe 'openstack-block-storage::volume' do
         expect(sprintf('%o', file.mode)).to eq('644')
       end
 
-      it 'has StorageType' do
-        expect(chef_run).to render_file(file.name).with_content('<StorageType>0</StorageType>')
-      end
+      describe 'template contents' do
+        before do
+          Chef::Recipe.any_instance.stub(:get_password)
+            .with('user', anything)
+            .and_return('emc_test_pass')
+        end
 
-      it 'has EcomServerIp' do
-        expect(chef_run).to render_file(file.name).with_content('<EcomServerIp>127.0.0.1</EcomServerIp>')
-      end
+        %w(StorageType EcomServerPort EcomUserName).each do |attr|
+          it "has an emc #{attr} setting" do
+            node.set['openstack']['block-storage']['emc'][attr] = "emc_#{attr}_value"
+            expect(chef_run).to render_file(file.name).with_content(/^<#{attr}>emc_#{attr}_value<\/#{attr}>$/)
+          end
+        end
 
-      it 'has EcomServerPort' do
-        expect(chef_run).to render_file(file.name).with_content('<EcomServerPort>5988</EcomServerPort>')
-      end
+        it 'has a EcomServerIP' do
+          node.set['openstack']['block-storage']['emc']['EcomServerIP'] = 'emc_EcomServerIP_value'
+          expect(chef_run).to render_file(file.name).with_content(/^<EcomServerIp>emc_EcomServerIP_value<\/EcomServerIp>$/)
+        end
 
-      it 'has EcomUserName' do
-        expect(chef_run).to render_file(file.name).with_content('<EcomUserName>admin</EcomUserName>')
-      end
+        it 'has EcomPassword' do
+          node.set['openstack']['block-storage']['emc']['EcomUserName'] = 'emc_username'
+          expect(chef_run).to render_file(file.name).with_content(/^<EcomPassword>emc_test_pass<\/EcomPassword>$/)
+        end
 
-      it 'has EcomPassword' do
-        expect(chef_run).to render_file(file.name).with_content('<EcomPassword>emc_test_pass</EcomPassword>')
-      end
+        it 'does not have MaskingView when not specified' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^<MaskingView>/)
+        end
 
-      it 'does not have MaskingView when not specified' do
-        expect(chef_run).not_to render_file(file.name).with_content('<MaskingView>')
-      end
+        it 'has MaskingView when specified' do
+          node.set['openstack']['block-storage']['emc']['MaskingView'] = 'testMaskingView'
 
-      it 'has MaskingView when specified' do
-        node.set['openstack']['block-storage']['emc']['MaskingView'] = 'testMaskingView'
-
-        expect(chef_run).to render_file(file.name).with_content('<MaskingView>testMaskingView</MaskingView>')
+          expect(chef_run).to render_file(file.name).with_content(/^<MaskingView>testMaskingView<\/MaskingView>$/)
+        end
       end
     end
   end

@@ -50,8 +50,9 @@ describe 'openstack-block-storage::volume' do
       end
 
       it 'has redhat include' do
+        node.set['openstack']['block-storage']['volume']['volumes_dir'] = 'volumes_dir_value'
         expect(chef_run).to render_file(file.name).with_content(
-          'include /var/lib/cinder/volumes/*')
+          'include volumes_dir_value/*')
         expect(chef_run).not_to render_file(file.name).with_content(
           'include /etc/tgt/conf.d/*.conf')
       end
@@ -159,5 +160,27 @@ describe 'openstack-block-storage::volume' do
         )
       end
     end
+
+    describe 'create_vg' do
+      let(:file) { chef_run.template('/etc/init.d/cinder-group-active') }
+      before do
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+        node.set['openstack']['block-storage']['volume']['create_volume_group'] = true
+        stub_command('vgs cinder-volumes').and_return(false)
+      end
+
+      describe 'template contents' do
+        it 'sources /etc/rc.d/init.d/functions' do
+          expect(chef_run).to render_file(file.name).with_content(%r(^\s*. /etc/rc.d/init.d/functions$))
+        end
+
+        it 'calls success and echo' do
+          [/^\s*success$/, /^\s*echo$/].each do |cmd|
+            expect(chef_run).to render_file(file.name).with_content(cmd)
+          end
+        end
+      end
+    end
+
   end
 end

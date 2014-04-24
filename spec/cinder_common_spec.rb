@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 #
 # Cookbook Name:: openstack-block-storage
 
@@ -46,330 +46,452 @@ describe 'openstack-block-storage::cinder-common' do
         expect(sprintf('%o', file.mode)).to eq '644'
       end
 
-      it 'has name templates' do
-        expect(chef_run).to render_file(file.name).with_content('volume_name_template=volume-%s')
-        expect(chef_run).to render_file(file.name).with_content('snapshot_name_template=snapshot-%s')
-      end
-
-      it 'has rpc_backend set' do
-        expect(chef_run).to render_file(file.name).with_content('rpc_backend=cinder.openstack.common.rpc.impl_kombu')
-      end
-
-      it 'has has volumes_dir set' do
-        expect(chef_run).to render_file(file.name).with_content('volumes_dir=/var/lib/cinder/volumes')
-      end
-
-      it 'has correct volume.driver set' do
-        expect(chef_run).to render_file(file.name).with_content('volume_driver=cinder.volume.drivers.lvm.LVMISCSIDriver')
-      end
-
-      it 'has osapi_volume_listen set' do
-        node.set['openstack']['endpoints']['block-storage-api']['host'] = '1.1.1.1'
-        expect(chef_run).to render_file(file.name).with_content('osapi_volume_listen=1.1.1.1')
-      end
-
-      it 'has osapi_volume_listen_port set' do
-        node.set['openstack']['endpoints']['block-storage-api']['port'] = '9999'
-        expect(chef_run).to render_file(file.name).with_content('osapi_volume_listen_port=9999')
-      end
-
-      it 'has rpc_thread_pool_size' do
-        expect(chef_run).to render_file(file.name).with_content('rpc_thread_pool_size=64')
-      end
-
-      it 'has rpc_conn_pool_size' do
-        expect(chef_run).to render_file(file.name).with_content('rpc_conn_pool_size=30')
-      end
-
-      it 'has rpc_response_timeout' do
-        expect(chef_run).to render_file(file.name).with_content('rpc_response_timeout=60')
-      end
-
-      it 'has rabbit_host' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_host=127.0.0.1')
-      end
-
-      it 'does not have rabbit_hosts' do
-        expect(chef_run).not_to render_file(file.name).with_content('rabbit_hosts=')
-      end
-
-      it 'does not have rabbit_ha_queues' do
-        expect(chef_run).not_to render_file(file.name).with_content('rabbit_ha_queues=')
-      end
-
-      it 'has log_file' do
-        expect(chef_run).to render_file(file.name).with_content('log_file = /var/log/cinder/cinder.log')
-      end
-
-      it 'has log_config when syslog is true' do
-        node.set['openstack']['block-storage']['syslog']['use'] = true
-
-        expect(chef_run).to render_file(file.name).with_content('log_config = /etc/openstack/logging.conf')
-      end
-
-      it 'has rabbit_port' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_port=5672')
-      end
-
-      it 'has rabbit_use_ssl' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_use_ssl=false')
-      end
-
-      it 'has rabbit_userid' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_userid=guest')
-      end
-
-      it 'has rabbit_password' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_password=mq-pass')
-      end
-
-      it 'has rabbit_virtual_host' do
-        expect(chef_run).to render_file(file.name).with_content('rabbit_virtual_host=/')
-      end
-
-      it 'has rabbit notification_topics' do
-        expect(chef_run).to render_file(file.name).with_content('notification_topics=rabbit_topic')
-      end
-
-      describe 'rabbit ha' do
+      context 'template contents' do
+        let(:test_pass) { 'test_pass' }
         before do
-          node.set['openstack']['mq']['block-storage']['rabbit']['ha'] = true
+          Chef::Recipe.any_instance.stub(:endpoint)
+            .with('image-api')
+            .and_return(double(host: 'glance_host_value', port: 'glance_port_value'))
+          Chef::Recipe.any_instance.stub(:endpoint)
+            .with('block-storage-api')
+            .and_return(double(host: 'cinder_host_value', port: 'cinder_port_value'))
+          Chef::Recipe.any_instance.stub(:get_password)
+            .with('user', anything)
+            .and_return(test_pass)
         end
 
-        it 'has rabbit_hosts' do
-          expect(chef_run).to render_file(file.name).with_content('rabbit_hosts=1.1.1.1:5672,2.2.2.2:5672')
-        end
+        context 'commonly  named attributes' do
+          %w(debug verbose lock_path notification_driver
+             storage_availability_zone quota_volumes quota_gigabytes quota_driver
+             volume_name_template snapshot_name_template
+             control_exchange rpc_thread_pool_size rpc_conn_pool_size
+             rpc_response_timeout max_gigabytes).each do |attr_key|
+            it "has a #{attr_key} attribute" do
+              node.set['openstack']['block-storage'][attr_key] = "#{attr_key}_value"
 
-        it 'has rabbit_ha_queues' do
-          expect(chef_run).to render_file(file.name).with_content('rabbit_ha_queues=True')
-        end
-
-        it 'does not have rabbit_host' do
-          expect(chef_run).not_to render_file(file.name).with_content('rabbit_host=127.0.0.1')
-        end
-
-        it 'does not have rabbit_port' do
-          expect(chef_run).not_to render_file(file.name).with_content('rabbit_port=5672')
-        end
-      end
-
-      describe 'qpid' do
-        before do
-          node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
-          node.set['openstack']['block-storage']['notification_driver'] = 'cinder.test_driver'
-          node.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_topic'
-            # we set username here since the attribute in common currently
-            # defaults to ''
-          node.set['openstack']['mq']['block-storage']['qpid']['username'] = 'guest'
-        end
-
-        it 'has qpid_hostname' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_hostname=127.0.0.1')
-        end
-
-        it 'has qpid_port' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_port=5672')
-        end
-
-        it 'has qpid_username' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_username=guest')
-        end
-
-        it 'has qpid_password' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_password=mq-pass')
-        end
-
-        it 'has qpid_sasl_mechanisms' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_sasl_mechanisms=')
-        end
-
-        it 'has qpid_reconnect_timeout' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect_timeout=0')
-        end
-
-        it 'has qpid_reconnect_limit' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect_limit=0')
-        end
-
-        it 'has qpid_reconnect_interval_min' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect_interval_min=0')
-        end
-
-        it 'has qpid_reconnect_interval_max' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect_interval_max=0')
-        end
-
-        it 'has qpid_reconnect_interval' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect_interval=0')
-        end
-
-        it 'has qpid_reconnect' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_reconnect=true')
-        end
-
-        it 'has qpid_heartbeat' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_heartbeat=60')
-        end
-
-        it 'has qpid_protocol' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_protocol=tcp')
-        end
-
-        it 'has qpid_tcp_nodelay' do
-          expect(chef_run).to render_file(file.name).with_content('qpid_tcp_nodelay=true')
-        end
-
-        it 'has notification_driver' do
-          expect(chef_run).to render_file(file.name).with_content('notification_driver=cinder.test_driver')
-        end
-
-        it 'has notification_topics' do
-          expect(chef_run).to render_file(file.name).with_content('notification_topics=qpid_topic')
-        end
-      end
-
-      describe 'lvm settings' do
-        before do
-          node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
-          node.set['openstack']['block-storage']['volume']['volume_group'] = 'test-group'
-          node.set['openstack']['block-storage']['volume']['volume_clear_size'] = 100
-          node.set['openstack']['block-storage']['volume']['volume_clear'] = 'none'
-        end
-
-        it 'has volume_group' do
-          expect(chef_run).to render_file(file.name).with_content('volume_group=test-group')
-        end
-
-        it 'has volume_clear_size' do
-          expect(chef_run).to render_file(file.name).with_content('volume_clear_size=100')
-        end
-
-        it 'has volume_clear' do
-          expect(chef_run).to render_file(file.name).with_content('volume_clear=none')
-        end
-      end
-
-      describe 'solidfire settings' do
-        before do
-          node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.solidfire.SolidFire'
-          node.set['openstack']['block-storage']['solidfire']['sf_emulate'] = 'test'
-          node.set['openstack']['block-storage']['solidfire']['san_ip'] = '203.0.113.10'
-          node.set['openstack']['block-storage']['solidfire']['san_login'] = 'solidfire_admin'
-        end
-
-        it 'has solidfire sf_emulate set' do
-          expect(chef_run).to render_file(file.name).with_content('sf_emulate_512=test')
-        end
-
-        it 'has solidfire san_ip set' do
-          expect(chef_run).to render_file(file.name).with_content('san_ip=203.0.113.10')
-        end
-
-        it 'has solidfire san_login' do
-          expect(chef_run).to render_file(file.name).with_content('san_login=solidfire_admin')
-        end
-
-        it 'has solidfire password' do
-          expect(chef_run).to render_file(file.name).with_content('san_password=solidfire_testpass')
-        end
-
-        it 'does not have iscsi_ip_prefix not specified' do
-          expect(chef_run).to_not render_file(file.name).with_content('iscsi_ip_prefix')
-        end
-
-        it 'does have iscsi_ip_prefix when specified' do
-          chef_run.node.set['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = '203.0.113.*'
-
-          expect(chef_run).to render_file(file.name).with_content('iscsi_ip_prefix=203.0.113.*')
-        end
-      end
-
-      describe 'emc settings' do
-        before do
-          node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
-          node.set['openstack']['block-storage']['emc']['iscsi_target_prefix'] = 'test.prefix'
-          node.set['openstack']['block-storage']['emc']['cinder_emc_config_file'] = '/etc/test/config.file'
-        end
-
-        it 'has emc iscsi_target_prefix' do
-          expect(chef_run).to render_file(file.name).with_content('iscsi_target_prefix=test.prefix')
-        end
-
-        it 'has cinder_emc_config_file' do
-          expect(chef_run).to render_file(file.name).with_content('cinder_emc_config_file=/etc/test/config.file')
-        end
-      end
-
-      describe 'ibmnas settings' do
-        before do
-          chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_ip'] = '127.0.0.1'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_login'] = 'ibmnas_admin'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['nas_ssh_port'] = '22'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['shares_config'] = '/etc/cinder/nfs_shares.conf'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['mount_point_base'] = '/mnt/cinder-volumes'
-          chef_run.node.set['openstack']['block-storage']['ibmnas']['nfs_sparsed_volumes'] = 'true'
-          chef_run.converge 'openstack-block-storage::cinder-common'
-        end
-
-        it 'has ibmnas nas_ip' do
-          expect(chef_run).to render_file(file.name).with_content('nas_ip=127.0.0.1')
-        end
-
-        it 'has ibmnas nas_login' do
-          expect(chef_run).to render_file(file.name).with_content('nas_login=ibmnas_admin')
-        end
-
-        it 'has ibmnas nas_password' do
-          expect(chef_run).to render_file(file.name).with_content('nas_password=test_pass')
-        end
-
-        it 'has ibmnas nas_ssh_port' do
-          expect(chef_run).to render_file(file.name).with_content('nas_ssh_port=22')
-        end
-
-        it 'has ibmnas shares_config' do
-          expect(chef_run).to render_file(file.name).with_content('shares_config=/etc/cinder/nfs_shares.conf')
-        end
-
-        it 'has ibmnas mount_point_base' do
-          expect(chef_run).to render_file(file.name).with_content('mount_point_base=/mnt/cinder-volumes')
-        end
-
-        it 'has ibmnas nfs_sparsed_volumes' do
-          expect(chef_run).to render_file(file.name).with_content('nfs_sparsed_volumes=true')
-        end
-      end
-
-      describe 'vmware vmdk settings' do
-        before do
-          chef_run.node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
-          chef_run.converge 'openstack-block-storage::cinder-common'
-        end
-
-        [
-          /^vmware_host_ip = $/,
-          /^vmware_host_username = $/,
-          /^vmware_host_password = $/,
-          /^vmware_api_retry_count = 10$/,
-          /^vmware_task_poll_interval = 5$/,
-          /^vmware_volume_folder = cinder-volumes/,
-          /^vmware_image_transfer_timeout_secs = 7200$/,
-          /^vmware_max_objects_retrieval = 100$/
-        ].each do |content|
-          it "has a #{content.source[1...-1]} line" do
-            expect(chef_run).to render_file(file.name).with_content(content)
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr_key}=#{attr_key}_value$/)
+            end
           end
         end
 
-        it 'has no wsdl_location line' do
-          expect(chef_run).not_to render_file(file.name).with_content('vmware_wsdl_location = ')
+        context 'syslog use' do
+          it 'sets the log_config value when syslog is in use' do
+            node.set['openstack']['block-storage']['syslog']['use'] = true
+
+            expect(chef_run).to render_file(file.name)
+              .with_content(%r{^log_config = /etc/openstack/logging.conf$})
+          end
+
+          it 'sets the log_file value when syslog is not in use' do
+            node.set['openstack']['block-storage']['syslog']['use'] = false
+
+            expect(chef_run).to render_file(file.name)
+              .with_content(%r{^log_file = /var/log/cinder/cinder.log$})
+          end
         end
 
-        it 'has wsdl_location line' do
-          node.set['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = 'http://127.0.0.1/wsdl'
+        it 'has a sql_connection attribute' do
+          Chef::Recipe.any_instance.stub(:db_uri)
+            .with('block-storage', anything, '').and_return('sql_connection_value')
 
-          expect(chef_run).to render_file(file.name).with_content('vmware_wsdl_location = http://127.0.0.1/wsdl')
+          expect(chef_run).to render_file(file.name)
+            .with_content(/^sql_connection=sql_connection_value$/)
+        end
+
+        it 'has a volume_driver attribute' do
+          node.set['openstack']['block-storage']['volume']['driver'] = 'volume_driver_value'
+          expect(chef_run).to render_file(file.name).with_content(/^volume_driver=volume_driver_value$/)
+        end
+
+        it 'has a state_path attribute' do
+          node.set['openstack']['block-storage']['volume']['state_path'] = 'state_path_value'
+          expect(chef_run).to render_file(file.name).with_content(/^state_path=state_path_value$/)
+        end
+
+        context 'glance endpoint' do
+          %w(host port).each do |glance_attr|
+            it "has a glace #{glance_attr} attribute" do
+              expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=glance_#{glance_attr}_value$/)
+            end
+          end
+        end
+
+        it 'has a api_rate_limit attribute' do
+          node.set['openstack']['block-storage']['api']['ratelimit'] = 'api_rate_limit_value'
+          expect(chef_run).to render_file(file.name).with_content(/^api_rate_limit=api_rate_limit_value$/)
+        end
+
+        context 'cinder endpoint' do
+          it 'has osapi_volume_listen set' do
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen=cinder_host_value$/)
+          end
+
+          it 'has osapi_volume_listen_port set' do
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=cinder_port_value$/)
+          end
+        end
+
+        it 'has a rpc_backend attribute' do
+          node.set['openstack']['block_storage']['rpc_backend'] = 'rpc_backend_value'
+          expect(chef_run).to render_file(file.name).with_content(/^rpc_backend=rpc_backend_value$/)
+        end
+
+        context 'rabbitmq as mq service' do
+          before do
+            node.set['openstack']['mq']['block-storage']['service_type'] = 'rabbitmq'
+          end
+
+          context 'ha attributes' do
+            before do
+              node.set['openstack']['mq']['block-storage']['rabbit']['ha'] = true
+            end
+
+            it 'has a rabbit_hosts attribute' do
+              Chef::Recipe.any_instance.stub(:rabbit_servers)
+                .and_return('rabbit_servers_value')
+
+              expect(chef_run).to render_file(file.name).with_content(/^rabbit_hosts=rabbit_servers_value$/)
+            end
+
+            %w(host port).each do |attr|
+              it "does not have rabbit_#{attr} attribute" do
+                expect(chef_run).not_to render_file(file.name).with_content(/^rabbit_#{attr}=/)
+              end
+            end
+          end
+
+          context 'non ha attributes' do
+            before do
+              node.set['openstack']['mq']['block-storage']['rabbit']['ha'] = false
+            end
+
+            %w(host port).each do |attr|
+              it "has rabbit_#{attr} attribute" do
+                node.set['openstack']['mq']['block-storage']['rabbit'][attr] = "rabbit_#{attr}_value"
+                expect(chef_run).to render_file(file.name).with_content(/^rabbit_#{attr}=rabbit_#{attr}_value$/)
+              end
+            end
+
+            it 'does not have a rabbit_hosts attribute' do
+              expect(chef_run).not_to render_file(file.name).with_content(/^rabbit_hosts=/)
+            end
+          end
+
+          %w(use_ssl userid).each do |attr|
+            it "has rabbit_#{attr}" do
+              node.set['openstack']['mq']['block-storage']['rabbit'][attr] = "rabbit_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^rabbit_#{attr}=rabbit_#{attr}_value$/)
+            end
+          end
+
+          it 'has rabbit_password' do
+            expect(chef_run).to render_file(file.name).with_content(/^rabbit_password=#{test_pass}$/)
+          end
+
+          it 'has rabbit_virtual_host' do
+            node.set['openstack']['mq']['block-storage']['rabbit']['vhost'] = 'vhost_value'
+            expect(chef_run).to render_file(file.name).with_content(/^rabbit_virtual_host=vhost_value$/)
+          end
+        end
+
+        context 'qpid as mq service' do
+          before do
+            node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
+          end
+
+          %w(port username sasl_mechanisms reconnect reconnect_timeout reconnect_limit
+             reconnect_interval_min reconnect_interval_max reconnect_interval heartbeat protocol
+             tcp_nodelay).each do |attr|
+            it "has qpid_#{attr} attribute" do
+              node.set['openstack']['mq']['block-storage']['qpid'][attr] = "qpid_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^qpid_#{attr}=qpid_#{attr}_value$/)
+            end
+          end
+
+          it 'has qpid_hostname' do
+            node.set['openstack']['mq']['block-storage']['qpid']['host'] = 'qpid_host_value'
+            expect(chef_run).to render_file(file.name).with_content(/^qpid_hostname=qpid_host_value$/)
+          end
+
+          it 'has qpid_password' do
+            expect(chef_run).to render_file(file.name).with_content(/^qpid_password=#{test_pass}$/)
+          end
+
+          it 'has qpid notification_topics' do
+            node.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_notification_topic_value'
+            expect(chef_run).to render_file(file.name).with_content(/^notification_topics=qpid_notification_topic_value$/)
+          end
+        end
+
+        context 'lvm settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+          end
+
+          %w(group clear clear_size).each do |attr|
+            it "has lvm volume_#{attr} attribute" do
+              node.set['openstack']['block-storage']['volume']["volume_#{attr}"] = "volume_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^volume_#{attr}=volume_#{attr}_value$/)
+            end
+          end
+        end
+
+        context 'commonly named volume attributes' do
+          %w(iscsi_ip_address iscsi_port iscsi_helper volumes_dir).each do |attr|
+            it "has volume related #{attr} attribute" do
+              node.set['openstack']['block-storage']['volume'][attr] = "common_volume_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=common_volume_#{attr}_value$/)
+            end
+          end
+        end
+
+        context 'rbd attributes' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
+          end
+
+          %w(rbd_pool rbd_user rbd_secret_uuid).each do |attr|
+            it "has a #{attr} attribute" do
+              node.set['openstack']['block-storage'][attr] = "#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=#{attr}_value$/)
+            end
+          end
+        end
+
+        it 'has volume_driver attribute' do
+          node.set['openstack']['block-storage']['volume']['driver'] = 'volume_driver_value'
+          expect(chef_run).to render_file(file.name).with_content(/^volume_driver=volume_driver_value$/)
+        end
+
+        context 'netapp ISCSI settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
+          end
+
+          %w(login password).each do |attr|
+            it "has a netapp_#{attr} attribute" do
+              node.set['openstack']['block-storage']['netapp']["dfm_#{attr}"] = "dfm_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^netapp_#{attr}=dfm_#{attr}_value$/)
+            end
+          end
+
+          %w(hostname port).each do |attr|
+            it "has a netapp_server_#{attr} attribute" do
+              node.set['openstack']['block-storage']['netapp']["dfm_#{attr}"] = "dfm_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^netapp_server_#{attr}=dfm_#{attr}_value$/)
+            end
+          end
+
+          it 'has a netapp_storage_service attribute' do
+            node.set['openstack']['block-storage']['netapp']['storage_service'] = 'netapp_storage_service_value'
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_storage_service=netapp_storage_service_value$/)
+          end
+        end
+
+        context 'netapp direct7 mode nfs settings' do
+          let(:hostnames) { %w(hostname1 hostname2 hostname3) }
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
+            node.set['openstack']['block-storage']['netapp']['netapp_server_hostname'] = hostnames
+          end
+
+          %w(mount_point_base shares_config).each do |attr_key|
+            it "has a nfs_#{attr_key} attribute" do
+              node.set['openstack']['block-storage']['nfs'][attr_key] = "netapp_nfs_#{attr_key}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^nfs_#{attr_key}=netapp_nfs_#{attr_key}_value$/)
+            end
+          end
+
+          it 'has netapp server_hostname attributes' do
+            hostnames.each do |hostname|
+              expect(chef_run).to render_file(file.name).with_content(/^netapp_server_hostname=#{hostname}$/)
+            end
+          end
+
+          it 'has a netapp_server_port attribute' do
+            node.set['openstack']['block-storage']['netapp']['netapp_server_port'] = 'netapp_server_port_value'
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_server_port=netapp_server_port_value$/)
+          end
+
+          %w(login password).each do |attr|
+            it "has a netapp_#{attr} attribute" do
+              node.set['openstack']['block-storage']['netapp']["netapp_server_#{attr}"] = "netapp_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^netapp_#{attr}=netapp_#{attr}_value$/)
+            end
+          end
+
+          %w(disk_util sparsed_volumes).each do |attr|
+            it "has a nfs_#{attr} attribute" do
+              node.set['openstack']['block-storage']['nfs']["nfs_#{attr}"] = "netapp_nfs_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^nfs_#{attr}=netapp_nfs_#{attr}_value$/)
+            end
+          end
+        end
+
+        context 'ibmnas settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+          end
+
+          %w(mount_point_base shares_config).each do |attr|
+            it "has a ibmnas_#{attr} attribute" do
+              node.set['openstack']['block-storage']['ibmnas'][attr] = "ibmnas_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^nfs_#{attr}=ibmnas_#{attr}_value$/)
+            end
+          end
+
+          it 'has a nfs_sparsed_volumes attribute' do
+            node.set['openstack']['block-storage']['ibmnas']['nfs_sparsed_volumes'] = 'ibmnas_nfs_sparsed_volumes_value'
+            expect(chef_run).to render_file(file.name).with_content(/^nfs_sparsed_volumes=ibmnas_nfs_sparsed_volumes_value$/)
+          end
+
+          %w(nas_ip nas_login nas_ssh_port).each do |attr|
+            it "has a ibmnas #{attr} attribute" do
+              node.set['openstack']['block-storage']['ibmnas'][attr] = "ibmnas_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=ibmnas_#{attr}_value$/)
+            end
+          end
+
+          it 'has a nas_password attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^nas_password=#{test_pass}$/)
+          end
+        end
+
+        context 'storwize settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
+          end
+
+          %w(san_ip san_login san_private_key storwize_svc_volpool_name
+             storwize_svc_vol_rsize storwize_svc_vol_warning storwize_svc_vol_autoexpand
+             storwize_svc_vol_grainsize storwize_svc_vol_compression storwize_svc_vol_easytier
+             storwize_svc_vol_iogrp storwize_svc_flashcopy_timeout storwize_svc_connection_protocol
+             storwize_svc_multihostmap_enabled).each do |attr|
+            it "has a san_#{attr} attribute" do
+              node.set['openstack']['block-storage']['storwize'][attr] = "storwize_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=storwize_#{attr}_value$/)
+            end
+          end
+
+          context 'storwize with iSCSI connection protocol' do
+            before do
+              node.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'iSCSI'
+            end
+
+            it 'has a iscsi chap enabled attribute' do
+              node.set['openstack']['block-storage']['storwize']['storwize_svc_iscsi_chap_enabled'] = 'storwize_svc_iscsi_chap_enabled_value'
+              expect(chef_run).to render_file(file.name).with_content(/^storwize_svc_iscsi_chap_enabled=storwize_svc_iscsi_chap_enabled_value$/)
+            end
+
+            it 'does not have a multipath enabled attribute' do
+              expect(chef_run).not_to render_file(file.name).with_content(/^storwize_svc_multipath_enabled=/)
+            end
+          end
+
+          context 'storwize without iSCSI connection protocol' do
+            before do
+              node.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'non-iSCSI'
+            end
+
+            it 'does not have a iscsi chap enabled attribute' do
+              expect(chef_run).not_to render_file(file.name).with_content(/^storwize_svc_iscsi_enabled=/)
+            end
+
+            it 'has a multipath enabled attribute' do
+              node.set['openstack']['block-storage']['storwize']['storwize_svc_multipath_enabled'] = 'storwize_svc_multipath_enabled_value'
+              expect(chef_run).to render_file(file.name).with_content(/^storwize_svc_multipath_enabled=storwize_svc_multipath_enabled_value$/)
+            end
+          end
+        end
+
+        context 'solidfire settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.solidfire.SolidFire'
+          end
+
+          it 'has solidfire sf_emulate set' do
+            node.set['openstack']['block-storage']['solidfire']['sf_emulate'] = 'test'
+            expect(chef_run).to render_file(file.name).with_content(/^sf_emulate_512=test$/)
+          end
+
+          %w(san_login san_ip).each do |attr|
+            it "has solidfire #{attr} set" do
+              node.set['openstack']['block-storage']['solidfire'][attr] = "solidfire_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=solidfire_#{attr}_value$/)
+            end
+          end
+
+          it 'does not have iscsi_ip_prefix not specified' do
+            node.set['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = nil
+            expect(chef_run).to_not render_file(file.name).with_content(/^iscsi_ip_prefix=/)
+          end
+
+          it 'does have iscsi_ip_prefix when specified' do
+            chef_run.node.set['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = '203.0.113.*'
+            expect(chef_run).to render_file(file.name).with_content(/^iscsi_ip_prefix=203.0.113.*$/)
+          end
+        end
+
+        context 'emc settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
+          end
+
+          %w(iscsi_target_prefix cinder_emc_config_file).each do |attr|
+            it "has emc #{attr} set" do
+              node.set['openstack']['block-storage']['emc'][attr] = "emc_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=emc_#{attr}_value$/)
+            end
+          end
+        end
+
+        context 'vmware vmdk settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
+          end
+
+          %w(vmware_host_ip vmware_host_username vmware_host_password
+             vmware_api_retry_count vmware_task_poll_interval vmware_volume_folder
+             vmware_image_transfer_timeout_secs vmware_max_objects_retrieval).each do |attr|
+            it "has vmware #{attr} set" do
+              node.set['openstack']['block-storage']['vmware'][attr] = "vmware_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr} = vmware_#{attr}_value$/)
+            end
+          end
+
+          it 'has no wsdl_location line without the attribute' do
+            node.set['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = nil
+            expect(chef_run).not_to render_file(file.name).with_content(/^vmware_wsdl_location = /)
+          end
+
+          it 'has wsdl_location line with attribute present' do
+            node.set['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = 'http://127.0.0.1/wsdl'
+            expect(chef_run).to render_file(file.name).with_content(%r(^vmware_wsdl_location = http://127.0.0.1/wsdl$))
+          end
+        end
+
+        context 'gpfs settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.gpfs.GPFSDriver'
+          end
+
+          %w(gpfs_mount_point_base gpfs_images_share_mode gpfs_max_clone_depth
+             gpfs_sparse_volumes gpfs_storage_pool).each do |attr|
+            it "has gpfs #{attr} set" do
+              node.set['openstack']['block-storage']['gpfs'][attr] = "gpfs_#{attr}_value"
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr} = gpfs_#{attr}_value$/)
+            end
+          end
+
+          it 'has no gpfs_images_dir line without the attribute' do
+            node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = nil
+            expect(chef_run).not_to render_file(file.name).with_content(/^gpfs_images_dir = /)
+          end
+
+          it 'has gpfs_images_dir line with attribute present' do
+            node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'gpfs_images_dir_value'
+            expect(chef_run).to render_file(file.name).with_content(/^gpfs_images_dir = gpfs_images_dir_value$/)
+          end
         end
       end
     end
