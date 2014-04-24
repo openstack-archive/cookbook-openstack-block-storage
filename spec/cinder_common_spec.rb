@@ -64,12 +64,12 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       it 'has osapi_volume_listen set' do
-        node.set['openstack']['endpoints']['block-storage-api']['host'] = '1.1.1.1'
+        node.set['openstack']['endpoints']['block-storage-api-bind']['host'] = '1.1.1.1'
         expect(chef_run).to render_file(file.name).with_content('osapi_volume_listen=1.1.1.1')
       end
 
       it 'has osapi_volume_listen_port set' do
-        node.set['openstack']['endpoints']['block-storage-api']['port'] = '9999'
+        node.set['openstack']['endpoints']['block-storage-api-bind']['port'] = '9999'
         expect(chef_run).to render_file(file.name).with_content('osapi_volume_listen_port=9999')
       end
 

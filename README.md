@@ -163,6 +163,15 @@ Cinder attributes
 * `openstack['block-storage']['gpfs']['gpfs_max_clone_depth']` - Maximum clone indirections allowed when creating volume file snapshots clones; zero indicates unlimited clone depth (integer, defalut 0)
 * `openstack['block-storage']['gpfs']['gpfs_storage_pool']` - GPFS storage pool that volumes are assigned to (string value)
 
+
+The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
+
+* `openstack['endpoints']['block-storage-api-bind']['host']` - The IP address to bind the api service to
+* `openstack['endpoints']['block-storage-api-bind']['port']` - The port to bind the api service to
+* `openstack['endpoints']['block-storage-api-bind']['bind_interface']` - The interface name to bind the api service to
+
+If the value of the 'bind_interface' attribute is non-nil, then the block-storage service will be bound to the first IP address on that interface.  If the value of the 'bind_interface' attribute is nil, then the block-storage service will be bound to the IP address specified in the host attribute.
+
 Testing
 =====
 

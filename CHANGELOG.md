@@ -2,6 +2,9 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 
+## 8.4.3
+* Allow specifying different local bind IP than (load balanced) endpoint IP
+
 ## 8.4.2
 * Allow specifying api bind IP and port
 
