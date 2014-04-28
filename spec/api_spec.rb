@@ -48,46 +48,6 @@ describe 'openstack-block-storage::api' do
       end
     end
 
-    describe 'cinder.conf' do
-      let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
-
-      it 'runs logging recipe if node attributes say to' do
-        node.set['openstack']['block-storage']['syslog']['use'] = true
-
-        expect(chef_run).to render_file(file.name).with_content('log_config = /etc/openstack/logging.conf')
-      end
-
-      context 'rdb driver' do
-        before do
-          node.set['openstack']['block-storage']['volume'] = {
-            'driver' => 'cinder.volume.drivers.rbd.RBDDriver'
-          }
-        end
-
-        # FIXME(galstrom21): this block needs to check all of the default
-        #   rdb_* configuration options
-        it 'has default rbd_* options set' do
-          expect(chef_run).to render_file(file.name).with_content(/^rbd_/)
-          expect(chef_run).not_to render_file(file.name).with_content(/^netapp_/)
-        end
-      end
-
-      context 'netapp driver' do
-        before do
-          node.set['openstack']['block-storage']['volume'] = {
-            'driver' => 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
-          }
-        end
-
-        # FIXME(galstrom21): this block needs to check all of the default
-        #   netapp_* configuration options
-        it 'has default netapp_* options set' do
-          expect(chef_run).to render_file(file.name).with_content(/^netapp_/)
-          expect(chef_run).not_to render_file(file.name).with_content(/^rbd_/)
-        end
-      end
-    end
-
     it 'runs db migrations' do
       expect(chef_run).to run_execute('cinder-manage db sync')
     end
