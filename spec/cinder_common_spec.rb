@@ -74,6 +74,30 @@ describe 'openstack-block-storage::cinder-common' do
           end
         end
 
+        context 'rdb driver' do
+          # FIXME(galstrom21): this block needs to check all of the default
+          #   rdb_* configuration options
+          it 'has default rbd_* options set' do
+            node.set['openstack']['block-storage']['volume'] = {
+              'driver' => 'cinder.volume.drivers.rbd.RBDDriver'
+            }
+            expect(chef_run).to render_file(file.name).with_content(/^rbd_/)
+            expect(chef_run).not_to render_file(file.name).with_content(/^netapp_/)
+          end
+        end
+
+        context 'netapp driver' do
+          # FIXME(galstrom21): this block needs to check all of the default
+          #   netapp_* configuration options
+          it 'has default netapp_* options set' do
+            node.set['openstack']['block-storage']['volume'] = {
+              'driver' => 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
+            }
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_/)
+            expect(chef_run).not_to render_file(file.name).with_content(/^rbd_/)
+          end
+        end
+
         context 'syslog use' do
           it 'sets the log_config value when syslog is in use' do
             node.set['openstack']['block-storage']['syslog']['use'] = true
