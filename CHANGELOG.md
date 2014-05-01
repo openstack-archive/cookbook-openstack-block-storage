@@ -1,8 +1,10 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+## 9.1.1
+* Fix package action to allow updates
 
-## 9.0.2
+## 9.1.0
 ### Blue print
 * Remove policy template
 

@@ -15,7 +15,7 @@ describe 'openstack-block-storage::api' do
 
     expect_creates_cinder_conf 'service[cinder-api]', 'cinder', 'cinder'
 
-    it 'installs cinder api packages' do
+    it 'upgrades cinder api packages' do
       expect(chef_run).to upgrade_package('cinder-api')
       expect(chef_run).to upgrade_package('python-cinderclient')
     end
@@ -24,11 +24,11 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to enable_service('cinder-api')
     end
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package('python-mysqldb')
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package('python-psycopg2')

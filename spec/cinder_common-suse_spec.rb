@@ -12,7 +12,7 @@ describe 'openstack-block-storage::cinder-common' do
 
     include_context 'block-storage-stubs'
 
-    it 'installs the openstack-cinder package' do
+    it 'upgrades the openstack-cinder package' do
       expect(chef_run).to upgrade_package 'openstack-cinder'
     end
   end
