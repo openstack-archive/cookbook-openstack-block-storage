@@ -141,5 +141,22 @@ describe 'openstack-block-storage::api' do
         end
       end
     end
+
+    describe 'policy file' do
+      it 'does not manage policy file unless specified' do
+        expect(chef_run).not_to create_remote_file('/etc/cinder/policy.json')
+      end
+      describe 'policy file specified' do
+        before { node.set['openstack']['block-storage']['policyfile_url'] = 'http://server/mypolicy.json' }
+        let(:remote_policy) { chef_run.remote_file('/etc/cinder/policy.json') }
+
+        it 'manages policy file when remote file is specified' do
+          expect(chef_run).to create_remote_file('/etc/cinder/policy.json').with(
+            user: 'cinder',
+            group: 'cinder',
+            mode: 00644)
+        end
+      end
+    end
   end
 end

@@ -37,6 +37,9 @@ default['openstack']['block-storage']['custom_template_banner'] = '
 default['openstack']['block-storage']['verbose'] = 'False'
 default['openstack']['block-storage']['debug'] = 'False'
 
+# Specify policy.json remote file to import
+default['openstack']['block-storage']['policyfile_url'] = nil
+
 # Default lock_path
 default['openstack']['block-storage']['lock_path'] = '/var/lock/cinder'
 # Default notification_driver and control exchange
