@@ -1,6 +1,10 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+## 9.2.0
+### Blue print
+* Get VMware vCenter password from databag
+
 ## 9.1.1
 * Fix package action to allow updates
 

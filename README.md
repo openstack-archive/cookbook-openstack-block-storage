@@ -140,15 +140,15 @@ Cinder attributes
 * `openstack['block-storage']['storwize']['storwize_svc_multihostmap_enabled'] - Allows vdisk to multi host mapping
 
 ### VMware attributes ###
+* `openstack['block-storage']['vmware']['secret_name']` - VMware databag secret name
 * `openstack['block-storage']['vmware']['vmware_host_ip']` - IP address for connecting to VMware ESX/VC server. (string value)
 * `openstack['block-storage']['vmware']['vmware_host_username']` - Username for authenticating with VMware ESX/VC server. (string value)
-* `openstack']['block-storage']['vmware']['vmware_host_password']` - Password for authenticating with VMware ESX/VC server. (string value)
-* `openstack']['block-storage']['vmware']['vmware_wsdl_location']` - Optional VIM service WSDL Location e.g http://<server>/vimService.wsdl. Optional over-ride to default location for bug work-arounds. (string value)
-* `openstack']['block-storage']['vmware']['vmware_api_retry_count']` - Number of times VMware ESX/VC server API must be retried upon connection related issues. (integer value, default 10)
-* `openstack']['block-storage']['vmware']['vmware_task_poll_interval']` - The interval (in seconds) for polling remote tasks invoked on VMware ESX/VC server. (integer value, default 5)
-* `openstack']['block-storage']['vmware']['vmware_volume_folder']` - Name for the folder in the VC datacenter that will contain cinder volumes. (string value, default cinder-volumes)
-* `openstack']['block-storage']['vmware']['vmware_image_transfer_timeout_secs']` - Timeout in seconds for VMDK volume transfer between Cinder and Glance. (integer value, default 7200)
-* `openstack']['block-storage']['vmware']['vmware_max_objects_retrieval']` - Max number of objects to be retrieved per batch. (integer value, default 100)
+* `openstack['block-storage']['vmware']['vmware_wsdl_location']` - Optional VIM service WSDL Location e.g http://<server>/vimService.wsdl. Optional over-ride to default location for bug work-arounds. (string value)
+* `openstack['block-storage']['vmware']['vmware_api_retry_count']` - Number of times VMware ESX/VC server API must be retried upon connection related issues. (integer value, default 10)
+* `openstack['block-storage']['vmware']['vmware_task_poll_interval']` - The interval (in seconds) for polling remote tasks invoked on VMware ESX/VC server. (integer value, default 5)
+* `openstack['block-storage']['vmware']['vmware_volume_folder']` - Name for the folder in the VC datacenter that will contain cinder volumes. (string value, default cinder-volumes)
+* `openstack['block-storage']['vmware']['vmware_image_transfer_timeout_secs']` - Timeout in seconds for VMDK volume transfer between Cinder and Glance. (integer value, default 7200)
+* `openstack['block-storage']['vmware']['vmware_max_objects_retrieval']` - Max number of objects to be retrieved per batch. (integer value, default 100)
 
 ### IBM GPFS attributes ###
 * `openstack['block-storage']['gpfs']['gpfs_mount_point_base']` - Path to directory in GPFS filesystem where volume files are located (string value)

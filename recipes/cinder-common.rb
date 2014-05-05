@@ -61,6 +61,8 @@ directory '/etc/cinder' do
   action :create
 end
 
+vmware_host_pass = get_secret node['openstack']['block-storage']['vmware']['secret_name']
+
 template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
   group node['openstack']['block-storage']['group']
@@ -76,7 +78,8 @@ template '/etc/cinder/cinder.conf' do
     ibmnas_pass: ibmnas_pass,
     solidfire_pass: solidfire_pass,
     volume_api_bind_address: cinder_api_bind.host,
-    volume_api_bind_port: cinder_api_bind.port
+    volume_api_bind_port: cinder_api_bind.port,
+    vmware_host_pass: vmware_host_pass
   )
 end
 
