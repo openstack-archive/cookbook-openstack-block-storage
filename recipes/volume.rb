@@ -67,7 +67,7 @@ when 'cinder.volume.drivers.rbd.RBDDriver'
   platform_options['cinder_ceph_packages'].each do |pkg|
     package pkg do
       options platform_options['package_overrides']
-      action :install
+      action :upgrade
     end
   end
 

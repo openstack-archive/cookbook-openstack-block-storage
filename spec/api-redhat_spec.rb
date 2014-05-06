@@ -12,15 +12,15 @@ describe 'openstack-block-storage::api' do
 
     include_context 'block-storage-stubs'
 
-    it 'installs cinder api packages' do
+    it 'upgrades cinder api package' do
       expect(chef_run).to upgrade_package 'python-cinderclient'
     end
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package 'MySQL-python'
     end
 
-    it 'installs db2 python packages if explicitly told' do
+    it 'upgrades db2 python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
 
       ['python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
@@ -28,7 +28,7 @@ describe 'openstack-block-storage::api' do
       end
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'

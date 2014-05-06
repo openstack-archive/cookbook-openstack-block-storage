@@ -12,11 +12,11 @@ describe 'openstack-block-storage::volume' do
 
     include_context 'block-storage-stubs'
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package('MySQL-python')
     end
 
-    it 'installs db2 python packages if explicitly told' do
+    it 'upgrades db2 python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
 
       ['python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
@@ -24,14 +24,14 @@ describe 'openstack-block-storage::volume' do
       end
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package('python-psycopg2')
       expect(chef_run).not_to upgrade_package('MySQL-python')
     end
 
-    it 'installs cinder iscsi packages' do
+    it 'upgrades cinder iscsi package' do
       expect(chef_run).to upgrade_package('scsi-target-utils')
     end
 
@@ -75,7 +75,7 @@ describe 'openstack-block-storage::volume' do
         expect(chef_run).to render_file(file.name).with_content('127.0.0.1:/ibm/fs/export')
       end
 
-      it 'installs nfs packages' do
+      it 'upgrades nfs packages' do
         expect(chef_run).to upgrade_package 'nfs-utils'
         expect(chef_run).to upgrade_package 'nfs-utils-lib'
       end
@@ -94,7 +94,7 @@ describe 'openstack-block-storage::volume' do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
       end
 
-      it 'installs nfs packages' do
+      it 'upgrades nfs packages' do
         expect(chef_run).to upgrade_package('nfs-utils')
         expect(chef_run).to upgrade_package('nfs-utils-lib')
       end
@@ -105,7 +105,7 @@ describe 'openstack-block-storage::volume' do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
       end
 
-      it 'installs emc packages' do
+      it 'upgrades emc package' do
         expect(chef_run).to upgrade_package('pywbem')
       end
     end

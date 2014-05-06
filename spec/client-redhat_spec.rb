@@ -9,7 +9,7 @@ describe 'openstack-block-storage::client' do
       runner.converge(described_recipe)
     end
 
-    it 'installs packages' do
+    it 'upgrades packages' do
       expect(chef_run).to upgrade_package('python-cinderclient')
     end
   end

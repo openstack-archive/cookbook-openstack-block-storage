@@ -15,7 +15,7 @@ describe 'openstack-block-storage::volume' do
 
     expect_creates_cinder_conf('service[cinder-volume]', 'cinder', 'cinder')
 
-    it 'installs cinder volume packages' do
+    it 'upgrades cinder volume packages' do
       expect(chef_run).to upgrade_package 'cinder-volume'
     end
 
@@ -31,22 +31,22 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to enable_service 'tgt'
     end
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python packages by default' do
       expect(chef_run).to upgrade_package 'python-mysqldb'
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
       expect(chef_run).not_to upgrade_package 'python-mysqldb'
     end
 
-    it 'installs cinder iscsi packages' do
+    it 'upgrades cinder iscsi package' do
       expect(chef_run).to upgrade_package 'tgt'
     end
 
-    it 'installs emc packages' do
+    it 'upgrades emc package' do
       node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'
 
       expect(chef_run).to upgrade_package 'python-pywbem'
@@ -74,7 +74,7 @@ describe 'openstack-block-storage::volume' do
         end
       end
 
-      it 'installs nfs packages' do
+      it 'upgrades nfs package' do
         expect(chef_run).to upgrade_package 'nfs-common'
       end
 
@@ -93,7 +93,7 @@ describe 'openstack-block-storage::volume' do
           node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
         end
 
-        it 'installs nfs packages' do
+        it 'upgrades nfs package' do
           expect(chef_run).to upgrade_package 'nfs-common'
         end
 
@@ -160,9 +160,9 @@ describe 'openstack-block-storage::volume' do
         expect(chef_run).to include_recipe('openstack-common::ceph_client')
       end
 
-      it 'installs the needed ceph packages by default' do
+      it 'upgrades the needed ceph packages by default' do
         %w{ python-ceph ceph-common }.each do |pkg|
-          expect(chef_run).to install_package(pkg)
+          expect(chef_run).to upgrade_package(pkg)
         end
       end
 
@@ -171,7 +171,7 @@ describe 'openstack-block-storage::volume' do
         node.set['openstack']['block-storage']['platform']['package_overrides'] = '--override1 --override2'
 
         %w{ python-ceph ceph-common }.each do |pkg|
-          expect(chef_run).to install_package(pkg).with(options: '--override1 --override2')
+          expect(chef_run).to upgrade_package(pkg).with(options: '--override1 --override2')
         end
       end
 
@@ -180,7 +180,7 @@ describe 'openstack-block-storage::volume' do
         node.set['openstack']['block-storage']['platform']['cinder_ceph_packages'] = ['my-ceph', 'my-other-ceph']
 
         %w{my-ceph my-other-ceph}.each do |pkg|
-          expect(chef_run).to install_package(pkg)
+          expect(chef_run).to upgrade_package(pkg)
         end
       end
 

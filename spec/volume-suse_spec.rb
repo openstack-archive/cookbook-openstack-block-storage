@@ -12,22 +12,22 @@ describe 'openstack-block-storage::volume' do
 
     include_context 'block-storage-stubs'
 
-    it 'installs cinder volume packages' do
+    it 'upgrades cinder volume package' do
       expect(chef_run).to upgrade_package('openstack-cinder-volume')
     end
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package('python-mysql')
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package('python-psycopg2')
       expect(chef_run).not_to upgrade_package('python-mysql')
     end
 
-    it 'installs cinder iscsi packages' do
+    it 'upgrades cinder iscsi package' do
       expect(chef_run).to upgrade_package('tgt')
     end
 

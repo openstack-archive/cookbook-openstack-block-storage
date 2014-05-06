@@ -12,7 +12,7 @@ describe 'openstack-block-storage::scheduler' do
 
     include_context 'block-storage-stubs'
 
-    it 'installs cinder scheduler packages' do
+    it 'upgrades cinder scheduler package' do
       expect(chef_run).to upgrade_package 'openstack-cinder-scheduler'
     end
 
@@ -28,11 +28,11 @@ describe 'openstack-block-storage::scheduler' do
       expect(chef_run).not_to upgrade_python_pip 'stevedore'
     end
 
-    it 'installs mysql python packages by default' do
+    it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package 'python-mysql'
     end
 
-    it 'installs postgresql python packages if explicitly told' do
+    it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
       expect(chef_run).to upgrade_package 'python-psycopg2'
