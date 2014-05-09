@@ -62,7 +62,10 @@ service_pass = get_password 'service', 'openstack-block-storage'
 
 auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['block-storage']['api']['auth']['version'])
 
-execute 'cinder-manage db sync'
+execute 'cinder-manage db sync' do
+  user node['openstack']['block-storage']['user']
+  group node['openstack']['block-storage']['group']
+end
 
 template '/etc/cinder/api-paste.ini' do
   source 'api-paste.ini.erb'
