@@ -7,7 +7,7 @@
 # Copyright 2012, Rackspace US, Inc.
 # Copyright 2012-2013, AT&T Services, Inc.
 # Copyright 2013, Opscode, Inc.
-# Copyright 2013, IBM, Corp
+# Copyright 2013-2014, IBM, Corp
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -163,9 +163,9 @@ default['openstack']['block-storage']['emc']['EcomUserName'] = 'admin'
 default['openstack']['block-storage']['emc']['MaskingView'] = nil
 
 # VMware Support
+default['openstack']['block-storage']['vmware']['secret_name'] = 'openstack_vmware_secret_name'
 default['openstack']['block-storage']['vmware']['vmware_host_ip'] = ''
 default['openstack']['block-storage']['vmware']['vmware_host_username'] = ''
-default['openstack']['block-storage']['vmware']['vmware_host_password'] = ''
 default['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = nil
 default['openstack']['block-storage']['vmware']['vmware_api_retry_count'] = 10
 default['openstack']['block-storage']['vmware']['vmware_task_poll_interval'] = 5

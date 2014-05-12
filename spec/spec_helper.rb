@@ -42,6 +42,9 @@ shared_context 'block-storage-stubs' do
     Chef::Recipe.any_instance.stub(:get_secret)
       .with('rbd_secret_uuid')
       .and_return('b0ff3bba-e07b-49b1-beed-09a45552b1ad')
+    Chef::Recipe.any_instance.stub(:get_secret)
+      .with('openstack_vmware_secret_name')
+      .and_return 'vmware_secret_name'
     Chef::Recipe.any_instance.stub(:get_password)
       .with('user', 'guest')
       .and_return('mq-pass')

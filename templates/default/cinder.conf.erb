@@ -901,7 +901,7 @@ vmware_host_username = <%= node['openstack']['block-storage']['vmware']['vmware_
 
 # Password for authenticating with VMware ESX/VC server.
 # (string value)
-vmware_host_password = <%= node['openstack']['block-storage']['vmware']['vmware_host_password'] %>
+vmware_host_password = <%= @vmware_host_pass %>
 
 <% if node['openstack']['block-storage']['vmware']['vmware_wsdl_location'] -%>
 # Optional VIM service WSDL Location e.g
