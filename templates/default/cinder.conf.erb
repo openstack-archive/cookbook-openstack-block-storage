@@ -933,8 +933,8 @@ vmware_image_transfer_timeout_secs = <%= node['openstack']['block-storage']['vmw
 vmware_max_objects_retrieval = <%= node['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] %>
 <% end %>
 
-######## defined in cinder.openstack.common.cfg:CommonConfigOpts ########
 <% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.gpfs.GPFSDriver" %>
+######## defined in cinder.openstack.volume.drivers.ibm.gpfs ########
 
 # Specifies the path of the GPFS directory where Block Storage
 # volume and snapshot files are stored. (string value)
@@ -976,11 +976,3 @@ gpfs_sparse_volumes = <%= node['openstack']['block-storage']['gpfs']['gpfs_spars
 gpfs_storage_pool = <%= node['openstack']['block-storage']['gpfs']['gpfs_storage_pool'] %>
 <% end %>
 
-san_ip=<%= node["openstack"]["block-storage"]["storwize"]["san_ip"] %>
-#### (StrOpt) IP address of SAN controller
-
-san_login=<%= node["openstack"]["block-storage"]["storwize"]["san_login"] %>
-#### (StrOpt) Username for SAN controller
-
-san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_key"] %>
-#### (StrOpt) Filename of private key to use for SSH authentication
