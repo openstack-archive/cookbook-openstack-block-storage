@@ -386,12 +386,41 @@ describe 'openstack-block-storage::cinder-common' do
             node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
           end
 
-          %w(san_ip san_login san_private_key storwize_svc_volpool_name
-             storwize_svc_vol_rsize storwize_svc_vol_warning storwize_svc_vol_autoexpand
-             storwize_svc_vol_grainsize storwize_svc_vol_compression storwize_svc_vol_easytier
-             storwize_svc_vol_iogrp storwize_svc_flashcopy_timeout storwize_svc_connection_protocol
-             storwize_svc_multihostmap_enabled).each do |attr|
-            it "has a san_#{attr} attribute" do
+          it 'has a default attribute' do
+            %w(san_ip=127.0.0.1
+               san_login=admin
+               san_private_key=/v7000_rsa
+               storwize_svc_volpool_name=volpool
+               storwize_svc_vol_rsize=2
+               storwize_svc_vol_warning=0
+               storwize_svc_vol_autoexpand=true
+               storwize_svc_vol_grainsize=256
+               storwize_svc_vol_compression=false
+               storwize_svc_vol_easytier=true
+               storwize_svc_vol_iogrp=0
+               storwize_svc_flashcopy_timeout=120
+               storwize_svc_connection_protocol=iSCSI
+               storwize_svc_iscsi_chap_enabled=true
+               storwize_svc_multihostmap_enabled=true).each do |attr|
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}$/)
+            end
+          end
+
+          it 'has a overridden attribute' do
+            %w(san_ip
+               san_login
+               san_private_key
+               storwize_svc_volpool_name
+               storwize_svc_vol_rsize
+               storwize_svc_vol_warning
+               storwize_svc_vol_autoexpand
+               storwize_svc_vol_grainsize
+               storwize_svc_vol_compression
+               storwize_svc_vol_easytier
+               storwize_svc_vol_iogrp
+               storwize_svc_flashcopy_timeout
+               storwize_svc_connection_protocol
+               storwize_svc_multihostmap_enabled).each do |attr|
               node.set['openstack']['block-storage']['storwize'][attr] = "storwize_#{attr}_value"
               expect(chef_run).to render_file(file.name).with_content(/^#{attr}=storwize_#{attr}_value$/)
             end
