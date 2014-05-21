@@ -976,3 +976,9 @@ gpfs_sparse_volumes = <%= node['openstack']['block-storage']['gpfs']['gpfs_spars
 gpfs_storage_pool = <%= node['openstack']['block-storage']['gpfs']['gpfs_storage_pool'] %>
 <% end %>
 
+# Misc options
+<% if node["openstack"]["block-storage"]["misc_cinder"] %>
+<% node["openstack"]["block-storage"]["misc_cinder"].each do |m| %>
+<%= m %>
+<% end %>
+<% end %>

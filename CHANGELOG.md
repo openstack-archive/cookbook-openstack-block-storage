@@ -1,6 +1,10 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+## 9.2.2
+### Bug
+* Add support for miscellaneous options (like in Compute)
+
 ## 9.2.1
 ### Bug
 * Remove output of extra config lines in cinder.conf.erb

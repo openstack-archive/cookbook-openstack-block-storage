@@ -222,6 +222,11 @@ default['openstack']['block-storage']['rbd_secret_uuid'] = nil
 default['openstack']['block-storage']['rbd_secret_name'] = '00000000-0000-0000-0000-000000000000'
 default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_key'
 
+# Misc option support
+# Allow additional strings to be added to cinder.conf
+# For example: ['# Comment', 'key=value']
+default['openstack']['block-storage']['misc_cinder'] = []
+
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names

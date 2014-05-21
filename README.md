@@ -120,6 +120,7 @@ Cinder attributes
 * `openstack["block-storage"]["rpc_thread_pool_size"]` - Size of RPC thread pool
 * `openstack["block-storage"]["rpc_conn_pool_size"]` - Size of RPC connection pool
 * `openstack["block-storage"]["rpc_response_timeout"]` - Seconds to wait for a response from call or multicall
+* `openstack["block-storage"]["misc_cinder"] - Array of strings to be added to cinder.conf for misc options, e.g. ['# Comment', 'key=value']
 
 ### Storwize/SVC attributes ###
 * `openstack['block-storage']['san']['san_ip'] - IP address of SAN controller

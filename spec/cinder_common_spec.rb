@@ -520,6 +520,14 @@ describe 'openstack-block-storage::cinder-common' do
             node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'gpfs_images_dir_value'
             expect(chef_run).to render_file(file.name).with_content(/^gpfs_images_dir = gpfs_images_dir_value$/)
           end
+
+          it 'templates misc_cinder array correctly' do
+            node.set['openstack']['block-storage']['misc_cinder'] = ['# Comments', 'MISC=OPTION']
+            expect(chef_run).to render_file(file.name).with_content(
+              /^# Comments$/)
+            expect(chef_run).to render_file(file.name).with_content(
+              /^MISC=OPTION$/)
+          end
         end
       end
     end
