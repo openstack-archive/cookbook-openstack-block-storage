@@ -349,6 +349,9 @@ rpc_response_timeout=<%= node["openstack"]["block-storage"]["rpc_response_timeou
 #### (ListOpt) Modules of exceptions that are permitted to be recreatedupon
 ####           receiving exception data from an rpc call.
 
+# from oslo/messaging/_drivers/amqp.py
+amqp_durable_queues=<%= node['openstack']['mq']['block-storage']['durable_queues'] %>
+amqp_auto_delete=<%= node['openstack']['mq']['block-storage']['auto_delete'] %>
 
 <% if @mq_service_type == "rabbitmq"  %>
 
@@ -461,6 +464,9 @@ qpid_protocol=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["protocol"] %
 
 qpid_tcp_nodelay=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["tcp_nodelay"] %>
 #### (BoolOpt) Disable Nagle algorithm
+
+qpid_topology_version=<%= node['openstack']['mq']['block-storage']['qpid']['topology_version'] %>
+#### (IntOpt) See oslo/messaging/_drivers/impl_qpid.py for details
 
 notification_topics=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["notification_topic"] %>
 #### (ListOpt) AMQP topic used for openstack notifications

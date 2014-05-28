@@ -60,12 +60,11 @@ describe 'openstack-block-storage::cinder-common' do
             .and_return(test_pass)
         end
 
-        context 'commonly  named attributes' do
+        context 'commonly named attributes' do
           %w(debug verbose lock_path notification_driver
              storage_availability_zone quota_volumes quota_gigabytes quota_driver
              volume_name_template snapshot_name_template
-             control_exchange rpc_thread_pool_size rpc_conn_pool_size
-             rpc_response_timeout max_gigabytes).each do |attr_key|
+             control_exchange max_gigabytes).each do |attr_key|
             it "has a #{attr_key} attribute" do
               node.set['openstack']['block-storage'][attr_key] = "#{attr_key}_value"
 
@@ -160,6 +159,17 @@ describe 'openstack-block-storage::cinder-common' do
           expect(chef_run).to render_file(file.name).with_content(/^rpc_backend=rpc_backend_value$/)
         end
 
+        it 'has default RPC/AMQP options set' do
+          [/^rpc_backend=cinder.openstack.common.rpc.impl_kombu$/,
+           /^rpc_thread_pool_size=64$/,
+           /^rpc_conn_pool_size=30$/,
+           /^rpc_response_timeout=60$/,
+           /^amqp_durable_queues=false$/,
+           /^amqp_auto_delete=false$/].each do |line|
+            expect(chef_run).to render_file(file.name).with_content(line)
+          end
+        end
+
         context 'rabbitmq as mq service' do
           before do
             node.set['openstack']['mq']['block-storage']['service_type'] = 'rabbitmq'
@@ -239,6 +249,10 @@ describe 'openstack-block-storage::cinder-common' do
 
           it 'has qpid_password' do
             expect(chef_run).to render_file(file.name).with_content(/^qpid_password=#{test_pass}$/)
+          end
+
+          it 'has default qpid topology version' do
+            expect(chef_run).to render_file(file.name).with_content(/^qpid_topology_version=1$/)
           end
 
           it 'has qpid notification_topics' do
