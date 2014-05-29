@@ -472,14 +472,16 @@ describe 'openstack-block-storage::cinder-common' do
         context 'vmware vmdk settings' do
           before do
             node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
+            %w(vmware_host_ip vmware_host_username
+               vmware_api_retry_count vmware_task_poll_interval vmware_volume_folder
+               vmware_image_transfer_timeout_secs vmware_max_objects_retrieval).each do |attr|
+              node.set['openstack']['block-storage']['vmware'][attr] = "vmware_#{attr}_value"
+            end
           end
 
-          %w(vmware_host_ip vmware_host_username
-             vmware_api_retry_count vmware_task_poll_interval vmware_volume_folder
-             vmware_image_transfer_timeout_secs vmware_max_objects_retrieval).each do |attr|
-            it "has vmware #{attr} set" do
-              node.set['openstack']['block-storage']['vmware'][attr] = "vmware_#{attr}_value"
-              expect(chef_run).to render_file(file.name).with_content(/^#{attr} = vmware_#{attr}_value$/)
+          it 'has vmware attributes set' do
+            node['openstack']['block-storage']['vmware'].each do |attr, val|
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr} = #{val}$/)
             end
           end
 

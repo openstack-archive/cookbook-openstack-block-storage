@@ -45,10 +45,13 @@ elsif mq_service_type == 'qpid'
   mq_password = get_password 'user', node['openstack']['mq']['block-storage']['qpid']['username']
 end
 
-if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.solidfire.SolidFire'
+case node['openstack']['block-storage']['volume']['driver']
+when 'cinder.volume.drivers.solidfire.SolidFire'
   solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
-elsif node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
+when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
   ibmnas_pass = get_password 'user', node['openstack']['block-storage']['ibmnas']['nas_login']
+when 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
+  vmware_host_pass = get_secret node['openstack']['block-storage']['vmware']['secret_name']
 end
 
 glance_api_endpoint = endpoint 'image-api'
@@ -60,8 +63,6 @@ directory '/etc/cinder' do
   mode 00750
   action :create
 end
-
-vmware_host_pass = get_secret node['openstack']['block-storage']['vmware']['secret_name']
 
 template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
