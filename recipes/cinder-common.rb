@@ -64,6 +64,22 @@ directory '/etc/cinder' do
   action :create
 end
 
+multi_backend_sections = {}
+multi_backend = node['openstack']['block-storage']['volume']['multi_backend']
+if multi_backend.nil?
+  enabled_drivers = [node['openstack']['block-storage']['volume']['driver']]
+else
+  enabled_drivers = []
+  multi_backend.each do |drv, options|
+    optlines = []
+    options.each do |optkey, optvalue|
+      optlines.push "#{optkey} = #{optvalue}"
+      enabled_drivers.push optvalue if optkey == 'volume_driver'
+    end
+    multi_backend_sections[drv] = optlines
+  end
+end
+
 template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
   group node['openstack']['block-storage']['group']
@@ -80,7 +96,9 @@ template '/etc/cinder/cinder.conf' do
     solidfire_pass: solidfire_pass,
     volume_api_bind_address: cinder_api_bind.host,
     volume_api_bind_port: cinder_api_bind.port,
-    vmware_host_pass: vmware_host_pass
+    vmware_host_pass: vmware_host_pass,
+    enabled_drivers: enabled_drivers,
+    multi_backend_sections: multi_backend_sections
   )
 end
 

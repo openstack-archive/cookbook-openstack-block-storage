@@ -532,7 +532,7 @@ max_gigabytes=<%= node["openstack"]["block-storage"]["max_gigabytes"] %>
 
 
 ######## defined in cinder.volume.driver ########
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.lvm.LVMISCSIDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.lvm.LVMISCSIDriver") %>
 volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
 volume_clear=<%= node["openstack"]["block-storage"]["volume"]["volume_clear"] %>
@@ -557,7 +557,7 @@ iscsi_ip_address=<%= node["openstack"]["block-storage"]["volume"]["iscsi_ip_addr
 iscsi_port=<%= node["openstack"]["block-storage"]["volume"]["iscsi_port"] %>
 #### (IntOpt) The port that the iSCSI daemon is listening on
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.rbd.RBDDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.rbd.RBDDriver") %>
 rbd_pool=<%= node["openstack"]["block-storage"]["rbd_pool"] %>
 #### (StrOpt) the RADOS pool in which rbd volumes are stored
 
@@ -595,7 +595,7 @@ volume_driver=<%= node["openstack"]["block-storage"]["volume"]["driver"] %>
 
 ######## defined in cinder.volume.netapp ########
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.netapp.NetAppISCSIDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.netapp.NetAppISCSIDriver") %>
 netapp_wsdl_url=<%= node["openstack"]["block-storage"]["netapp"]["protocol"] %>://<%= node["openstack"]["block-storage"]["netapp"]["dfm_hostname"] %>:<%= node["openstack"]["block-storage"]["netapp"]["dfm_web_port"] %>/dfm.wsdl
 #### (StrOpt) URL of the WSDL file for the DFM server
 
@@ -624,7 +624,7 @@ netapp_storage_service=<%= node["openstack"]["block-storage"]["netapp"]["storage
 <% end %>
 
 ######## defined in cinder.volume.netapp_nfs ########
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver") %>
 
 nfs_mount_point_base=<%= node["openstack"]["block-storage"]["nfs"]["mount_point_base"] %>
 <% node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"].each do |h| %>
@@ -677,7 +677,7 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["nfs"]["nfs_sparsed_v
 
 ######## defined in cinder.volume.nfs ########
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver") %>
 
 nfs_shares_config=<%= node["openstack"]["block-storage"]["ibmnas"]["shares_config"] %>
 #### (StrOpt) File with the list of available nfs shares
@@ -709,7 +709,7 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["ibmnas"]["nfs_sparse
 
 ######## defined in cinder.volume.san ########
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver") %>
 
 san_ip=<%= node["openstack"]["block-storage"]["storwize"]["san_ip"] %>
 #### (StrOpt) IP address of SAN controller
@@ -750,7 +750,7 @@ san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_
 #### (StrOpt) The ZFS path under which to create zvols for volumes.
 <% end %>
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.solidfire.SolidFire" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.solidfire.SolidFire") %>
 ######## defined in cinder.volume.solidfire ########
 sf_emulate_512=<%= node["openstack"]["block-storage"]["solidfire"]["sf_emulate"] %>
 #### (BoolOpt) Set 512 byte emulation on volume creation;
@@ -770,7 +770,7 @@ iscsi_ip_prefix=<%= node["openstack"]["block-storage"]["solidfire"]["iscsi_ip_pr
 <% end %>
 
 #### (BoolOpt) Allow tenants to specify QOS on create
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver") %>
 ######## defined in cinder.volume.storwize_svc ########
 
 storwize_svc_volpool_name=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_volpool_name"] %>
@@ -822,14 +822,14 @@ storwize_svc_multihostmap_enabled=<%= node["openstack"]["block-storage"]["storwi
 
 <% end %>
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver") %>
 
 iscsi_target_prefix=<%= node["openstack"]["block-storage"]["emc"]["iscsi_target_prefix"] %>
 cinder_emc_config_file=<%= node["openstack"]["block-storage"]["emc"]["cinder_emc_config_file"] %>
 
 <% end %>
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver" %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver") %>
 ######## defined in cinder.volume.ibm.ibmnas ########
 
 nas_ip=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_ip"] %>
@@ -892,7 +892,7 @@ nas_ssh_port=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_ssh_port"] %>
 # zadara_vpsa_allow_nonexistent_delete=true
 #### (BoolOpt) Don't halt on deletion of non-existing volumes
 
-<% if node['openstack']['block-storage']['volume']['driver'] == 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver' %>
+<% if @enabled_drivers.include?('cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver') %>
 #
 # Options defined in cinder.volume.drivers.vmware.vmdk
 #
@@ -939,7 +939,7 @@ vmware_image_transfer_timeout_secs = <%= node['openstack']['block-storage']['vmw
 vmware_max_objects_retrieval = <%= node['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] %>
 <% end %>
 
-<% if node["openstack"]["block-storage"]["volume"]["driver"] == "cinder.volume.drivers.gpfs.GPFSDriver" %>
+<% if @enabled_drivers.include?('cinder.volume.drivers.gpfs.GPFSDriver') %>
 ######## defined in cinder.openstack.volume.drivers.ibm.gpfs ########
 
 # Specifies the path of the GPFS directory where Block Storage
@@ -982,9 +982,25 @@ gpfs_sparse_volumes = <%= node['openstack']['block-storage']['gpfs']['gpfs_spars
 gpfs_storage_pool = <%= node['openstack']['block-storage']['gpfs']['gpfs_storage_pool'] %>
 <% end %>
 
+<% unless @multi_backend_sections.empty? %>
+enabled_backends = <%= @multi_backend_sections.keys.join(',') %>
+<% end %>
+
 # Misc options
 <% if node["openstack"]["block-storage"]["misc_cinder"] %>
 <% node["openstack"]["block-storage"]["misc_cinder"].each do |m| %>
 <%= m %>
+<% end %>
+<% end %>
+
+# Multi-backend support, add new sections here
+# Make sure these sections are at the bottom of conf file
+<% unless @multi_backend_sections.empty? %>
+<% @multi_backend_sections.each do |sec, opts| %>
+[<%= sec %>]
+<% opts.each do |optline| %>
+<%= optline %>
+<% end %>
+
 <% end %>
 <% end %>

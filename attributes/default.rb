@@ -222,6 +222,20 @@ default['openstack']['block-storage']['rbd_secret_uuid'] = nil
 default['openstack']['block-storage']['rbd_secret_name'] = '00000000-0000-0000-0000-000000000000'
 default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_key'
 
+# Multiple backend support
+# Allow multiple backends configured in cinder.conf
+# For example: {
+#                'lvm1' => {
+#                  'volume_driver': 'cinder.volume.drivers.lvm.LVMISCSIDriver',
+#                  'volume_backend_name': 'lvm-backend-1'
+#                }
+#                'lvm2' => {
+#                  'volume_driver': 'cinder.volume.drivers.lvm.LVMISCSIDriver',
+#                  'volume_backend_name': 'lvm-backend-2'
+#                }
+#              }
+default['openstack']['block-storage']['volume']['multi_backend'] = nil
+
 # Misc option support
 # Allow additional strings to be added to cinder.conf
 # For example: ['# Comment', 'key=value']

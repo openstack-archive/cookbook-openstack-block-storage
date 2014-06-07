@@ -168,6 +168,9 @@ Cinder attributes
 * `openstack['block-storage']['ibmnas']['mount_point_base']` - Storage system autoexpand parameter for volumes
 * `openstack['block-storage']['ibmnas']['nfs_sparsed_volumes']` - Storage system volume creation method
 
+### Multiple backends attributes ###
+* `openstack['block-storage']['volume']['multi_backend']` - Hash map to indicate multiple backends sections, e.g. { 'lvm1' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm1' }, 'lvm2' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm2' } }
+
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
 
 * `openstack['endpoints']['block-storage-api-bind']['host']` - The IP address to bind the api service to

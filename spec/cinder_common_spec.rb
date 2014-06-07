@@ -574,6 +574,145 @@ describe 'openstack-block-storage::cinder-common' do
               /^MISC=OPTION$/)
           end
         end
+
+        context 'multiple backend settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['multi_backend'] = {
+              'lvm' => {
+                'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver',
+                'volume_backend_name' => 'lvmdrv'
+              },
+              'rbd' => {
+                'volume_driver' => 'cinder.volume.drivers.rbd.RBDDriver',
+                'volume_backend_name' => 'rbddrv'
+              },
+              'netapp_iscsi' => {
+                'volume_driver' => 'cinder.volume.drivers.netapp.NetAppISCSIDriver',
+                'multi_netapp_iscsi' => 'multi-netapp'
+              },
+              'netapp_nfs' => {
+                'volume_driver' => 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver',
+                'volume_backend_name' => 'netappnfsdrv',
+                'multi_netapp_nfs' => 'multi-netapp'
+              },
+              'ibmnas' => {
+                'volume_driver' => 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver',
+                'multi_ibmnas' => 'multi-ibmnas'
+              },
+              'ibmsvc' => {
+                'volume_driver' => 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver',
+                'multi_ibmsvc' => 'multi-ibmsvc'
+              },
+              'solidfire' => {
+                'volume_driver' => 'cinder.volume.drivers.solidfire.SolidFire',
+                'multi_solidfire' => 'multi-solidfire'
+              },
+              'emciscsi' => {
+                'volume_driver' => 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver',
+                'multi_emciscsi' => 'multi-emciscsi'
+              },
+              'vmware' => {
+                'volume_driver' => 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver',
+                'multi_vmware' => 'multi-vmware'
+              },
+              'gpfs' => {
+                'volume_driver' => 'cinder.volume.drivers.gpfs.GPFSDriver',
+                'multi_gpfs' => 'multi-gpfs'
+              }
+            }
+            node.set['openstack']['block-storage']['volume']['volume_group'] = 'multi-lvm-group'
+            node.set['openstack']['block-storage']['rbd_pool'] = 'multi-rbd-pool'
+            node.set['openstack']['block-storage']['netapp']['dfm_login'] = 'multi-netapp-login'
+            node.set['openstack']['block-storage']['netapp']['netapp_server_hostname'] = ['netapp-host-1', 'netapp-host-2']
+            node.set['openstack']['block-storage']['netapp']['netapp_server_port'] = 'multi-netapp-port'
+            node.set['openstack']['block-storage']['ibmnas']['shares_config'] = 'multi-ibmnas-share'
+            node.set['openstack']['block-storage']['storwize']['storwize_svc_volpool_name'] = 'multi-svc-volpool'
+            node.set['openstack']['block-storage']['solidfire']['sf_emulate'] = 'multi-sf-true'
+            node.set['openstack']['block-storage']['emc']['cinder_emc_config_file'] = 'multi-emc-conf'
+            node.set['openstack']['block-storage']['vmware']['vmware_host_ip'] = 'multi-vmware-ip'
+            node.set['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = 'multi-gpfs-mnt'
+          end
+
+          it 'enable multiple backends' do
+            expect(chef_run).to render_file(file.name).with_content(/^enabled_backends = lvm,rbd,netapp_iscsi,netapp_nfs,ibmnas,ibmsvc,solidfire,emciscsi,vmware,gpfs$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[lvm\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.lvm\.LVMISCSIDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[rbd\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.rbd\.RBDDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[netapp_iscsi\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.netapp\.NetAppISCSIDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_server_hostname=netapp-host-1$/)
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_server_hostname=netapp-host-2$/)
+            expect(chef_run).to render_file(file.name).with_content(/^\[netapp_nfs\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.netapp\.nfs\.NetAppDirect7modeNfsDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[ibmnas\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.ibm\.ibmnas\.IBMNAS_NFSDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[ibmsvc\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.ibm\.storwize_svc\.StorwizeSVCDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[solidfire\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.solidfire\.SolidFire$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[emciscsi\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.emc\.emc_smis_iscsi\.EMCSMISISCSIDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[vmware\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.vmware\.vmdk\.VMwareVcVmdkDriver$/)
+
+            expect(chef_run).to render_file(file.name).with_content(/^\[gpfs\]$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.gpfs\.GPFSDriver$/)
+          end
+
+          it 'set lvm option' do
+            expect(chef_run).to render_file(file.name).with_content(/^volume_group=multi-lvm-group$/)
+          end
+
+          it 'set rbd option' do
+            expect(chef_run).to render_file(file.name).with_content(/^rbd_pool=multi-rbd-pool$/)
+          end
+
+          it 'set netapp_iscsi option' do
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_login=multi-netapp-login$/)
+          end
+
+          it 'set netapp_nfs option' do
+            expect(chef_run).to render_file(file.name).with_content(/^netapp_server_port=multi-netapp-port$/)
+          end
+
+          it 'set ibmnas option' do
+            expect(chef_run).to render_file(file.name).with_content(/^nfs_shares_config=multi-ibmnas-share$/)
+          end
+
+          it 'set ibmsvc option' do
+            expect(chef_run).to render_file(file.name).with_content(/^storwize_svc_volpool_name=multi-svc-volpool$/)
+          end
+
+          it 'set solidfire option' do
+            expect(chef_run).to render_file(file.name).with_content(/^sf_emulate_512=multi-sf-true$/)
+          end
+
+          it 'set emciscsi option' do
+            expect(chef_run).to render_file(file.name).with_content(/^cinder_emc_config_file=multi-emc-conf$/)
+          end
+
+          it 'set vmware option' do
+            expect(chef_run).to render_file(file.name).with_content(/^vmware_host_ip = multi-vmware-ip$/)
+          end
+
+          it 'set gpfs option' do
+            expect(chef_run).to render_file(file.name).with_content(/^gpfs_mount_point_base = multi-gpfs-mnt$/)
+          end
+        end
+
+        it 'no multiple backends configured' do
+          expect(chef_run).to_not render_file(file.name).with_content(/^enabled_backends = [\w\W]+$/)
+        end
       end
     end
 
