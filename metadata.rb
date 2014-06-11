@@ -19,7 +19,7 @@ recipe           'openstack-block-storage::volume', 'Installs the cinder-volume 
 end
 
 depends          'apt', '>= 2.3.8'
-depends          'openstack-common', '~> 9.0'
+depends          'openstack-common', '~> 9.4'
 depends          'openstack-identity', '~> 9.0'
 depends          'openstack-image', '~> 9.0'
 depends          'selinux', '>= 0.7.2'
