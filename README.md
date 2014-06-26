@@ -91,6 +91,15 @@ Cinder attributes
 * `openstack["block-storage"]["platform"]` - hash of platform specific package/service names and options
 * `openstack["block-storage"]["volume"]["state_path"]` - Top-level directory for maintaining cinder's state
 * `openstack["block-storage"]["volume"]["driver"]` - Driver to use for volume creation
+  * Supported volume drivers
+     - **cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver** - NetApp iSCSI driver for clustered Data
+     - **cinder.volume.drivers.rbd.RBDDriver** - Ceph Block Device driver
+     - **cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver** - NetApp NFS direct driver for 7-Mode storage controller
+     - **cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver** -  IBM Storwize/SVC driver
+     - **cinder.volume.drivers.gpfs.GPFSDriver** -  IBM General Parallel File System driver
+     - **cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver** - IBM Storwize V7000 Unified and IBM SONAS Cinder driver
+     - **cinder.volume.drivers.lvm.LVMISCSIDriver** - LVM Driver
+     - **cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver** - EMC SMI-S iSCSI Driver
 * `openstack["block-storage"]["volume"]["volume_clear"]` - Defines the method for clearing volumes on a volume delete possible options: 'zero', 'none', 'shred' (https://review.openstack.org/#/c/12521/)
 * `openstack["block-storage"]["volume"]["volume_clear_size"]` - size in MB used to limit the cleared area on deleting a volume, to the first part of the volume only. (default 0 = all MB)
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
