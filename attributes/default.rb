@@ -248,9 +248,6 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['block-storage']['group'] = 'cinder'
 
   default['openstack']['block-storage']['platform'] = {
-    'mysql_python_packages' => ['MySQL-python'],
-    'db2_python_packages' => ['python-ibm-db', 'python-ibm-db-sa'],
-    'postgresql_python_packages' => ['python-psycopg2'],
     'cinder_common_packages' => ['openstack-cinder'],
     'cinder_api_packages' => ['python-cinderclient'],
     'cinder_api_service' => 'openstack-cinder-api',
@@ -271,8 +268,6 @@ when 'suse'
   default['openstack']['block-storage']['user'] = 'openstack-cinder'
   default['openstack']['block-storage']['group'] = 'openstack-cinder'
   default['openstack']['block-storage']['platform'] = {
-    'mysql_python_packages' => ['python-mysql'],
-    'postgresql_python_packages' => ['python-psycopg2'],
     'cinder_common_packages' => ['openstack-cinder'],
     'cinder_api_packages' => ['openstack-cinder-api'],
     'cinder_api_service' => 'openstack-cinder-api',
@@ -292,8 +287,6 @@ when 'debian'
   default['openstack']['block-storage']['user'] = 'cinder'
   default['openstack']['block-storage']['group'] = 'cinder'
   default['openstack']['block-storage']['platform'] = {
-    'mysql_python_packages' => ['python-mysqldb'],
-    'postgresql_python_packages' => ['python-psycopg2'],
     'cinder_common_packages' => ['cinder-common'],
     'cinder_api_packages' => ['cinder-api', 'python-cinderclient'],
     'cinder_api_service' => 'cinder-api',

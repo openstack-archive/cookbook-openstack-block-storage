@@ -1,6 +1,11 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+
+## 9.4.0
+* python_packages database client attributes have been migrated to
+the -common cookbook
+
 ## 9.3.0
 ### Blue print
 * Add multiple backend configuration support
