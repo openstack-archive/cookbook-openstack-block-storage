@@ -5,6 +5,7 @@ This file is used to list changes made in each version of the openstack-block-st
 ## 9.4.0
 * python_packages database client attributes have been migrated to
 the -common cookbook
+* bump berkshelf to 2.0.18 to allow Supermarket support
 
 ## 9.3.0
 ### Blue print
