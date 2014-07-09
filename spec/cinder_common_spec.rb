@@ -728,5 +728,38 @@ describe 'openstack-block-storage::cinder-common' do
         expect(sprintf('%o', dir.mode)).to eq '700'
       end
     end
+
+    describe 'rootwrap.conf' do
+      let(:file) { chef_run.template('/etc/cinder/rootwrap.conf') }
+
+      it 'creates the /etc/cinder/rootwrap.conf file' do
+        expect(chef_run).to create_template(file.name).with(
+          user: 'root',
+          group: 'root',
+          mode: 0644
+        )
+      end
+
+      context 'template contents' do
+        it 'shows the custom banner' do
+          node.set['openstack']['block-storage']['custom_template_banner'] = 'banner'
+
+          expect(chef_run).to render_file(file.name)
+          .with_content(/^banner$/)
+        end
+
+        it 'sets the default attributes' do
+          [
+            %r(^filters_path=/etc/cinder/rootwrap.d,/usr/share/cinder/rootwrap$),
+            %r(^exec_dirs=/sbin,/usr/sbin,/bin,/usr/bin$),
+            /^use_syslog=False$/,
+            /^syslog_log_facility=syslog$/,
+            /^syslog_log_level=ERROR$/
+          ].each do |line|
+            expect(chef_run).to render_file(file.name).with_content(line)
+          end
+        end
+      end
+    end
   end
 end

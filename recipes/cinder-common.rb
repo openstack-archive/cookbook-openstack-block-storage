@@ -107,3 +107,10 @@ directory node['openstack']['block-storage']['lock_path'] do
   owner node['openstack']['block-storage']['user']
   mode 00700
 end
+
+template '/etc/cinder/rootwrap.conf' do
+  source 'rootwrap.conf.erb'
+  owner 'root'
+  group 'root'
+  mode   00644
+end
