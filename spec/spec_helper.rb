@@ -1,7 +1,7 @@
 # encoding: UTF-8
 #
 # Cookbook Name:: openstack-block-storage
-
+require 'rspec/expectations'
 require 'chefspec'
 require 'chefspec/berkshelf'
 require 'chef/application'
@@ -126,9 +126,5 @@ def expect_creates_policy_json(service, user, group, action = :restart) # ruboco
     end
   end
 end
-
-# README(galstrom21): This will remove any coverage warnings from
-#   dependent cookbooks
-ChefSpec::Coverage.filters << '*/openstack-block-storage'
 
 at_exit { ChefSpec::Coverage.report! }
