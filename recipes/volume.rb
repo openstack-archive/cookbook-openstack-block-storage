@@ -155,35 +155,47 @@ when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
   end
 
 when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+
   if node['openstack']['block-storage']['volume']['create_volume_group']
-    volume_size = node['openstack']['block-storage']['volume']['volume_group_size']
-    seek_count = volume_size.to_i * 1024
-    # default volume group is 40G
-    seek_count = 40 * 1024 if seek_count == 0
     vg_name = node['openstack']['block-storage']['volume']['volume_group']
-    vg_file = "#{node['openstack']['block-storage']['volume']['state_path']}/#{vg_name}.img"
 
-    # create volume group
-    execute 'Create Cinder volume group' do
-      command "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate #{vg_name} $(losetup --show -f #{vg_file})"
-      action :run
-      not_if "vgs #{vg_name}"
-    end
+    case node['openstack']['block-storage']['volume']['create_volume_group_type']
+    when 'file'
+      volume_size = node['openstack']['block-storage']['volume']['volume_group_size']
+      seek_count = volume_size.to_i * 1024
+      vg_file = "#{node['openstack']['block-storage']['volume']['state_path']}/#{vg_name}.img"
 
-    template '/etc/init.d/cinder-group-active' do
-      source 'cinder-group-active.erb'
-      mode '755'
-      variables(
-        volume_name: vg_name,
-        volume_file: vg_file
-      )
-      notifies :start, 'service[cinder-group-active]', :immediately
-    end
+      # create volume group
+      execute 'Create Cinder volume group' do
+        command "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate #{vg_name} $(losetup --show -f #{vg_file})"
+        action :run
+        not_if "vgs #{vg_name}"
+      end
 
-    service 'cinder-group-active' do
-      service_name 'cinder-group-active'
+      template '/etc/init.d/cinder-group-active' do
+        source 'cinder-group-active.erb'
+        mode '755'
+        variables(
+          volume_name: vg_name,
+          volume_file: vg_file
+        )
+        notifies :start, 'service[cinder-group-active]', :immediately
+      end
 
-      action [:enable, :start]
+      service 'cinder-group-active' do
+        service_name 'cinder-group-active'
+
+        action [:enable, :start]
+      end
+
+    when 'block_devices'
+
+      block_devices = node['openstack']['block-storage']['volume']['block_devices']
+      execute 'Create Cinder volume group with block devices' do
+        command "pvcreate #{block_devices}; vgcreate #{vg_name} #{block_devices}"
+        action :run
+        not_if "vgs #{vg_name}"
+      end
     end
   end
 
