@@ -38,6 +38,10 @@ describe 'openstack-block-storage::api' do
     describe '/var/cache/cinder' do
       let(:dir) { chef_run.directory('/var/cache/cinder') }
 
+      it 'should create the directory' do
+        expect(chef_run).to create_directory(dir.name)
+      end
+
       it 'has proper owner' do
         expect(dir.owner).to eq('cinder')
         expect(dir.group).to eq('cinder')
@@ -54,6 +58,10 @@ describe 'openstack-block-storage::api' do
 
     describe 'api-paste.ini' do
       let(:file) { chef_run.template('/etc/cinder/api-paste.ini') }
+
+      it 'should create api-paste.ini' do
+        expect(chef_run).to create_template(file.name)
+      end
 
       it 'has proper owner' do
         expect(file.owner).to eq('cinder')

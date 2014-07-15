@@ -24,6 +24,10 @@ describe 'openstack-block-storage::cinder-common' do
     describe '/etc/cinder' do
       let(:dir) { chef_run.directory('/etc/cinder') }
 
+      it 'should create the /etc/cinder directory' do
+        expect(chef_run).to create_directory(dir.name)
+      end
+
       it 'has proper owner' do
         expect(dir.owner).to eq('cinder')
         expect(dir.group).to eq('cinder')
@@ -36,6 +40,10 @@ describe 'openstack-block-storage::cinder-common' do
 
     describe 'cinder.conf' do
       let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
+
+      it 'should create the cinder.conf template' do
+        expect(chef_run).to create_template(file.name)
+      end
 
       it 'has proper owner' do
         expect(file.owner).to eq('cinder')
@@ -718,6 +726,10 @@ describe 'openstack-block-storage::cinder-common' do
 
     describe '/var/lock/cinder' do
       let(:dir) { chef_run.directory('/var/lock/cinder') }
+
+      it 'should create the /var/lock/cinder directory' do
+        expect(chef_run).to create_directory(dir.name)
+      end
 
       it 'has proper owner' do
         expect(dir.owner).to eq('cinder')

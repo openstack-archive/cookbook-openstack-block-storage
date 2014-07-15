@@ -205,6 +205,10 @@ describe 'openstack-block-storage::volume' do
       it 'configures storewize private key' do
         san_key = chef_run.file chef_run.node['openstack']['block-storage']['san']['san_private_key']
         expect(san_key.mode).to eq('0400')
+        expect(chef_run).to create_file('/v7000_rsa').with(
+          user: 'cinder',
+          group: 'cinder'
+        )
       end
 
       context 'ISCSI' do
@@ -232,6 +236,10 @@ describe 'openstack-block-storage::volume' do
 
     describe 'targets.conf' do
       let(:file) { chef_run.template('/etc/tgt/targets.conf') }
+
+      it 'should create the targets.conf' do
+        expect(chef_run).to create_template(file.name)
+      end
 
       it 'has proper modes' do
         expect(sprintf('%o', file.mode)).to eq '600'

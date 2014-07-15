@@ -55,6 +55,7 @@ describe 'openstack-block-storage::scheduler' do
                    [:weekday, '*'], [:month, '*'], [:user, 'cinder']]
       crontests.each do |k, v|
         expect(cron.send(k)).to eq v
+        expect(chef_run).to create_cron('cinder-volume-usage-audit')
       end
       expect(cron.action).to include :create
     end
