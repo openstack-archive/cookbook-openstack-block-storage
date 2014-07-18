@@ -7,6 +7,7 @@ This file is used to list changes made in each version of the openstack-block-st
 the -common cookbook
 * bump berkshelf to 2.0.18 to allow Supermarket support
 * added rootwrap.conf as a template
+* fix fauxhai version for suse and redhat
 
 ## 9.3.0
 ### Blue print
