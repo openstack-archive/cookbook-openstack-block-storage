@@ -103,6 +103,8 @@ Cinder attributes
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `openstack["block-storage"]["voluem"]["volume_group_size"]` - The size (GB) of volume group (default is 40)
 * `openstack["block-storage"]["voluem"]["create_volume_group"]` - Create volume group or not when using the LVMISCSIDriver (default is false)
+* `openstack["block-storage"]["volume"]["create_volume_group_type"]` - 'file' or 'block_devices'. Create volume group from block devices or just a file for testing
+* `openstack["block-storage"]["volume"]["block_devices"]` - String of blank separated block devices to use for creating volume group when type is 'block_devices'
 * `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
 * `openstack["block-storage"]["volume"]["iscsi_ip_address"]` - The IP address where the iSCSI daemon is listening on
 * `openstack["block-storage"]["volume"]["iscsi_port"]` - The port where the iSCSI daemon is listening on

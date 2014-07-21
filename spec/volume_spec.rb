@@ -311,6 +311,21 @@ describe 'openstack-block-storage::volume' do
       end
     end
 
+    describe 'create vg on block devices' do
+      before do
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+        node.set['openstack']['block-storage']['volume']['create_volume_group'] = true
+        node.set['openstack']['block-storage']['volume']['create_volume_group_type'] = 'block_devices'
+        node.set['openstack']['block-storage']['volume']['block_devices'] = '/dev/sdx /dev/sdx1'
+        stub_command('vgs cinder-volumes').and_return(false)
+      end
+
+      it 'create volume group on block devices' do
+        cmd = 'pvcreate /dev/sdx /dev/sdx1; vgcreate cinder-volumes /dev/sdx /dev/sdx1'
+        expect(chef_run).to run_execute('Create Cinder volume group with block devices').with(command: cmd)
+      end
+    end
+
     describe 'cinder_emc_config.xml' do
       let(:file) { chef_run.template('/etc/cinder/cinder_emc_config.xml') }
       before do

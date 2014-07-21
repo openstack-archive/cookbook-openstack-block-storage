@@ -210,6 +210,14 @@ default['openstack']['block-storage']['volume']['volume_clear_size'] = 0
 default['openstack']['block-storage']['volume']['volume_clear'] = 'zero'
 
 default['openstack']['block-storage']['volume']['create_volume_group'] = false
+# Type of volume group to create:
+# - 'file' for basic 40g file for testing
+# - 'block_devices' for using block devices, specified in block_devices attribute
+default['openstack']['block-storage']['volume']['create_volume_group_type'] = 'file'
+# String of local disk device paths
+# Examples: '/dev/sdx /dev/sdx1' or '/dev/sd[k-m]1'
+default['openstack']['block-storage']['volume']['block_devices'] = nil
+
 default['openstack']['block-storage']['volume']['iscsi_helper'] = 'tgtadm'
 default['openstack']['block-storage']['volume']['iscsi_ip_address'] = node['ipaddress']
 default['openstack']['block-storage']['volume']['iscsi_port'] = '3260'
