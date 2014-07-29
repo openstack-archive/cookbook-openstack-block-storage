@@ -86,19 +86,19 @@ describe 'openstack-block-storage::api' do
         context 'endpoint related' do
           before do
             endpoint = double(port: 'port', host: 'host', scheme: 'scheme')
-            Chef::Recipe.any_instance.stub(:endpoint)
+            allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
               .with('image-api')
               .and_return(endpoint)
-            Chef::Recipe.any_instance.stub(:endpoint)
+            allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
               .with('identity-admin')
               .and_return(endpoint)
-            Chef::Recipe.any_instance.stub(:endpoint)
+            allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
               .with('identity-api')
               .and_return(endpoint)
-            Chef::Recipe.any_instance.stub(:endpoint)
+            allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
               .with('block-storage-api-bind')
               .and_return(endpoint)
-            Chef::Recipe.any_instance.stub(:auth_uri_transform)
+            allow_any_instance_of(Chef::Recipe).to receive(:auth_uri_transform)
               .and_return('auth_uri_transform')
           end
 

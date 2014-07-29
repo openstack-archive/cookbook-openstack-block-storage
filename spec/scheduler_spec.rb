@@ -43,7 +43,7 @@ describe 'openstack-block-storage::scheduler' do
     end
 
     it 'creates cron metering default' do
-      ::Chef::Recipe.any_instance.stub(:search)
+      allow_any_instance_of(Chef::Recipe).to receive(:search)
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'fauxhai.local')])
       node.set['openstack']['telemetry'] = true
@@ -63,7 +63,7 @@ describe 'openstack-block-storage::scheduler' do
     it 'creates cron metering custom' do
       crontests = [[:minute, '50'], [:hour, '23'], [:day, '6'],
                    [:weekday, '5'], [:month, '11'], [:user, 'foobar']]
-      ::Chef::Recipe.any_instance.stub(:search)
+      allow_any_instance_of(Chef::Recipe).to receive(:search)
         .with(:node, 'roles:os-block-storage-scheduler')
         .and_return([OpenStruct.new(name: 'foobar')])
       node.set['openstack']['telemetry'] = true

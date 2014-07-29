@@ -57,13 +57,13 @@ describe 'openstack-block-storage::cinder-common' do
       context 'template contents' do
         let(:test_pass) { 'test_pass' }
         before do
-          Chef::Recipe.any_instance.stub(:endpoint)
+          allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
             .with('image-api')
             .and_return(double(host: 'glance_host_value', port: 'glance_port_value'))
-          Chef::Recipe.any_instance.stub(:endpoint)
+          allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
             .with('block-storage-api-bind')
             .and_return(double(host: 'cinder_host_value', port: 'cinder_port_value'))
-          Chef::Recipe.any_instance.stub(:get_password)
+          allow_any_instance_of(Chef::Recipe).to receive(:get_password)
             .with('user', anything)
             .and_return(test_pass)
         end
@@ -122,7 +122,7 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         it 'has a sql_connection attribute' do
-          Chef::Recipe.any_instance.stub(:db_uri)
+          allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
             .with('block-storage', anything, '').and_return('sql_connection_value')
 
           expect(chef_run).to render_file(file.name)
@@ -189,7 +189,7 @@ describe 'openstack-block-storage::cinder-common' do
             end
 
             it 'has a rabbit_hosts attribute' do
-              Chef::Recipe.any_instance.stub(:rabbit_servers)
+              allow_any_instance_of(Chef::Recipe).to receive(:rabbit_servers)
                 .and_return('rabbit_servers_value')
 
               expect(chef_run).to render_file(file.name).with_content(/^rabbit_hosts=rabbit_servers_value$/)

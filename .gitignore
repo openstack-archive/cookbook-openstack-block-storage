@@ -5,4 +5,5 @@
 .coverage/
 *.swp
 Berksfile.lock
+Genmfile.lock
 Vagrantfile

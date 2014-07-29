@@ -342,7 +342,7 @@ describe 'openstack-block-storage::volume' do
 
       describe 'template contents' do
         before do
-          Chef::Recipe.any_instance.stub(:get_password)
+          allow_any_instance_of(Chef::Recipe).to receive(:get_password)
             .with('user', anything)
             .and_return('emc_test_pass')
         end
