@@ -1,28 +1,29 @@
 # Testing the Cookbook #
 
-This cookbook uses [bundler](http://gembundler.com/), [berkshelf](http://berkshelf.com/), and [strainer](https://github.com/customink/strainer) to isolate dependencies and run tests.
+This cookbook uses [bundler](http://gembundler.com/) and [berkshelf](http://berkshelf.com/) to isolate dependencies.
 
-Tests are defined in [Strainerfile](Strainerfile), which in turn calls rubocop, knife, foodcritic and chefspec.
-
-To run the tests:
+To setup the dependencies:
 
     $ bundle install --path=.bundle # install gem dependencies
     $ bundle exec berks vendor .cookbooks # install cookbook dependencies and create the folder .cookbooks
-    $ bundle exec strainer test -s Strainerfile # run tests
+
+To run the tests:
+
+    $ export COOKBOOK='openstack-block-storage'
+    $ bundle exec foodcritic -f any -t ~FC003 -t ~FC023 .cookbooks/$COOKBOOK
+    $ bundle exec rubocop .cookbooks/$COOKBOOK
+    $ bundle exec rspec --format documentation .cookbooks/$COOKBOOK/spec
 
 ## Rubocop  ##
 
 [Rubocop](https://github.com/bbatsov/rubocop) is a static Ruby code analyzer, based on the community [Ruby style guide](https://github.com/bbatsov/ruby-style-guide). We are attempting to adhere to this where applicable, slowly cleaning up the cookbooks until we can turn on Rubocop for gating the commits.
 
-## Knife ##
-
-[knife cookbook test](http://docs.opscode.com/chef/knife.html#test) is used to check the cookbook's Ruby and ERB files for basic syntax errors.
-
 ## Foodcritic ##
 
 [Foodcritic](http://acrmp.github.io/foodcritic/) is a lint tool for Chef cookbooks. We ignore the following rules:
 
-[FC003](http://acrmp.github.io/foodcritic/#FC003) these cookbooks are not intended for Chef Solo.
+* [FC003](http://acrmp.github.io/foodcritic/#FC003) These cookbooks are not intended for Chef Solo.
+* [FC023](http://acrmp.github.io/foodcritic/#FC023) Prefer conditional attributes.
 
 ## Chefspec
 
