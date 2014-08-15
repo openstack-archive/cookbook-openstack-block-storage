@@ -7,7 +7,7 @@ Tests are defined in [Strainerfile](Strainerfile), which in turn calls rubocop, 
 To run the tests:
 
     $ bundle install --path=.bundle # install gem dependencies
-    $ bundle exec berks install --path=.cookbooks # install cookbook dependencies
+    $ bundle exec berks vendor .cookbooks # install cookbook dependencies and create the folder .cookbooks
     $ bundle exec strainer test -s Strainerfile # run tests
 
 ## Rubocop  ##
