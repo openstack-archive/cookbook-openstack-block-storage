@@ -55,14 +55,3 @@ paste.filter_factory = cinder.api.middleware.auth:CinderKeystoneContext.factory
 
 [filter:authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
-auth_uri = <%= @auth_uri %>
-auth_host = <%= @identity_admin_endpoint.host %>
-auth_port = <%= @identity_admin_endpoint.port %>
-auth_protocol = <%= @identity_admin_endpoint.scheme %>
-<% if node['openstack']['block-storage']['api']['auth']['version'] != 'v2.0' %>
-auth_version = <%= node['openstack']['block-storage']['api']['auth']['version'] %>
-<% end %>
-admin_tenant_name = <%= node["openstack"]["block-storage"]["service_tenant_name"] %>
-admin_user = <%= node["openstack"]["block-storage"]["service_user"] %>
-admin_password = <%= @service_pass %>
-signing_dir = <%= node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"] %>

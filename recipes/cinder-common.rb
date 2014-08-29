@@ -80,6 +80,12 @@ else
   end
 end
 
+identity_endpoint = endpoint 'identity-api'
+identity_admin_endpoint = endpoint 'identity-admin'
+service_pass = get_password 'service', 'openstack-block-storage'
+
+auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['block-storage']['api']['auth']['version'])
+
 template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
   group node['openstack']['block-storage']['group']
@@ -98,7 +104,10 @@ template '/etc/cinder/cinder.conf' do
     volume_api_bind_port: cinder_api_bind.port,
     vmware_host_pass: vmware_host_pass,
     enabled_drivers: enabled_drivers,
-    multi_backend_sections: multi_backend_sections
+    multi_backend_sections: multi_backend_sections,
+    auth_uri: auth_uri,
+    identity_admin_endpoint: identity_admin_endpoint,
+    service_pass: service_pass
   )
 end
 

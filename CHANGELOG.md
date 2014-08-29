@@ -6,6 +6,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Upgrading to Juno
 * Sync conf files with Juno
 * Upgrading berkshelf from 2.0.18 to 3.1.5
+* Move keystone keys into cinder.conf
 
 ## 9.4.1
 * Add support for LVMISCSIDriver driver using block devices with LVM

@@ -40,6 +40,27 @@ describe 'openstack-block-storage::cinder-common' do
 
     describe 'cinder.conf' do
       let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
+      let(:test_pass) { 'test_pass' }
+      before do
+        endpoint = double(port: 'port', host: 'host', scheme: 'scheme')
+        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+          .with('image-api')
+          .and_return(endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+          .with('identity-admin')
+          .and_return(endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+          .with('identity-api')
+          .and_return(endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+          .with('block-storage-api-bind')
+          .and_return(endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:auth_uri_transform)
+          .and_return('auth_uri_transform')
+        allow_any_instance_of(Chef::Recipe).to receive(:get_password)
+          .with('user', anything)
+          .and_return(test_pass)
+      end
 
       it 'should create the cinder.conf template' do
         expect(chef_run).to create_template(file.name)
@@ -54,19 +75,63 @@ describe 'openstack-block-storage::cinder-common' do
         expect(sprintf('%o', file.mode)).to eq '644'
       end
 
-      context 'template contents' do
-        let(:test_pass) { 'test_pass' }
-        before do
-          allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
-            .with('image-api')
-            .and_return(double(host: 'glance_host_value', port: 'glance_port_value'))
-          allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
-            .with('block-storage-api-bind')
-            .and_return(double(host: 'cinder_host_value', port: 'cinder_port_value'))
-          allow_any_instance_of(Chef::Recipe).to receive(:get_password)
-            .with('user', anything)
-            .and_return(test_pass)
+      context 'template keystone contents' do
+        it 'has signing_dir' do
+          node.set['openstack']['block-storage']['api']['auth']['cache_dir'] = 'auth_cache_dir'
+
+          expect(chef_run).to render_file(file.name).with_content(/^signing_dir = auth_cache_dir$/)
         end
+
+        context 'endpoint related' do
+
+          it 'has auth_uri' do
+            expect(chef_run).to render_file(file.name).with_content(/^auth_uri = auth_uri_transform$/)
+          end
+
+          it 'has auth_host' do
+            expect(chef_run).to render_file(file.name).with_content(/^auth_host = host$/)
+          end
+
+          it 'has auth_port' do
+            expect(chef_run).to render_file(file.name).with_content(/^auth_port = port$/)
+          end
+
+          it 'has auth_protocol' do
+            expect(chef_run).to render_file(file.name).with_content(/^auth_protocol = scheme$/)
+          end
+        end
+
+        it 'has no auth_version when auth_version is v2.0' do
+          node.set['openstack']['block-storage']['api']['auth']['version'] = 'v2.0'
+
+          expect(chef_run).not_to render_file(file.name).with_content(/^auth_version = v2.0$/)
+        end
+
+        it 'has auth_version when auth version is not v2.0' do
+          node.set['openstack']['block-storage']['api']['auth']['version'] = 'v3.0'
+
+          expect(chef_run).to render_file(file.name).with_content(/^auth_version = v3.0$/)
+        end
+
+        it 'has an admin tenant name' do
+          node.set['openstack']['block-storage']['service_tenant_name'] = 'tenant_name'
+
+          expect(chef_run).to render_file(file.name).with_content(/^admin_tenant_name = tenant_name$/)
+        end
+
+        it 'has an admin user' do
+          node.set['openstack']['block-storage']['service_user'] = 'username'
+
+          expect(chef_run).to render_file(file.name).with_content(/^admin_user = username$/)
+        end
+
+        it 'has an admin password' do
+          # (fgimenez) the get_password mocking is set in spec/spec_helper.rb
+          expect(chef_run).to render_file(file.name).with_content(/^admin_password = cinder-pass$/)
+        end
+      end
+
+      context 'template contents' do
 
         context 'commonly named attributes' do
           %w(debug verbose lock_path notification_driver
@@ -141,8 +206,8 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'glance endpoint' do
           %w(host port).each do |glance_attr|
-            it "has a glace #{glance_attr} attribute" do
-              expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=glance_#{glance_attr}_value$/)
+            it "has a glance #{glance_attr} attribute" do
+              expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=#{glance_attr}$/)
             end
           end
         end
@@ -154,11 +219,11 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'cinder endpoint' do
           it 'has osapi_volume_listen set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen=cinder_host_value$/)
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen=host$/)
           end
 
           it 'has osapi_volume_listen_port set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=cinder_port_value$/)
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=port$/)
           end
         end
 
