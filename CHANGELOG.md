@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the openstack-block-st
 # Update cinder.conf mode from 0644 to 0640
 * Add attribute for ibmnas_platform_type
 
+* Update deprecated keystoneclient.middleware.auth_token in api-paste.ini
+
 ## 10.0.0
 * Upgrading to Juno
 * Sync conf files with Juno
