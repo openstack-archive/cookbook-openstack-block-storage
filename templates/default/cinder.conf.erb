@@ -201,6 +201,17 @@ quota_gigabytes=<%= node["openstack"]["block-storage"]["quota_gigabytes"] %>
 quota_driver=<%= node["openstack"]["block-storage"]["quota_driver"] %>
 #### (StrOpt) default driver to use for quota checks
 
+# Number of volume snapshots allowed per project (integer
+# value)
+quota_snapshots=<%= node["openstack"]["block-storage"]["quota_snapshots"] %>
+
+# Whether snapshots count against GigaByte quota (boolean
+# value)
+no_snapshot_gb_quota=<%= node["openstack"]["block-storage"]["no_snapshot_gb_quota"] %>
+
+# Enables or disables use of default quota class with default
+# quota. (boolean value)
+use_default_quota_class=<%= node["openstack"]["block-storage"]["use_default_quota_class"] %>
 
 ######## defined in cinder.service ########
 

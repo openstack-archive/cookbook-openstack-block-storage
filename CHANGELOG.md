@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the openstack-block-st
 # Update cinder.conf mode from 0644 to 0640
 * Add attribute for ibmnas_platform_type
 
+* Add attributes for quota_snapshots, no_snapshot_gb_quota and use_default_quota_class
+
 ## 10.0.0
 * Upgrading to Juno
 * Sync conf files with Juno
