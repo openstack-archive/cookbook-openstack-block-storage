@@ -108,7 +108,7 @@ def expect_creates_cinder_conf(service, user, group, action = :restart) # ruboco
     end
 
     it 'has proper modes' do
-      expect(sprintf('%o', file.mode)).to eq '644'
+      expect(sprintf('%o', file.mode)).to eq '640'
     end
 
     it 'notifies service restart' do

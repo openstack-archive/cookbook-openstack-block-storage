@@ -90,7 +90,7 @@ template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 00644
+  mode 00640
   variables(
     sql_connection: sql_connection,
     mq_service_type: mq_service_type,
