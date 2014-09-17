@@ -172,10 +172,12 @@ Cinder attributes
 * `openstack['block-storage']['ibmnas']['nas_ip']` - Management IP address of IBMNAS storage
 * `openstack['block-storage']['ibmnas']['nas_login']` - Username for IBMNAS storage system
 * `openstack['block-storage']['ibmnas']['nas_access_ip']` - Hostname/Public IP address to access shares
+* `openstack['block-storage']['ibmnas']['nas_ssh_port']` - ssh port of IBMNAS storage
 * `openstack['block-storage']['ibmnas']['export']` - Storage system shares/export path parameter
 * `openstack['block-storage']['ibmnas']['shares_config']` - File that contains list of IBMNAS Shares
 * `openstack['block-storage']['ibmnas']['mount_point_base']` - Storage system autoexpand parameter for volumes
 * `openstack['block-storage']['ibmnas']['nfs_sparsed_volumes']` - Storage system volume creation method
+* `openstack['block-storage']['ibmnas']['ibmnas_platform_type']` - Platform type to be used as backend storage
 
 ### Multiple backends attributes ###
 * `openstack['block-storage']['volume']['multi_backend']` - Hash map to indicate multiple backends sections, e.g. { 'lvm1' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm1' }, 'lvm2' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm2' } }
