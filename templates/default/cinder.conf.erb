@@ -1095,9 +1095,13 @@ admin_tenant_name = <%= node["openstack"]["block-storage"]["service_tenant_name"
 # A PEM encoded Certificate Authority to use when verifying
 # HTTPs connections. Defaults to system CAs. (string value)
 #cafile=<None>
+<% if node['openstack']['block-storage']['api']['auth']['cafile'] %>
+cafile = <%= node['openstack']['block-storage']['api']['auth']['cafile'] %>
+<% end %>
 
 # Verify HTTPS connections. (boolean value)
 #insecure=false
+insecure = <%= node['openstack']['block-storage']['api']['auth']['insecure'] %>
 
 # Directory used to cache files related to PKI tokens (string
 # value)
@@ -1108,6 +1112,9 @@ signing_dir = <%= node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"]
 # in-process. (list value)
 # Deprecated group/name - [DEFAULT]/memcache_servers
 #memcached_servers=<None>
+<% if node['openstack']['block-storage']['api']['auth']['memcached_servers'] %>
+memcached_servers = <%= node['openstack']['block-storage']['api']['auth']['memcached_servers'] %>
+<% end %>
 
 # In order to prevent excessive effort spent validating
 # tokens, the middleware caches previously-seen tokens for a
@@ -1130,11 +1137,17 @@ signing_dir = <%= node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"]
 # value is not one of these options or empty, auth_token will
 # raise an exception on initialization. (string value)
 #memcache_security_strategy=<None>
+<% if node['openstack']['block-storage']['api']['auth']['memcache_security_strategy'] %>
+memcache_security_strategy = <%= node['openstack']['block-storage']['api']['auth']['memcache_security_strategy'] %>
+<% end %>
 
 # (optional, mandatory if memcache_security_strategy is
 # defined) this string is used for key derivation. (string
 # value)
 #memcache_secret_key=<None>
+<% if node['openstack']['block-storage']['api']['auth']['memcache_secret_key'] %>
+memcache_secret_key = <%= node['openstack']['block-storage']['api']['auth']['memcache_secret_key'] %>
+<% end %>
 
 # (optional) indicate whether to set the X-Service-Catalog
 # header. If False, middleware will not ask for service
@@ -1169,3 +1182,4 @@ signing_dir = <%= node["openstack"]["block-storage"]["api"]["auth"]["cache_dir"]
 # should be set to a single value for better performance.
 # (list value)
 #hash_algorithms=md5
+hash_algorithms = <%= node['openstack']['block-storage']['api']['auth']['hash_algorithms'] %>

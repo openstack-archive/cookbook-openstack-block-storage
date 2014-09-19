@@ -4,6 +4,7 @@ This file is used to list changes made in each version of the openstack-block-st
 ## 10.0.1
 # Update cinder.conf mode from 0644 to 0640
 * Add attribute for ibmnas_platform_type
+* Allow cafile, insecure, memcached_servers, memcache_security_strategy, memcache_secret_key and hash_algorithms to be configurable
 
 ## 10.0.0
 * Upgrading to Juno

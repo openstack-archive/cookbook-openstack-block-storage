@@ -71,6 +71,24 @@ default['openstack']['block-storage']['api']['auth']['cache_dir'] = '/var/cache/
 
 default['openstack']['block-storage']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
 
+# A list of memcached server(s) to use for caching
+default['openstack']['block-storage']['api']['auth']['memcached_servers'] = nil
+
+# Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT
+default['openstack']['block-storage']['api']['auth']['memcache_security_strategy'] = nil
+
+# This string is used for key derivation
+default['openstack']['block-storage']['api']['auth']['memcache_secret_key'] = nil
+
+# Hash algorithms to use for hashing PKI tokens
+default['openstack']['block-storage']['api']['auth']['hash_algorithms'] = 'md5'
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections
+default['openstack']['block-storage']['api']['auth']['cafile'] = nil
+
+# Verify HTTPS connections
+default['openstack']['block-storage']['api']['auth']['insecure'] = false
+
 # Maximum allocatable gigabytes
 # Should equal total backend storage, default is 10TB
 default['openstack']['block-storage']['max_gigabytes'] = '10000'

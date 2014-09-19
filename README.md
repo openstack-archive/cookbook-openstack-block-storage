@@ -48,9 +48,14 @@ Attributes
 
 * `openstack["block-storage"]["db"]["username"]` - cinder username for database
 * `openstack["block-storage"]["volume_name_template"]` - Template string to be used to generate volume names
-*  `openstack["block-storage"]["snapshot_name_template"]` - Template string to be used to generate snapshot names
-* `openstack['block-storage']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0 inherited from common cookbook. The default auth API version used to interact with identity service.
-
+* `openstack["block-storage"]["snapshot_name_template"]` - Template string to be used to generate snapshot names
+* `openstack['block-storage']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0 inherited from common cookbook. The default auth API version used to interact with identity service
+* `openstack['block-storage']['api']['auth']['memcached_servers']` - A list of memcached server(s) to use for caching
+* `openstack['block-storage']['api']['auth']['memcache_security_strategy']` - Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT
+* `openstack['block-storage']['api']['auth']['memcache_secret_key']` - This string is used for key derivation
+* `openstack['block-storage']['api']['auth']['hash_algorithms']` - Hash algorithms to use for hashing PKI tokens
+* `openstack['block-storage']['api']['auth']['cafile']` - A PEM encoded Certificate Authority to use when verifying HTTPs connections
+* `openstack['block-storage']['api']['auth']['insecure']` - Set whether to verify HTTPS connections
 MQ attributes
 -------------
 * `openstack["block-storage"]["mq"]["service_type"]` - Select qpid or rabbitmq. default rabbitmq
