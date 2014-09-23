@@ -49,6 +49,11 @@ default['openstack']['block-storage']['control_exchange'] = 'cinder'
 default['openstack']['block-storage']['region'] = node['openstack']['region']
 default['openstack']['block-storage']['scheduler_role'] = 'os-block-storage-scheduler'
 
+# Number of workers for OpenStack Volume API service. The
+# default is equal to the number of CPUs available. (integer
+# value)
+default['openstack']['block-storage']['osapi_volume_workers'] = [8, node['cpu']['total'].to_i].min
+
 # Template strings to be used to generate resource names
 default['openstack']['block-storage']['volume_name_template'] = 'volume-%s'
 default['openstack']['block-storage']['snapshot_name_template'] = 'snapshot-%s'

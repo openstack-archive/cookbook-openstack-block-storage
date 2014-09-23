@@ -221,6 +221,11 @@ osapi_volume_listen=<%= @volume_api_bind_address %>
 #### (IntOpt) port for os volume api to listen
 osapi_volume_listen_port=<%= @volume_api_bind_port %>
 
+# Number of workers for OpenStack Volume API service. The
+# default is equal to the number of CPUs available. (integer
+# value)
+osapi_volume_workers=<%= node["openstack"]["block-storage"]["osapi_volume_workers"] %>
+
 ######## defined in cinder.test ########
 
 # sqlite_clean_db=clean.sqlite
