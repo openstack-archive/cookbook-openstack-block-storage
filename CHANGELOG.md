@@ -1,6 +1,9 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+## 9.4.2
+* Updated Berksfile.lock for the UTF8 issue in common
+
 ## 9.4.1
 * Add support for LVMISCSIDriver driver using block devices with LVM
 
