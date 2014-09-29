@@ -456,15 +456,24 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^nfs_sparsed_volumes=ibmnas_nfs_sparsed_volumes_value$/)
           end
 
-          %w(nas_ip nas_login nas_ssh_port).each do |attr|
+          %w(nas_ip nas_login nas_ssh_port ibmnas_platform_type).each do |attr|
             it "has a ibmnas #{attr} attribute" do
               node.set['openstack']['block-storage']['ibmnas'][attr] = "ibmnas_#{attr}_value"
               expect(chef_run).to render_file(file.name).with_content(/^#{attr}=ibmnas_#{attr}_value$/)
             end
           end
 
-          it 'has a nas_password attribute' do
-            expect(chef_run).to render_file(file.name).with_content(/^nas_password=#{test_pass}$/)
+          it 'has a default attributes' do
+            %w(nas_ip=127.0.0.1
+               nas_login=admin
+               nas_password=test_pass
+               nas_ssh_port=22
+               ibmnas_platform_type=v7ku
+               nfs_sparsed_volumes=true
+               nfs_mount_point_base=/mnt/cinder-volumes
+               nfs_shares_config=/etc/cinder/nfs_shares.conf).each do |attr|
+              expect(chef_run).to render_file(file.name).with_content(/^#{attr}$/)
+            end
           end
         end
 

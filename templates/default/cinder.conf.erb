@@ -848,6 +848,10 @@ nas_password=<%= @ibmnas_pass %>
 
 nas_ssh_port=<%= node["openstack"]["block-storage"]["ibmnas"]["nas_ssh_port"] %>
 #### (StrOpt) IP address of IBMNAS storage
+
+ibmnas_platform_type=<%= node["openstack"]["block-storage"]["ibmnas"]["ibmnas_platform_type"] %>
+#### (StrOpt) IBMNAS platform type to be used as backend storage
+
 <% end %>
 
 ######## defined in cinder.volume.xiv ########
