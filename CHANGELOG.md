@@ -8,6 +8,8 @@ This file is used to list changes made in each version of the openstack-block-st
 
 * Bump Chef gem to 11.16
 
+* Update deprecated keystoneclient.middleware.auth_token in api-paste.ini
+
 ## 10.0.0
 * Upgrading to Juno
 * Sync conf files with Juno
