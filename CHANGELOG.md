@@ -6,6 +6,8 @@ This file is used to list changes made in each version of the openstack-block-st
 * Add attribute for ibmnas_platform_type
 * Allow cafile, insecure, memcached_servers, memcache_security_strategy, memcache_secret_key and hash_algorithms to be configurable
 
+* Bump Chef gem to 11.16
+
 ## 10.0.0
 * Upgrading to Juno
 * Sync conf files with Juno
