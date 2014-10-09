@@ -193,6 +193,7 @@ describe 'openstack-block-storage::cinder-common' do
           %w(debug verbose lock_path notification_driver
              storage_availability_zone quota_volumes quota_gigabytes quota_driver
              volume_name_template snapshot_name_template osapi_volume_workers
+             use_default_quota_class quota_snapshots no_snapshot_gb_quota
              control_exchange max_gigabytes).each do |attr_key|
             it "has a #{attr_key} attribute" do
               node.set['openstack']['block-storage'][attr_key] = "#{attr_key}_value"

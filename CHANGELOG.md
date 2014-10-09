@@ -10,6 +10,8 @@ This file is used to list changes made in each version of the openstack-block-st
 
 * Update deprecated keystoneclient.middleware.auth_token in api-paste.ini
 
+* Add attributes for quota_snapshots, no_snapshot_gb_quota and use_default_quota_class
+
 ## 10.0.0
 * Upgrading to Juno
 * Sync conf files with Juno

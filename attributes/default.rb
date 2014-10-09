@@ -101,6 +101,9 @@ default['openstack']['block-storage']['storage_availability_zone'] = 'nova'
 default['openstack']['block-storage']['quota_volumes'] = '10'
 default['openstack']['block-storage']['quota_gigabytes'] = '1000'
 default['openstack']['block-storage']['quota_driver'] = 'cinder.quota.DbQuotaDriver'
+default['openstack']['block-storage']['quota_snapshots'] = 10
+default['openstack']['block-storage']['no_snapshot_gb_quota'] = false
+default['openstack']['block-storage']['use_default_quota_class'] = true
 
 # Common rpc definitions
 default['openstack']['block-storage']['rpc_thread_pool_size'] = 64
