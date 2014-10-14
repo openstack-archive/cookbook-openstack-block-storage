@@ -20,6 +20,7 @@ The following cookbooks are dependencies:
 * openstack-identity
 * openstack-image
 * selinux (Fedora)
+* python
 
 Usage
 =====
