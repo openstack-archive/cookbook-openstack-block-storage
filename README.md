@@ -57,6 +57,11 @@ Attributes
 * `openstack['block-storage']['api']['auth']['hash_algorithms']` - Hash algorithms to use for hashing PKI tokens
 * `openstack['block-storage']['api']['auth']['cafile']` - A PEM encoded Certificate Authority to use when verifying HTTPs connections
 * `openstack['block-storage']['api']['auth']['insecure']` - Set whether to verify HTTPS connections
+
+Glance Attributes
+-----------------
+* `openstack["block-storage"]["image"]["glance_api_insecure"]` - If True, this indicates that glance-api allows the client to perform insecure SSL(https) requests, this should be the same as the setting in the glance-api service
+
 MQ attributes
 -------------
 * `openstack["block-storage"]["mq"]["service_type"]` - Select qpid or rabbitmq. default rabbitmq

@@ -89,6 +89,11 @@ default['openstack']['block-storage']['api']['auth']['cafile'] = nil
 # Verify HTTPS connections
 default['openstack']['block-storage']['api']['auth']['insecure'] = false
 
+# If True, this indicates that glance-api allows the client to perform
+# insecure SSL(https) requests; this should be the same as the setting
+# in the glance-api service.
+default['openstack']['block-storage']['image']['glance_api_insecure'] = false
+
 # Maximum allocatable gigabytes
 # Should equal total backend storage, default is 10TB
 default['openstack']['block-storage']['max_gigabytes'] = '10000'

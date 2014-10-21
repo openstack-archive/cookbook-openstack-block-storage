@@ -96,6 +96,7 @@ template '/etc/cinder/cinder.conf' do
     mq_service_type: mq_service_type,
     mq_password: mq_password,
     rabbit_hosts: rabbit_hosts,
+    glance_scheme: glance_api_endpoint.scheme,
     glance_host: glance_api_endpoint.host,
     glance_port: glance_api_endpoint.port,
     ibmnas_pass: ibmnas_pass,

@@ -8,6 +8,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Bump Chef gem to 11.16
 * Update deprecated keystoneclient.middleware.auth_token in api-paste.ini
 * Add attributes for quota_snapshots, no_snapshot_gb_quota and use_default_quota_class
+* Add glance_api_insecure and make glance_api_servers to be prefixed with scheme
 
 ## 10.0.0
 * Upgrading to Juno

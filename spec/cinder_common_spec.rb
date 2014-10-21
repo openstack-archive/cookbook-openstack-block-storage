@@ -262,6 +262,19 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         context 'glance endpoint' do
+          it 'has a glance_api_servers attribute' do
+            expect(chef_run).to render_file(file.name).with_content(%r{^glance_api_servers=scheme://host:port$})
+          end
+
+          it 'has a glance_api_insecure attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^glance_api_insecure=false$/)
+          end
+
+          it 'sets insecure for glance' do
+            node.set['openstack']['block-storage']['image']['glance_api_insecure'] = true
+            expect(chef_run).to render_file(file.name).with_content(/^glance_api_insecure=true$/)
+          end
+
           %w(host port).each do |glance_attr|
             it "has a glance #{glance_attr} attribute" do
               expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=#{glance_attr}$/)
