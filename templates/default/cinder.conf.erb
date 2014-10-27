@@ -744,6 +744,10 @@ san_login=<%= node["openstack"]["block-storage"]["storwize"]["san_login"] %>
 san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_key"] %>
 #### (StrOpt) Filename of private key to use for SSH authentication
 
+san_password=<%= @storwize_pass %>
+#### (StrOpt) Password for SAN controller
+
+
 <% else %>
 # san_thin_provision=true
 #### (BoolOpt) Use thin provisioning for SAN volumes?

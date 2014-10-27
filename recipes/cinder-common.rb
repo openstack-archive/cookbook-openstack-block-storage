@@ -46,6 +46,8 @@ elsif mq_service_type == 'qpid'
 end
 
 case node['openstack']['block-storage']['volume']['driver']
+when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
+  storwize_pass = get_password 'user', node['openstack']['block-storage']['storwize']['san_login']
 when 'cinder.volume.drivers.solidfire.SolidFire'
   solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
 when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
@@ -101,6 +103,7 @@ template '/etc/cinder/cinder.conf' do
     glance_port: glance_api_endpoint.port,
     ibmnas_pass: ibmnas_pass,
     solidfire_pass: solidfire_pass,
+    storwize_pass: storwize_pass,
     volume_api_bind_address: cinder_api_bind.host,
     volume_api_bind_port: cinder_api_bind.port,
     vmware_host_pass: vmware_host_pass,

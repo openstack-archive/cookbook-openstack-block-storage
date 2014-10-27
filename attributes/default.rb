@@ -132,7 +132,6 @@ default['openstack']['block-storage']['service_role'] = 'admin'
 default['openstack']['block-storage']['san']['san_ip'] = '127.0.0.1'
 default['openstack']['block-storage']['san']['san_login'] = 'admin'
 default['openstack']['block-storage']['san']['san_private_key'] = '/v7000_rsa'
-default['openstack']['block-storage']['san']['san_password'] = 'san_password'
 
 # NFS support
 default['openstack']['block-storage']['nfs']['nas_ip'] = '127.0.0.1'
@@ -180,7 +179,6 @@ default['openstack']['block-storage']['storwize']['storwize_svc_multihostmap_ena
 # SolidFire Support
 default['openstack']['block-storage']['solidfire']['san_ip'] = node['openstack']['block-storage']['san']['san_ip']
 default['openstack']['block-storage']['solidfire']['san_login'] = node['openstack']['block-storage']['san']['san_login']
-default['openstack']['block-storage']['solidfire']['san_password'] = node['openstack']['block-storage']['san']['san_password']
 default['openstack']['block-storage']['solidfire']['sf_emulate'] = 'False'
 default['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = nil
 

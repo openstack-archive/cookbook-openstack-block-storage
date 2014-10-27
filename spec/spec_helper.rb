@@ -49,9 +49,6 @@ shared_context 'block-storage-stubs' do
       .with('user', 'guest')
       .and_return('mq-pass')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
-      .with('user', 'solidfire_admin')
-      .and_return('solidfire_testpass')
-    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('service', 'netapp')
       .and_return 'netapp-pass'
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)

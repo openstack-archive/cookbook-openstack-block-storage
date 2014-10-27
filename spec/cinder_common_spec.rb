@@ -564,6 +564,7 @@ describe 'openstack-block-storage::cinder-common' do
           it 'has a default attribute' do
             %w(san_ip=127.0.0.1
                san_login=admin
+               san_password=test_pass
                san_private_key=/v7000_rsa
                storwize_svc_volpool_name=volpool
                storwize_svc_vol_rsize=2
@@ -640,6 +641,10 @@ describe 'openstack-block-storage::cinder-common' do
           it 'has solidfire sf_emulate set' do
             node.set['openstack']['block-storage']['solidfire']['sf_emulate'] = 'test'
             expect(chef_run).to render_file(file.name).with_content(/^sf_emulate_512=test$/)
+          end
+
+          it 'has solidfire password' do
+            expect(chef_run).to render_file(file.name).with_content(/^san_password=test_pass$/)
           end
 
           %w(san_login san_ip).each do |attr|
