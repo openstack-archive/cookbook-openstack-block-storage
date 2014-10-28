@@ -211,6 +211,10 @@ describe 'openstack-block-storage::volume' do
         )
       end
 
+      it 'upgrades svc package' do
+        expect(chef_run).to upgrade_package 'sysfsutils'
+      end
+
       context 'ISCSI' do
         before do
           node.set['openstack']['block-storage']['storwize']['storwize_svc_connection_protocol'] = 'iSCSI'

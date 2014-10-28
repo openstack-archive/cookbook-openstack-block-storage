@@ -306,6 +306,7 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
     'cinder_emc_packages' => ['pywbem'],
+    'cinder_svc_packages' => ['sysfsutils'],
     'package_overrides' => ''
   }
 when 'suse'
@@ -325,7 +326,8 @@ when 'suse'
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgtd',
     'cinder_nfs_packages' => ['nfs-utils'],
-    'cinder_emc_packages' => ['python-pywbem']
+    'cinder_emc_packages' => ['python-pywbem'],
+    'cinder_svc_packages' => ['sysfsutils']
   }
 when 'debian'
   # operating system user and group names
@@ -345,6 +347,7 @@ when 'debian'
     'cinder_iscsitarget_service' => 'tgt',
     'cinder_nfs_packages' => ['nfs-common'],
     'cinder_emc_packages' => ['python-pywbem'],
+    'cinder_svc_packages' => ['sysfsutils'],
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

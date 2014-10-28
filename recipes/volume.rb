@@ -118,6 +118,13 @@ when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
     group node['openstack']['block-storage']['group']
   end
 
+  platform_options['cinder_svc_packages'].each do |pkg|
+    package pkg do
+      options platform_options['package_overrides']
+      action :upgrade
+    end
+  end
+
 when 'cinder.volume.drivers.gpfs.GPFSDriver'
   directory node['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] do
     mode '0755'
