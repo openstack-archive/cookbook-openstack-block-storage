@@ -94,6 +94,9 @@ glance_ca_certificates_file=<%= node['openstack']['block-storage']['image']['gla
 # glance_num_retries=0
 #### (IntOpt) Number retries when downloading an image from glance
 
+glance_api_version=<%= node['openstack']['block-storage']['image']['glance_api_version'] %>
+#### (IntOpt) Version of the glance API to use
+
 # scheduler_topic=cinder-scheduler
 #### (StrOpt) the topic scheduler nodes listen on
 

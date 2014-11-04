@@ -97,6 +97,9 @@ default['openstack']['block-storage']['image']['glance_api_insecure'] = false
 # Location of ca certificates file to use for glance client requests
 default['openstack']['block-storage']['image']['glance_ca_certificates_file'] = nil
 
+# Which version of the glance API cinder should use when talking to glance.
+default['openstack']['block-storage']['image']['glance_api_version'] = 1
+
 # Maximum allocatable gigabytes
 # Should equal total backend storage, default is 10TB
 default['openstack']['block-storage']['max_gigabytes'] = '10000'

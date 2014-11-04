@@ -266,6 +266,10 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(%r{^glance_api_servers=scheme://host:port$})
           end
 
+          it 'has glance_api_version attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^glance_api_version=1$/)
+          end
+
           it 'has a glance_api_insecure attribute' do
             expect(chef_run).to render_file(file.name).with_content(/^glance_api_insecure=false$/)
           end
