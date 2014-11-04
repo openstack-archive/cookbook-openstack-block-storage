@@ -88,6 +88,9 @@ glance_api_servers=<%= @glance_scheme %>://<%= @glance_host %>:<%= @glance_port 
 glance_api_insecure=<%= node['openstack']['block-storage']['image']['glance_api_insecure'] %>
 #### (BoolOpt) Allow to perform insecure SSL (https) requests to 'glance'
 
+glance_ca_certificates_file=<%= node['openstack']['block-storage']['image']['glance_ca_certificates_file'] %>
+#### (StrOpt) Location of ca certificates file to use for glance client requests
+
 # glance_num_retries=0
 #### (IntOpt) Number retries when downloading an image from glance
 

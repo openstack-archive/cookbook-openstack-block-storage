@@ -10,6 +10,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Add attributes for quota_snapshots, no_snapshot_gb_quota and use_default_quota_class
 * Add glance_api_insecure and make glance_api_servers to be prefixed with scheme
 * Add sysfsutils package for storwize/SVC driver
+* Add glance_ca_certificates_file
 
 ## 10.0.0
 * Upgrading to Juno

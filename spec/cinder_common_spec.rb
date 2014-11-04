@@ -275,6 +275,15 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^glance_api_insecure=true$/)
           end
 
+          it 'has a glance_ca_certificates_file attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^glance_ca_certificates_file=$/)
+          end
+
+          it 'sets glance_ca_certificates_file attribute' do
+            node.set['openstack']['block-storage']['image']['glance_ca_certificates_file'] = 'dir/to/path'
+            expect(chef_run).to render_file(file.name).with_content(%r{^glance_ca_certificates_file=dir/to/path$})
+          end
+
           %w(host port).each do |glance_attr|
             it "has a glance #{glance_attr} attribute" do
               expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=#{glance_attr}$/)

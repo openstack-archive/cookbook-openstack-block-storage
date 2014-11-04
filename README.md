@@ -61,6 +61,7 @@ Attributes
 Glance Attributes
 -----------------
 * `openstack["block-storage"]["image"]["glance_api_insecure"]` - If True, this indicates that glance-api allows the client to perform insecure SSL(https) requests, this should be the same as the setting in the glance-api service
+* `openstack["block-storage"]["image"]["glance_ca_certificates_file"]` - Location of ca certificates file to use for glance client requests
 
 MQ attributes
 -------------
