@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Add glance_api_insecure and make glance_api_servers to be prefixed with scheme
 * Add sysfsutils package for storwize/SVC driver
 * Add glance_ca_certificates_file
+* Add default_volume_type config option
 
 ## 10.0.0
 * Upgrading to Juno

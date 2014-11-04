@@ -284,6 +284,11 @@ default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_k
 #              }
 default['openstack']['block-storage']['volume']['multi_backend'] = nil
 
+# Default volume-type for volumes to be created as when client does not request
+# a specific type.  Volume types are configured from cinder-client and
+# will reference the backend name.
+default['openstack']['block-storage']['volume']['default_volume_type'] = nil
+
 # Misc option support
 # Allow additional strings to be added to cinder.conf
 # For example: ['# Comment', 'key=value']

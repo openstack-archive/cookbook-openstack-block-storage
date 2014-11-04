@@ -193,6 +193,7 @@ Cinder attributes
 
 ### Multiple backends attributes ###
 * `openstack['block-storage']['volume']['multi_backend']` - Hash map to indicate multiple backends sections, e.g. { 'lvm1' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm1' }, 'lvm2' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm2' } }
+* `default['openstack']['block-storage']['volume']['default_volume_type']` - String to indicate the volume_type that maps to one of the configured volume backends
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
 

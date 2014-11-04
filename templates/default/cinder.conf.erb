@@ -614,6 +614,8 @@ volume_driver=<%= node["openstack"]["block-storage"]["volume"]["driver"] %>
 # volume_force_update_capabilities=false
 #### (BoolOpt) if True will force update capabilities on each check
 
+# Default volume type to use (string value)
+default_volume_type=<%= node["openstack"]["block-storage"]["volume"]["default_volume_type"] %>
 
 ######## defined in cinder.volume.netapp ########
 

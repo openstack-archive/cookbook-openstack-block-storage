@@ -782,6 +782,7 @@ describe 'openstack-block-storage::cinder-common' do
               }
             }
             node.set['openstack']['block-storage']['volume']['volume_group'] = 'multi-lvm-group'
+            node.set['openstack']['block-storage']['volume']['default_volume_type'] = 'some-type-name'
             node.set['openstack']['block-storage']['rbd_pool'] = 'multi-rbd-pool'
             node.set['openstack']['block-storage']['netapp']['dfm_login'] = 'multi-netapp-login'
             node.set['openstack']['block-storage']['netapp']['netapp_server_hostname'] = ['netapp-host-1', 'netapp-host-2']
@@ -834,6 +835,10 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^volume_group=multi-lvm-group$/)
           end
 
+          it 'set default_volume_type option' do
+            expect(chef_run).to render_file(file.name).with_content(/^default_volume_type=some-type-name$/)
+          end
+
           it 'set rbd option' do
             expect(chef_run).to render_file(file.name).with_content(/^rbd_pool=multi-rbd-pool$/)
           end
@@ -869,10 +874,15 @@ describe 'openstack-block-storage::cinder-common' do
           it 'set gpfs option' do
             expect(chef_run).to render_file(file.name).with_content(/^gpfs_mount_point_base = multi-gpfs-mnt$/)
           end
+
         end
 
         it 'no multiple backends configured' do
           expect(chef_run).to_not render_file(file.name).with_content(/^enabled_backends = [\w\W]+$/)
+        end
+
+        it 'does not set default_volume_type' do
+          expect(chef_run).to_not render_file(file.name).with_content(/^default_volume_type=.+$/)
         end
       end
     end
