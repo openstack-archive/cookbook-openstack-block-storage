@@ -33,9 +33,9 @@ describe 'openstack-block-storage::identity_registration' do
         service_type: 'volume',
         service_description: 'Cinder Volume Service',
         endpoint_region: 'RegionOne',
-        endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-        endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-        endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+        endpoint_adminurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+        endpoint_internalurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+        endpoint_publicurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s'
       )
     end
 
@@ -50,9 +50,9 @@ describe 'openstack-block-storage::identity_registration' do
           service_type: 'volume',
           service_description: 'Cinder Volume Service',
           endpoint_region: 'RegionOne',
-          endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+          endpoint_adminurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+          endpoint_internalurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+          endpoint_publicurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s'
         )
       end
 
