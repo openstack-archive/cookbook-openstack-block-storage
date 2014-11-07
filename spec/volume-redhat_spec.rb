@@ -113,7 +113,7 @@ describe 'openstack-block-storage::volume' do
     describe 'IBM GPFS volume driver' do
       before do
         @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
-          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.gpfs.GPFSDriver'
+          n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
           n.set['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = 'volumes'
         end
 
@@ -126,15 +126,21 @@ describe 'openstack-block-storage::volume' do
           /^gpfs_mount_point_base = volumes$/)
       end
 
-      it 'verifies gpfs_images_dir' do
+      it 'verifies gpfs_images_dir and gpfs_images_share_mode is set with default value' do
         @chef_run.node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'images'
         expect(@chef_run).to render_file(@conf).with_content(
           /^gpfs_images_dir = images$/)
-      end
-
-      it 'verifies gpfs_images_share_mode is default' do
         expect(@chef_run).to render_file(@conf).with_content(
           /^gpfs_images_share_mode = copy_on_write$/)
+      end
+
+      it 'verifies gpfs_images_dir and gpfs_images_share_mode set correctly' do
+        @chef_run.node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'images'
+        @chef_run.node.set['openstack']['block-storage']['gpfs']['gpfs_images_share_mode'] = 'copy'
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_images_dir = images$/)
+        expect(@chef_run).to render_file(@conf).with_content(
+          /^gpfs_images_share_mode = copy$/)
       end
 
       it 'verifies gpfs_sparse_volumes is default' do

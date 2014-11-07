@@ -706,10 +706,10 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'gpfs settings' do
           before do
-            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.gpfs.GPFSDriver'
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
           end
 
-          %w(gpfs_mount_point_base gpfs_images_share_mode gpfs_max_clone_depth
+          %w(gpfs_mount_point_base gpfs_max_clone_depth
              gpfs_sparse_volumes gpfs_storage_pool).each do |attr|
             it "has gpfs #{attr} set" do
               node.set['openstack']['block-storage']['gpfs'][attr] = "gpfs_#{attr}_value"
@@ -720,11 +720,13 @@ describe 'openstack-block-storage::cinder-common' do
           it 'has no gpfs_images_dir line without the attribute' do
             node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = nil
             expect(chef_run).not_to render_file(file.name).with_content(/^gpfs_images_dir = /)
+            expect(chef_run).not_to render_file(file.name).with_content(/^gpfs_images_share_mode = /)
           end
 
           it 'has gpfs_images_dir line with attribute present' do
             node.set['openstack']['block-storage']['gpfs']['gpfs_images_dir'] = 'gpfs_images_dir_value'
             expect(chef_run).to render_file(file.name).with_content(/^gpfs_images_dir = gpfs_images_dir_value$/)
+            expect(chef_run).to render_file(file.name).with_content(/^gpfs_images_share_mode = copy_on_write$/)
           end
 
           it 'templates misc_cinder array correctly' do
@@ -777,7 +779,7 @@ describe 'openstack-block-storage::cinder-common' do
                 'multi_vmware' => 'multi-vmware'
               },
               'gpfs' => {
-                'volume_driver' => 'cinder.volume.drivers.gpfs.GPFSDriver',
+                'volume_driver' => 'cinder.volume.drivers.ibm.gpfs.GPFSDriver',
                 'multi_gpfs' => 'multi-gpfs'
               }
             }
@@ -828,7 +830,7 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.vmware\.vmdk\.VMwareVcVmdkDriver$/)
 
             expect(chef_run).to render_file(file.name).with_content(/^\[gpfs\]$/)
-            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.gpfs\.GPFSDriver$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.ibm\.gpfs\.GPFSDriver$/)
           end
 
           it 'set lvm option' do

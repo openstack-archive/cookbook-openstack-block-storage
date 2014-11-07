@@ -967,7 +967,7 @@ vmware_image_transfer_timeout_secs = <%= node['openstack']['block-storage']['vmw
 vmware_max_objects_retrieval = <%= node['openstack']['block-storage']['vmware']['vmware_max_objects_retrieval'] %>
 <% end %>
 
-<% if @enabled_drivers.include?('cinder.volume.drivers.gpfs.GPFSDriver') %>
+<% if @enabled_drivers.include?('cinder.volume.drivers.ibm.gpfs.GPFSDriver') %>
 ######## defined in cinder.openstack.volume.drivers.ibm.gpfs ########
 
 # Specifies the path of the GPFS directory where Block Storage
@@ -979,7 +979,6 @@ gpfs_mount_point_base = <%= node["openstack"]["block-storage"]["gpfs"]["gpfs_mou
 # Leave undefined if not storing images in GPFS. (string
 # value)
 gpfs_images_dir = <%= node['openstack']['block-storage']['gpfs']['gpfs_images_dir'] %>
-<% end %>
 
 # Specifies the type of image copy to be used.  Set this when
 # the Image service repository also uses GPFS so that image
@@ -990,6 +989,7 @@ gpfs_images_dir = <%= node['openstack']['block-storage']['gpfs']['gpfs_images_di
 # strategy is used and unmodified blocks of the image file are
 # shared efficiently. (string value)
 gpfs_images_share_mode = <%= node['openstack']['block-storage']['gpfs']['gpfs_images_share_mode'] %>
+<% end %>
 
 # Specifies an upper limit on the number of indirections
 # required to reach a specific block due to snapshots or

@@ -106,7 +106,7 @@ Cinder attributes
      - **cinder.volume.drivers.rbd.RBDDriver** - Ceph Block Device driver
      - **cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver** - NetApp NFS direct driver for 7-Mode storage controller
      - **cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver** -  IBM Storwize/SVC driver
-     - **cinder.volume.drivers.gpfs.GPFSDriver** -  IBM General Parallel File System driver
+     - **cinder.volume.drivers.ibm.gpfs.GPFSDriver** -  IBM General Parallel File System driver
      - **cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver** - IBM Storwize V7000 Unified and IBM SONAS Cinder driver
      - **cinder.volume.drivers.lvm.LVMISCSIDriver** - LVM Driver
      - **cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver** - EMC SMI-S iSCSI Driver

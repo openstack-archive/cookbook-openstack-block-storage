@@ -125,7 +125,7 @@ when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
     end
   end
 
-when 'cinder.volume.drivers.gpfs.GPFSDriver'
+when 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
   directory node['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] do
     mode '0755'
     owner node['openstack']['block-storage']['user']
