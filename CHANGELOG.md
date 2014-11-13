@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Add glance_ca_certificates_file
 * Add default_volume_type config option
 * Update gpfs volume driver path and fix gpfs_images_share_mode initialization
+* Change to cinder v2 service and endpoint
 
 ## 10.0.0
 * Upgrading to Juno
