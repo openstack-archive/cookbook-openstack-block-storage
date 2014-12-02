@@ -567,8 +567,6 @@ describe 'openstack-block-storage::cinder-common' do
 
           it 'has a default attribute' do
             %w(san_ip=127.0.0.1
-               san_login=admin
-               san_password=test_pass
                san_private_key=/v7000_rsa
                storwize_svc_volpool_name=volpool
                storwize_svc_vol_rsize=2
@@ -588,7 +586,6 @@ describe 'openstack-block-storage::cinder-common' do
 
           it 'has a overridden attribute' do
             %w(san_ip
-               san_login
                san_private_key
                storwize_svc_volpool_name
                storwize_svc_vol_rsize
@@ -603,6 +600,17 @@ describe 'openstack-block-storage::cinder-common' do
                storwize_svc_multihostmap_enabled).each do |attr|
               node.set['openstack']['block-storage']['storwize'][attr] = "storwize_#{attr}_value"
               expect(chef_run).to render_file(file.name).with_content(/^#{attr}=storwize_#{attr}_value$/)
+            end
+          end
+
+          context 'storwize with login and password' do
+            it 'has a login and password' do
+              node.set['openstack']['block-storage']['storwize']['san_private_key'] = ''
+              %w(san_login=admin
+                 san_password=test_pass
+                 san_private_key=).each do |attr|
+                expect(chef_run).to render_file(file.name).with_content(/^#{attr}$/)
+              end
             end
           end
 
