@@ -1,6 +1,9 @@
 openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
+## 10.1.0
+* Add disable logic for stage fix to tgtd issue on RHEL 7
+
 ## 10.0.1
 # Update cinder.conf mode from 0644 to 0640
 * Add attribute for ibmnas_platform_type

@@ -20,6 +20,11 @@ REDHAT_OPTS = {
   version: '6.5',
   log_level: LOG_LEVEL
 }
+REDHAT7_OPTS = {
+  platform: 'redhat',
+  version: '7.0',
+  log_level: LOG_LEVEL
+}
 UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '12.04',

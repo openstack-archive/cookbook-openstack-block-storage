@@ -233,14 +233,19 @@ service 'cinder-volume' do
   subscribes :restart, 'template[/etc/cinder/cinder.conf]'
 end
 
-service 'iscsitarget' do
-  service_name platform_options['cinder_iscsitarget_service']
-  supports status: true, restart: true
-  action :enable
-end
+unless node['platform_family'] == 'rhel' && node['platform_version'].to_i == 7
+  # On RHEL7, tgtd has been removed, disable it here just for now.
+  # This is a stage fix for bug #1400958, new logic should be added to fully
+  # support new targetcli on RHEL7
+  service 'iscsitarget' do
+    service_name platform_options['cinder_iscsitarget_service']
+    supports status: true, restart: true
+    action :enable
+  end
 
-template '/etc/tgt/targets.conf' do
-  source 'targets.conf.erb'
-  mode   00600
-  notifies :restart, 'service[iscsitarget]', :immediately
+  template '/etc/tgt/targets.conf' do
+    source 'targets.conf.erb'
+    mode   00600
+    notifies :restart, 'service[iscsitarget]', :immediately
+  end
 end

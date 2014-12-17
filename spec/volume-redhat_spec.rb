@@ -189,4 +189,20 @@ describe 'openstack-block-storage::volume' do
     end
 
   end
+
+  describe 'redhat' do
+    let(:runner) { ChefSpec::Runner.new(REDHAT7_OPTS) }
+    let(:node) { runner.node }
+    let(:chef_run) { runner.converge(described_recipe) }
+
+    include_context 'block-storage-stubs'
+
+    it 'disable tgtd for rhel7' do
+      # test temp solution for RHEL7 to disable tgtd
+      # stage fix for bug #1400958
+      expect(chef_run).not_to upgrade_package('scsi-target-utils')
+      expect(chef_run).not_to enable_service('iscsitarget')
+      expect(chef_run).not_to create_template('/etc/tgt/targets.conf')
+    end
+  end
 end

@@ -319,6 +319,13 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_svc_packages' => ['sysfsutils'],
     'package_overrides' => ''
   }
+  if platform_family == 'rhel' && platform_version.to_i == 7
+    # On RHEL7, tgtd has been removed, disable it here just for now.
+    # This is a stage fix for bug #1400958, new logic should be added to fully
+    # support new targetcli on RHEL7
+    default['openstack']['block-storage']['platform']['cinder_iscsitarget_packages'] = []
+    default['openstack']['block-storage']['platform']['cinder_iscsitarget_service'] = []
+  end
 when 'suse'
   # operating system user and group names
   default['openstack']['block-storage']['user'] = 'openstack-cinder'
