@@ -265,12 +265,16 @@ default['openstack']['block-storage']['volume']['iscsi_ip_address'] = node['ipad
 default['openstack']['block-storage']['volume']['iscsi_port'] = '3260'
 
 # Ceph/RADOS options
-default['openstack']['block-storage']['rbd_pool'] = 'rbd'
-default['openstack']['block-storage']['rbd_user'] = 'cinder'
-default['openstack']['block-storage']['rbd_secret_uuid'] = nil
-# make this a valid uuid for when node['openstack']['developer_mode'] = true
-default['openstack']['block-storage']['rbd_secret_name'] = '00000000-0000-0000-0000-000000000000'
-default['openstack']['block-storage']['rbd_key_name'] = 'openstack_image_cephx_key'
+default['openstack']['block-storage']['rbd']['cinder']['pool'] = 'volumes'
+default['openstack']['block-storage']['rbd']['glance']['pool'] = 'images'
+default['openstack']['block-storage']['rbd']['nova']['pool'] = 'instances'
+default['openstack']['block-storage']['rbd']['user'] = 'cinder'
+default['openstack']['block-storage']['rbd']['secret_uuid'] = '00000000-0000-0000-0000-000000000000'
+default['openstack']['block-storage']['rbd']['flatten_volume'] = false
+default['openstack']['block-storage']['rbd']['max_clone_depth'] = 5
+default['openstack']['block-storage']['rbd']['chunk_size'] = 4
+default['openstack']['block-storage']['rbd']['rados_timeout'] = '-1'
+default['openstack']['block-storage']['rbd']['conf_dir'] = '/etc/ceph/ceph.conf'
 
 # Multiple backend support
 # Allow multiple backends configured in cinder.conf

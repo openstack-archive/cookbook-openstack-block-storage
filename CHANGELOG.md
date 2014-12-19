@@ -20,6 +20,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Add support for san_password with ibm.storwize_svc.StorwizeSVCDriver
 * Add glance_api_version config option
 * Allow san_private_key to be used instead of san_login for Storwize
+* Add dependency on upstream ceph cookbook for better key management
 
 ## 10.0.0
 * Upgrading to Juno

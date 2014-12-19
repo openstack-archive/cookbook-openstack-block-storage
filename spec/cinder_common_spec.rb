@@ -444,11 +444,17 @@ describe 'openstack-block-storage::cinder-common' do
             node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
           end
 
-          %w(rbd_pool rbd_user rbd_secret_uuid).each do |attr|
-            it "has a #{attr} attribute" do
-              node.set['openstack']['block-storage'][attr] = "#{attr}_value"
-              expect(chef_run).to render_file(file.name).with_content(/^#{attr}=#{attr}_value$/)
-            end
+          it 'has a rbd_pool attribute' do
+            node.set['openstack']['block-storage']['rbd']['cinder']['pool'] = 'cinder_value'
+            expect(chef_run).to render_file(file.name).with_content(/^rbd_pool=cinder_value$/)
+          end
+          it 'has a rbd_user attribute' do
+            node.set['openstack']['block-storage']['rbd']['user'] = 'rbd_user_value'
+            expect(chef_run).to render_file(file.name).with_content(/^rbd_user=rbd_user_value$/)
+          end
+          it 'has a rbd_secret_uuid attribute' do
+            node.set['openstack']['block-storage']['rbd']['secret_uuid'] = 'rbd_secret_uuid_value'
+            expect(chef_run).to render_file(file.name).with_content(/^rbd_secret_uuid=rbd_secret_uuid_value$/)
           end
         end
 
@@ -802,7 +808,7 @@ describe 'openstack-block-storage::cinder-common' do
             }
             node.set['openstack']['block-storage']['volume']['volume_group'] = 'multi-lvm-group'
             node.set['openstack']['block-storage']['volume']['default_volume_type'] = 'some-type-name'
-            node.set['openstack']['block-storage']['rbd_pool'] = 'multi-rbd-pool'
+            node.set['openstack']['block-storage']['rbd']['cinder']['pool'] = 'multi-rbd-pool'
             node.set['openstack']['block-storage']['netapp']['dfm_login'] = 'multi-netapp-login'
             node.set['openstack']['block-storage']['netapp']['netapp_server_hostname'] = ['netapp-host-1', 'netapp-host-2']
             node.set['openstack']['block-storage']['netapp']['netapp_server_port'] = 'multi-netapp-port'

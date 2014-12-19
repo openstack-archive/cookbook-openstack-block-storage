@@ -583,14 +583,43 @@ iscsi_port=<%= node["openstack"]["block-storage"]["volume"]["iscsi_port"] %>
 #### (IntOpt) The port that the iSCSI daemon is listening on
 
 <% if @enabled_drivers.include?("cinder.volume.drivers.rbd.RBDDriver") %>
-rbd_pool=<%= node["openstack"]["block-storage"]["rbd_pool"] %>
-#### (StrOpt) the RADOS pool in which rbd volumes are stored
 
-rbd_user=<%= node["openstack"]["block-storage"]["rbd_user"] %>
-#### (StrOpt) the RADOS client name for accessing rbd volumes
+#
+# Options defined in cinder.volume.drivers.rbd
+#
 
-rbd_secret_uuid=<%= node["openstack"]["block-storage"]["rbd_secret_uuid"] %>
-#### (StrOpt) the libvirt uuid of the secret for the rbd_uservolumes
+# The RADOS pool where rbd volumes are stored (string value)
+rbd_pool=<%= node["openstack"]["block-storage"]["rbd"]["cinder"]["pool"] %>
+
+# The RADOS client name for accessing rbd volumes - only set
+# when using cephx authentication (string value)
+rbd_user=<%= node["openstack"]["block-storage"]["rbd"]["user"] %>
+
+# Path to the ceph configuration file (string value)
+rbd_ceph_conf=<%= node["openstack"]["block-storage"]["rbd"]["conf_dir"] %>
+
+# Flatten volumes created from snapshots to remove dependency
+# from volume to snapshot (boolean value)
+rbd_flatten_volume_from_snapshot=<%= node["openstack"]["block-storage"]["rbd"]["flatten_volume"] %>
+
+# The libvirt uuid of the secret for the rbd_user volumes
+# (string value)
+rbd_secret_uuid=<%= node["openstack"]["block-storage"]["rbd"]["secret_uuid"] %>
+
+# Maximum number of nested volume clones that are taken before
+# a flatten occurs. Set to 0 to disable cloning. (integer
+# value)
+rbd_max_clone_depth=<%= node["openstack"]["block-storage"]["rbd"]["max_clone_depth"] %>
+
+# Volumes will be chunked into objects of this size (in
+# megabytes). (integer value)
+rbd_store_chunk_size=<%= node["openstack"]["block-storage"]["rbd"]["chunk_size"] %>
+
+# Timeout value (in seconds) used when connecting to ceph
+# cluster. If value < 0, no timeout is set and default
+# librados value is used. (integer value)
+rados_connect_timeout=<%= node["openstack"]["block-storage"]["rbd"]["rados_timeout"] %>
+
 <% end %>
 # volume_tmp_dir=<None>
 #### (StrOpt) where to store temporary image files if the volume driver

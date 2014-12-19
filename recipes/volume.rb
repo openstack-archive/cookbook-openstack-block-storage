@@ -56,31 +56,25 @@ when 'cinder.volume.drivers.netapp.iscsi.NetAppISCSIDriver'
   node.override['openstack']['block-storage']['netapp']['dfm_password'] = get_password 'service', 'netapp'
 
 when 'cinder.volume.drivers.rbd.RBDDriver'
-  # this is used in the cinder.conf template
-  node.override['openstack']['block-storage']['rbd_secret_uuid'] = get_secret node['openstack']['block-storage']['rbd_secret_name']
+  include_recipe 'ceph'
 
-  rbd_user = node['openstack']['block-storage']['rbd_user']
-  rbd_key = get_password 'service', node['openstack']['block-storage']['rbd_key_name']
+  cinder_pool = node['openstack']['block-storage']['rbd']['cinder']['pool']
+  nova_pool = node['openstack']['block-storage']['rbd']['nova']['pool']
+  glance_pool =  node['openstack']['block-storage']['rbd']['glance']['pool']
 
-  include_recipe 'openstack-common::ceph_client'
+  caps = { 'mon' => 'allow r',
+           'osd' => "allow class-read object_prefix rbd_children, allow rwx pool=#{cinder_pool}, allow rwx pool=#{nova_pool}, allow rx pool=#{glance_pool}" }
 
-  platform_options['cinder_ceph_packages'].each do |pkg|
-    package pkg do
-      options platform_options['package_overrides']
-      action :upgrade
-    end
-  end
-
-  template "/etc/ceph/ceph.client.#{rbd_user}.keyring" do
-    source 'ceph.client.keyring.erb'
-    cookbook 'openstack-common'
+  ceph_client node['openstack']['block-storage']['rbd']['user'] do
+    name node['openstack']['block-storage']['rbd']['user']
+    caps caps
+    keyname "client.#{node['openstack']['block-storage']['rbd']['user']}"
+    filename "/etc/ceph/ceph.client.#{node['openstack']['block-storage']['rbd']['user']}.keyring"
     owner node['openstack']['block-storage']['user']
     group node['openstack']['block-storage']['group']
-    mode '0600'
-    variables(
-      name: rbd_user,
-      key: rbd_key
-    )
+
+    action :add
+    notifies :restart, 'service[cinder-volume]'
   end
 
 when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'

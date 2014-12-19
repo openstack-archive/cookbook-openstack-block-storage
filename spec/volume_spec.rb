@@ -148,54 +148,13 @@ describe 'openstack-block-storage::volume' do
       let(:file) { chef_run.template('/etc/ceph/ceph.client.cinder.keyring') }
       before do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
-        node.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
+        node.set['ceph']['config']['fsid'] = '00000000-0000-0000-0000-000000000000'
       end
 
-      it 'fetches the rbd_uuid_secret' do
-        n = chef_run.node['openstack']['block-storage']['rbd_secret_uuid']
-        expect(n).to eq 'b0ff3bba-e07b-49b1-beed-09a45552b1ad'
-      end
-
-      it 'includes the ceph_client recipe' do
-        expect(chef_run).to include_recipe('openstack-common::ceph_client')
-      end
-
-      it 'upgrades the needed ceph packages by default' do
-        %w{ python-ceph ceph-common }.each do |pkg|
-          expect(chef_run).to upgrade_package(pkg)
-        end
-      end
-
-      it 'honors package option platform overrides for python-ceph' do
-        node.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
-        node.set['openstack']['block-storage']['platform']['package_overrides'] = '--override1 --override2'
-
-        %w{ python-ceph ceph-common }.each do |pkg|
-          expect(chef_run).to upgrade_package(pkg).with(options: '--override1 --override2')
-        end
-      end
-
-      it 'honors package name platform overrides for python-ceph' do
-        node.set['openstack']['block-storage']['rbd_secret_name'] = 'rbd_secret_uuid'
-        node.set['openstack']['block-storage']['platform']['cinder_ceph_packages'] = ['my-ceph', 'my-other-ceph']
-
-        %w{my-ceph my-other-ceph}.each do |pkg|
-          expect(chef_run).to upgrade_package(pkg)
-        end
-      end
-
-      it 'creates a cephx client keyring correctly' do
-        [/^\[client\.cinder\]$/,
-         /^  key = cephx-key$/].each do |content|
-          expect(chef_run).to render_file(file.name).with_content(content)
-        end
-        expect(chef_run).to create_template(file.name).with(cookbook: 'openstack-common')
-        expect(file.owner).to eq('cinder')
-        expect(file.group).to eq('cinder')
-        expect(sprintf('%o', file.mode)).to eq '600'
+      it 'includes the ceph recipe' do
+        expect(chef_run).to include_recipe('ceph')
       end
     end
-
     context 'Storewize Driver' do
       let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
       before do
