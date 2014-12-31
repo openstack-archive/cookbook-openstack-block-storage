@@ -201,6 +201,16 @@ describe 'openstack-block-storage::volume' do
       end
     end
 
+    context 'FlashSystem Driver' do
+      before do
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver'
+      end
+
+      it 'upgrades sysfsutils package' do
+        expect(chef_run).to upgrade_package 'sysfsutils'
+      end
+    end
+
     describe 'targets.conf' do
       let(:file) { chef_run.template('/etc/tgt/targets.conf') }
 

@@ -161,6 +161,13 @@ Cinder attributes
 * `openstack['block-storage']['storwize']['storwize_svc_multipath_enabled'] - Connect with multipath (FC only; iSCSI multipath is controlled by Nova)
 * `openstack['block-storage']['storwize']['storwize_svc_multihostmap_enabled'] - Allows vdisk to multi host mapping
 
+### FlashSystem attributes ###
+* `openstack['block-storage']['san']['san_ip'] - IP address of FlashSystem Cluster node
+* `openstack['block-storage']['san']['san_login'] - Username for FlashSystem Cluster node
+* `openstack['block-storage']['flashsystem']['flashsystem_connection_protocol'] - The connection protocol for FlashSystem data path (FC)
+* `openstack['block-storage']['flashsystem']['flashsystem_multipath_enabled'] - The multipath enablement flag (FC only)
+* `openstack['block-storage']['flashsystem']['flashsystem_multihostmap_enabled'] - Enable vdisk to multi-host mapping
+
 ### VMware attributes ###
 * `openstack['block-storage']['vmware']['secret_name']` - VMware databag secret name
 * `openstack['block-storage']['vmware']['vmware_host_ip']` - IP address for connecting to VMware ESX/VC server. (string value)
@@ -242,12 +249,13 @@ License and Author
 | **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
 | **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |
 | **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)                 |
+| **Author**           |  Edwin Wang (<edwin.wang@cn.ibm.com>)              |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2012-2013, AT&T Services, Inc.      |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013-2014, SUSE Linux GmbH          |
-| **Copyright**        |  Copyright (c) 2013-2014, IBM, Corp.               |
+| **Copyright**        |  Copyright (c) 2013-2015, IBM, Corp.               |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

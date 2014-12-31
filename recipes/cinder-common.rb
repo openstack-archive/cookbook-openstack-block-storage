@@ -52,6 +52,8 @@ when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
   end
 when 'cinder.volume.drivers.solidfire.SolidFire'
   solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
+when 'cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver'
+  flashsystem_pass = get_password 'user', node['openstack']['block-storage']['flashsystem']['san_login']
 when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
   ibmnas_pass = get_password 'user', node['openstack']['block-storage']['ibmnas']['nas_login']
 when 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
@@ -105,6 +107,7 @@ template '/etc/cinder/cinder.conf' do
     glance_port: glance_api_endpoint.port,
     ibmnas_pass: ibmnas_pass,
     solidfire_pass: solidfire_pass,
+    flashsystem_pass: flashsystem_pass,
     storwize_pass: storwize_pass,
     volume_api_bind_address: cinder_api_bind.host,
     volume_api_bind_port: cinder_api_bind.port,

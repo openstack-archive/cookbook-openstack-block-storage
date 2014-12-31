@@ -683,6 +683,44 @@ describe 'openstack-block-storage::cinder-common' do
           end
         end
 
+        context 'flashsystem settings' do
+          before do
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver'
+          end
+
+          it 'has flashsystem password' do
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^san_password=test_pass$/)
+          end
+
+          it 'has a default attribute' do
+            %w(san_ip=127.0.0.1
+               flashsystem_connection_protocol=FC
+               flashsystem_multihostmap_enabled=true).each do |attr|
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^#{attr}$/)
+            end
+          end
+
+          it 'has a overridden attribute' do
+            %w(san_ip
+               flashsystem_connection_protocol
+               flashsystem_multihostmap_enabled).each do |attr|
+              node.set['openstack']['block-storage']['flashsystem'][attr] = "flashsystem_#{attr}_value"
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^#{attr}=flashsystem_#{attr}_value$/)
+            end
+          end
+
+          context 'FlashSystem with FC connection protocol' do
+            before do
+              node.set['openstack']['block-storage']['storwize']['flashsystem_connection_protocol'] = 'FC'
+            end
+
+            it 'has a multipath enabled attribute' do
+              node.set['openstack']['block-storage']['flashsystem']['flashsystem_multipath_enabled'] = 'flashsystem_multipath_enabled_value'
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^flashsystem_multipath_enabled=flashsystem_multipath_enabled_value$/)
+            end
+          end
+        end
+
         context 'emc settings' do
           before do
             node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver'

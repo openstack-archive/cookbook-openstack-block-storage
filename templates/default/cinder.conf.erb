@@ -800,6 +800,28 @@ iscsi_ip_prefix=<%= node["openstack"]["block-storage"]["solidfire"]["iscsi_ip_pr
 <% end %>
 <% end %>
 
+<% if @enabled_drivers.include?("cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver") -%>
+######## defined in cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver ########
+
+san_ip=<%= node["openstack"]["block-storage"]["flashsystem"]["san_ip"] %>
+#### (StrOpt) IP address of FlashSystem Cluster Node
+
+san_login=<%= node["openstack"]["block-storage"]["flashsystem"]["san_login"] %>
+#### (StrOpt) Username for FlashSystem Cluster Admin
+
+san_password=<%= @flashsystem_pass %>
+#### (StrOpt) Password for FlashSystem Cluster Admin
+
+flashsystem_connection_protocol=<%= node["openstack"]["block-storage"]["flashsystem"]["flashsystem_connection_protocol"] %>
+#### (StrOpt) Connection protocol (FC only)
+
+flashsystem_multipath_enabled=<%= node["openstack"]["block-storage"]["flashsystem"]["flashsystem_multipath_enabled"] %>
+#### (BoolOpt) Multipath flag (FC only)
+
+flashsystem_multihostmap_enabled=<%= node["openstack"]["block-storage"]["flashsystem"]["flashsystem_multihostmap_enabled"] %>
+#### (BoolOpt) Multi host mapping flag
+<% end -%>
+
 #### (BoolOpt) Allow tenants to specify QOS on create
 <% if @enabled_drivers.include?("cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver") %>
 ######## defined in cinder.volume.storwize_svc ########

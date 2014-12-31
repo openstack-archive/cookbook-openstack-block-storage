@@ -186,6 +186,16 @@ default['openstack']['block-storage']['solidfire']['san_login'] = node['openstac
 default['openstack']['block-storage']['solidfire']['sf_emulate'] = 'False'
 default['openstack']['block-storage']['solidfire']['iscsi_ip_prefix'] = nil
 
+# FlashSystem Support
+default['openstack']['block-storage']['flashsystem']['san_ip'] = node['openstack']['block-storage']['san']['san_ip']
+default['openstack']['block-storage']['flashsystem']['san_login'] = node['openstack']['block-storage']['san']['san_login']
+# The connection protocol for FlashSystem data path (FC only, will introduce iSCSI in Liberty)
+default['openstack']['block-storage']['flashsystem']['flashsystem_connection_protocol'] = 'FC'
+# The multipath enablement flag (FC only, iSCSI multipath will be controlled by Nova)
+default['openstack']['block-storage']['flashsystem']['flashsystem_multipath_enabled'] = false
+# Enable vdisk to multi-host mapping
+default['openstack']['block-storage']['flashsystem']['flashsystem_multihostmap_enabled'] = true
+
 # EMC VMAX/VNX tSupport
 # The EmcUserName user's password is stored in an encrypted databag and
 # accessed with openstack-common cookbook library's "get_password" routeine. You
@@ -322,6 +332,7 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
     'cinder_emc_packages' => ['pywbem'],
     'cinder_svc_packages' => ['sysfsutils'],
+    'cinder_flashsystem_packages' => ['sysfsutils'],
     'package_overrides' => ''
   }
 when 'suse'
@@ -342,7 +353,8 @@ when 'suse'
     'cinder_iscsitarget_service' => 'tgtd',
     'cinder_nfs_packages' => ['nfs-utils'],
     'cinder_emc_packages' => ['python-pywbem'],
-    'cinder_svc_packages' => ['sysfsutils']
+    'cinder_svc_packages' => ['sysfsutils'],
+    'cinder_flashsystem_packages' => ['sysfsutils']
   }
 when 'debian'
   # operating system user and group names
@@ -363,6 +375,7 @@ when 'debian'
     'cinder_nfs_packages' => ['nfs-common'],
     'cinder_emc_packages' => ['python-pywbem'],
     'cinder_svc_packages' => ['sysfsutils'],
+    'cinder_flashsystem_packages' => ['sysfsutils'],
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end
