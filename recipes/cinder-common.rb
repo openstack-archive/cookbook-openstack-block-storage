@@ -47,7 +47,9 @@ end
 
 case node['openstack']['block-storage']['volume']['driver']
 when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
-  storwize_pass = get_password 'user', node['openstack']['block-storage']['storwize']['san_login']
+  if node['openstack']['block-storage']['storwize']['san_private_key'].to_s.empty?
+    storwize_pass = get_password 'user', node['openstack']['block-storage']['storwize']['san_login']
+  end
 when 'cinder.volume.drivers.solidfire.SolidFire'
   solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
 when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'

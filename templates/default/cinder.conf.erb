@@ -737,48 +737,19 @@ nfs_sparsed_volumes=<%= node["openstack"]["block-storage"]["ibmnas"]["nfs_sparse
 ######## defined in cinder.volume.san ########
 
 <% if @enabled_drivers.include?("cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver") %>
-
 san_ip=<%= node["openstack"]["block-storage"]["storwize"]["san_ip"] %>
 #### (StrOpt) IP address of SAN controller
 
+<% if node['openstack']['block-storage']['storwize']['san_private_key'].to_s.empty?  %>
 san_login=<%= node["openstack"]["block-storage"]["storwize"]["san_login"] %>
 #### (StrOpt) Username for SAN controller
 
-san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_key"] %>
-#### (StrOpt) Filename of private key to use for SSH authentication
-
 san_password=<%= @storwize_pass %>
 #### (StrOpt) Password for SAN controller
+<% end %>
 
-
-<% else %>
-# san_thin_provision=true
-#### (BoolOpt) Use thin provisioning for SAN volumes?
-
-# san_ip=
-#### (StrOpt) IP address of SAN controller
-
-# san_login=admin
-#### (StrOpt) Username for SAN controller
-
-# san_password=
-#### (StrOpt) Password for SAN controller
-
-# san_private_key=
+san_private_key=<%= node["openstack"]["block-storage"]["storwize"]["san_private_key"] %>
 #### (StrOpt) Filename of private key to use for SSH authentication
-
-# san_clustername=
-#### (StrOpt) Cluster name to use for creating volumes
-
-# san_ssh_port=22
-#### (IntOpt) SSH port to use with SAN
-
-# san_is_local=false
-#### (BoolOpt) Execute commands locally instead of over SSH; use if the
-####           volume service is running on the SAN device
-
-# san_zfs_volume_base=rpool/
-#### (StrOpt) The ZFS path under which to create zvols for volumes.
 <% end %>
 
 <% if @enabled_drivers.include?("cinder.volume.drivers.solidfire.SolidFire") %>

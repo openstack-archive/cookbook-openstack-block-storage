@@ -16,6 +16,7 @@ This file is used to list changes made in each version of the openstack-block-st
 * Change to cinder v2 service and endpoint
 * Add support for san_password with ibm.storwize_svc.StorwizeSVCDriver
 * Add glance_api_version config option
+* Allow san_private_key to be used instead of san_login for Storwize
 
 ## 10.0.0
 * Upgrading to Juno

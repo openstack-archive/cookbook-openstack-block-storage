@@ -164,6 +164,7 @@ default['openstack']['block-storage']['nfs']['nfs_sparsed_volumes'] = 'true'
 # Storwize/SVC Support
 default['openstack']['block-storage']['storwize']['san_ip'] = node['openstack']['block-storage']['san']['san_ip']
 default['openstack']['block-storage']['storwize']['san_login'] = node['openstack']['block-storage']['san']['san_login']
+# If the key is set to nil, the san_login and san_password will be used.
 default['openstack']['block-storage']['storwize']['san_private_key'] = node['openstack']['block-storage']['san']['san_private_key']
 default['openstack']['block-storage']['storwize']['storwize_svc_volpool_name'] = 'volpool'
 default['openstack']['block-storage']['storwize']['storwize_svc_vol_rsize'] = 2
