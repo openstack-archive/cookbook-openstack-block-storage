@@ -2,9 +2,11 @@ openstack-block-storage Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-block-storage cookbook.
 ## 10.1.0
-* Add disable logic for stage fix to tgtd issue on RHEL 7
 * Use common specific_endpoint routines (bug 1412919)
 * Install qemu-img package for volume nodes
+* update iscsi_helper for RHEL7
+* update cinder_iscsitarget_packages for RHEL7
+* update cinder_iscsitarget_service for RHEL7
 
 ## 10.0.1
 # Update cinder.conf mode from 0644 to 0640

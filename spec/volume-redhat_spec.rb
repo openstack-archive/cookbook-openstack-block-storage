@@ -36,7 +36,7 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'upgrades cinder iscsi package' do
-      expect(chef_run).to upgrade_package('scsi-target-utils')
+      expect(chef_run).to upgrade_package('targetcli')
     end
 
     it 'starts cinder volume' do
@@ -48,17 +48,8 @@ describe 'openstack-block-storage::volume' do
     end
 
     context 'ISCSI' do
-      let(:file) { chef_run.template('/etc/tgt/targets.conf') }
       it 'starts iscsi target on boot' do
-        expect(chef_run).to enable_service('tgtd')
-      end
-
-      it 'has redhat include' do
-        node.set['openstack']['block-storage']['volume']['volumes_dir'] = 'volumes_dir_value'
-        expect(chef_run).to render_file(file.name).with_content(
-          'include volumes_dir_value/*')
-        expect(chef_run).not_to render_file(file.name).with_content(
-          'include /etc/tgt/conf.d/*.conf')
+        expect(chef_run).to enable_service('target')
       end
     end
 
@@ -190,23 +181,6 @@ describe 'openstack-block-storage::volume' do
           end
         end
       end
-    end
-
-  end
-
-  describe 'redhat' do
-    let(:runner) { ChefSpec::Runner.new(REDHAT7_OPTS) }
-    let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
-
-    include_context 'block-storage-stubs'
-
-    it 'disable tgtd for rhel7' do
-      # test temp solution for RHEL7 to disable tgtd
-      # stage fix for bug #1400958
-      expect(chef_run).not_to upgrade_package('scsi-target-utils')
-      expect(chef_run).not_to enable_service('iscsitarget')
-      expect(chef_run).not_to create_template('/etc/tgt/targets.conf')
     end
   end
 end

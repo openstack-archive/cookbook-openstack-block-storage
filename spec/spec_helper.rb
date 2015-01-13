@@ -17,11 +17,6 @@ SUSE_OPTS = {
 }
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '6.5',
-  log_level: LOG_LEVEL
-}
-REDHAT7_OPTS = {
-  platform: 'redhat',
   version: '7.0',
   log_level: LOG_LEVEL
 }

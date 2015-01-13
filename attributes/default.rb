@@ -305,6 +305,7 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
   default['openstack']['block-storage']['user'] = 'cinder'
   default['openstack']['block-storage']['group'] = 'cinder'
+  default['openstack']['block-storage']['volume']['iscsi_helper'] = 'lioadm'
 
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['openstack-cinder'],
@@ -315,21 +316,14 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_scheduler_packages' => [],
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
-    'cinder_iscsitarget_packages' => ['scsi-target-utils'],
-    'cinder_iscsitarget_service' => 'tgtd',
+    'cinder_iscsitarget_packages' => ['targetcli'],
+    'cinder_iscsitarget_service' => 'target',
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
     'cinder_emc_packages' => ['pywbem'],
     'cinder_svc_packages' => ['sysfsutils'],
     'package_overrides' => ''
   }
-  if platform_family == 'rhel' && platform_version.to_i == 7
-    # On RHEL7, tgtd has been removed, disable it here just for now.
-    # This is a stage fix for bug #1400958, new logic should be added to fully
-    # support new targetcli on RHEL7
-    default['openstack']['block-storage']['platform']['cinder_iscsitarget_packages'] = []
-    default['openstack']['block-storage']['platform']['cinder_iscsitarget_service'] = []
-  end
 when 'suse'
   # operating system user and group names
   default['openstack']['block-storage']['user'] = 'openstack-cinder'
