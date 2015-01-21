@@ -19,6 +19,10 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to upgrade_package 'cinder-volume'
     end
 
+    it 'upgrades qemu utils package' do
+      expect(chef_run).to upgrade_package 'qemu-utils'
+    end
+
     it 'starts cinder volume' do
       expect(chef_run).to start_service 'cinder-volume'
     end
