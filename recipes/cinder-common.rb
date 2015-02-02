@@ -58,7 +58,7 @@ when 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
   vmware_host_pass = get_secret node['openstack']['block-storage']['vmware']['secret_name']
 end
 
-glance_api_endpoint = endpoint 'image-api'
+glance_api_endpoint = internal_endpoint 'image-api'
 cinder_api_bind = endpoint 'block-storage-api-bind'
 
 directory '/etc/cinder' do
@@ -84,8 +84,8 @@ else
   end
 end
 
-identity_endpoint = endpoint 'identity-api'
-identity_admin_endpoint = endpoint 'identity-admin'
+identity_endpoint = internal_endpoint 'identity-internal'
+identity_admin_endpoint = admin_endpoint 'identity-admin'
 service_pass = get_password 'service', 'openstack-block-storage'
 
 auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['block-storage']['api']['auth']['version'])

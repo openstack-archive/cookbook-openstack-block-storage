@@ -43,14 +43,14 @@ describe 'openstack-block-storage::cinder-common' do
       let(:test_pass) { 'test_pass' }
       before do
         endpoint = double(port: 'port', host: 'host', scheme: 'scheme')
-        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:internal_endpoint)
           .with('image-api')
           .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
+        allow_any_instance_of(Chef::Recipe).to receive(:admin_endpoint)
           .with('identity-admin')
           .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
-          .with('identity-api')
+        allow_any_instance_of(Chef::Recipe).to receive(:internal_endpoint)
+          .with('identity-internal')
           .and_return(endpoint)
         allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
           .with('block-storage-api-bind')
