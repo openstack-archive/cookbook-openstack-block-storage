@@ -26,10 +26,12 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-identity_admin_endpoint = endpoint 'identity-admin'
+identity_admin_endpoint = admin_endpoint 'identity-admin'
 bootstrap_token = get_secret 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
-cinder_api_endpoint = endpoint 'block-storage-api'
+admin_cinder_api_endpoint = admin_endpoint 'block-storage-api'
+internal_cinder_api_endpoint = internal_endpoint 'block-storage-api'
+public_cinder_api_endpoint = public_endpoint 'block-storage-api'
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
 service_tenant_name = node['openstack']['block-storage']['service_tenant_name']
@@ -52,9 +54,9 @@ openstack_identity_register 'Register Cinder V2 Volume Service' do
   service_type 'volumev2'
   service_description 'Cinder Volume Service V2'
   endpoint_region region
-  endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
+  endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s
+  endpoint_internalurl ::URI.decode internal_cinder_api_endpoint.to_s
+  endpoint_publicurl ::URI.decode public_cinder_api_endpoint.to_s
   action :create_service
 end
 
@@ -65,9 +67,9 @@ openstack_identity_register 'Register Cinder V2 Volume Endpoint' do
   service_type 'volumev2'
   service_description 'Cinder Volume Service V2'
   endpoint_region region
-  endpoint_adminurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode cinder_api_endpoint.to_s
+  endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s
+  endpoint_internalurl ::URI.decode internal_cinder_api_endpoint.to_s
+  endpoint_publicurl ::URI.decode public_cinder_api_endpoint.to_s
   action :create_endpoint
 end
 
