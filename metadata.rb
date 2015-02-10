@@ -18,11 +18,10 @@ recipe           'openstack-block-storage::volume', 'Installs the cinder-volume 
   supports os
 end
 
-depends          'apt', '>= 2.3.8'
-depends          'openstack-common', '>= 10.2.0'
-depends          'openstack-identity', '>= 10.0.0'
-depends          'openstack-image', '>= 10.0.0'
-depends          'selinux', '>= 0.7.2'
-depends          'python', '>= 1.4.6'
-depends          'ceph', '>= 0.2.1'
-depends          'ceph', '< 3.0.0'
+depends 'apt', '>= 2.6.1', '< 3.0.0'
+depends 'openstack-common', '>= 10.2.0'
+depends 'openstack-identity', '>= 10.0.0'
+depends 'openstack-image', '>= 10.0.0'
+depends 'selinux', '>= 0.7.2'
+depends 'python', '>= 1.4.6'
+depends 'ceph', '>= 0.2.1', '< 3.0.0'
