@@ -382,6 +382,17 @@ describe 'openstack-block-storage::cinder-common' do
             node.set['openstack']['mq']['block-storage']['rabbit']['vhost'] = 'vhost_value'
             expect(chef_run).to render_file(file.name).with_content(/^rabbit_virtual_host=vhost_value$/)
           end
+
+          it 'does not have kombu ssl version set' do
+            expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          end
+
+          it 'sets kombu ssl version' do
+            node.set['openstack']['mq']['block-storage']['rabbit']['use_ssl'] = true
+            node.set['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
+
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          end
         end
 
         context 'qpid as mq service' do
