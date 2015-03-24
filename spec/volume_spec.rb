@@ -243,6 +243,10 @@ describe 'openstack-block-storage::volume' do
         stub_command('vgs cinder-volumes').and_return(false)
       end
 
+      it 'upgrades lvm packages' do
+        expect(chef_run).to upgrade_package 'lvm2'
+      end
+
       it 'cinder vg active' do
         expect(chef_run).to enable_service 'cinder-group-active'
       end

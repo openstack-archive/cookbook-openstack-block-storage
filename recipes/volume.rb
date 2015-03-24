@@ -171,6 +171,13 @@ when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
 
 when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
 
+  platform_options['cinder_lvm_packages'].each do |pkg|
+    package pkg do
+      options platform_options['package_overrides']
+      action :upgrade
+    end
+  end
+
   if node['openstack']['block-storage']['volume']['create_volume_group']
     vg_name = node['openstack']['block-storage']['volume']['volume_group']
 
