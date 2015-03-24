@@ -129,7 +129,7 @@ end
 
 default['openstack']['block-storage']['service_tenant_name'] = 'service'
 default['openstack']['block-storage']['service_user'] = 'cinder'
-default['openstack']['block-storage']['service_role'] = 'admin'
+default['openstack']['block-storage']['service_role'] = 'service'
 
 # SAN Support
 default['openstack']['block-storage']['san']['san_ip'] = '127.0.0.1'
