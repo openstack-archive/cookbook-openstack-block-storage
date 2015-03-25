@@ -91,6 +91,7 @@ identity_admin_endpoint = admin_endpoint 'identity-admin'
 service_pass = get_password 'service', 'openstack-block-storage'
 
 auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['block-storage']['api']['auth']['version'])
+identity_uri = identity_uri_transform(identity_admin_endpoint)
 
 template '/etc/cinder/cinder.conf' do
   source 'cinder.conf.erb'
@@ -115,7 +116,7 @@ template '/etc/cinder/cinder.conf' do
     enabled_drivers: enabled_drivers,
     multi_backend_sections: multi_backend_sections,
     auth_uri: auth_uri,
-    identity_admin_endpoint: identity_admin_endpoint,
+    identity_uri: identity_uri,
     service_pass: service_pass
   )
 end

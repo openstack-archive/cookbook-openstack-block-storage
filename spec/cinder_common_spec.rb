@@ -42,21 +42,6 @@ describe 'openstack-block-storage::cinder-common' do
       let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
       let(:test_pass) { 'test_pass' }
       before do
-        endpoint = double(port: 'port', host: 'host', scheme: 'scheme')
-        allow_any_instance_of(Chef::Recipe).to receive(:internal_endpoint)
-          .with('image-api')
-          .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:admin_endpoint)
-          .with('identity-admin')
-          .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:internal_endpoint)
-          .with('identity-internal')
-          .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:endpoint)
-          .with('block-storage-api-bind')
-          .and_return(endpoint)
-        allow_any_instance_of(Chef::Recipe).to receive(:auth_uri_transform)
-          .and_return('auth_uri_transform')
         allow_any_instance_of(Chef::Recipe).to receive(:get_password)
           .with('user', anything)
           .and_return(test_pass)
@@ -141,19 +126,11 @@ describe 'openstack-block-storage::cinder-common' do
         context 'endpoint related' do
 
           it 'has auth_uri' do
-            expect(chef_run).to render_file(file.name).with_content(/^auth_uri = auth_uri_transform$/)
+            expect(chef_run).to render_file(file.name).with_content(%r(^auth_uri = http://127.0.0.1:5000/v2.0$))
           end
 
-          it 'has auth_host' do
-            expect(chef_run).to render_file(file.name).with_content(/^auth_host = host$/)
-          end
-
-          it 'has auth_port' do
-            expect(chef_run).to render_file(file.name).with_content(/^auth_port = port$/)
-          end
-
-          it 'has auth_protocol' do
-            expect(chef_run).to render_file(file.name).with_content(/^auth_protocol = scheme$/)
+          it 'has identity_uri' do
+            expect(chef_run).to render_file(file.name).with_content(%r(^identity_uri = http://127.0.0.1:35357/$))
           end
         end
 
@@ -263,7 +240,7 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'glance endpoint' do
           it 'has a glance_api_servers attribute' do
-            expect(chef_run).to render_file(file.name).with_content(%r{^glance_api_servers=scheme://host:port$})
+            expect(chef_run).to render_file(file.name).with_content(%r{^glance_api_servers=http://127.0.0.1:9292$})
           end
 
           it 'has glance_api_version attribute' do
@@ -288,10 +265,12 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(%r{^glance_ca_certificates_file=dir/to/path$})
           end
 
-          %w(host port).each do |glance_attr|
-            it "has a glance #{glance_attr} attribute" do
-              expect(chef_run).to render_file(file.name).with_content(/^glance_#{glance_attr}=#{glance_attr}$/)
-            end
+          it 'has a glance host attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^glance_host=127.0.0.1$/)
+          end
+
+          it 'has a glance port attribute' do
+            expect(chef_run).to render_file(file.name).with_content(/^glance_port=9292$/)
           end
         end
 
@@ -302,11 +281,11 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'cinder endpoint' do
           it 'has osapi_volume_listen set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen=host$/)
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen=127.0.0.1$/)
           end
 
           it 'has osapi_volume_listen_port set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=port$/)
+            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=8776$/)
           end
         end
 

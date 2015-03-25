@@ -1080,29 +1080,13 @@ enabled_backends = <%= @multi_backend_sections.keys.join(',') %>
 # Options defined in keystonemiddleware.auth_token
 #
 
-# Prefix to prepend at the beginning of the path. Deprecated,
-# use identity_uri. (string value)
-#auth_admin_prefix=
-
-# Host providing the admin Identity API endpoint. Deprecated,
-# use identity_uri. (string value)
-auth_host = <%= @identity_admin_endpoint.host %>
-
-# Port of the admin Identity API endpoint. Deprecated, use
-# identity_uri. (integer value)
-auth_port = <%= @identity_admin_endpoint.port %>
-
-# Protocol of the admin Identity API endpoint (http or https).
-# Deprecated, use identity_uri. (string value)
-auth_protocol = <%= @identity_admin_endpoint.scheme %>
-
 # Complete public Identity API endpoint (string value)
 auth_uri = <%= @auth_uri %>
 
 # Complete admin Identity API endpoint. This should specify
 # the unversioned root endpoint e.g. https://localhost:35357/
 # (string value)
-#identity_uri=<None>
+identity_uri = <%= @identity_uri %>
 
 # API version of the admin Identity API endpoint (string
 # value)
