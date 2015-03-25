@@ -147,6 +147,7 @@ Cinder attributes
 * `openstack['block-storage']['san']['san_ip'] - IP address of SAN controller
 * `openstack['block-storage']['san']['san_login'] - Username for SAN controller
 * `openstack['block-storage']['san']['san_private_key'] - Filename of private key to use for SSH authentication
+* `openstack['block-storage']['san']['san_private_key_url'] - Source url of private key to use for SSH authentication
 * `openstack['block-storage']['storwize']['storwize_svc_volpool_name'] - Storage system storage pool for volumes
 * `openstack['block-storage']['storwize']['storwize_svc_vol_rsize'] - Storage system space-efficiency parameter for volumes
 * `openstack['block-storage']['storwize']['storwize_svc_vol_warning'] - Storage system threshold for volume capacity warnings

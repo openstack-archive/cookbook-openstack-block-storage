@@ -165,12 +165,13 @@ describe 'openstack-block-storage::volume' do
         node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
       end
 
-      it 'configures storewize private key' do
-        san_key = chef_run.file chef_run.node['openstack']['block-storage']['san']['san_private_key']
-        expect(san_key.mode).to eq('0400')
-        expect(chef_run).to create_file('/v7000_rsa').with(
+      it 'download san private key if needed' do
+        node.set['openstack']['block-storage']['storwize']['san_private_key_url'] = 'http://server/key'
+        expect(chef_run).to create_remote_file('/v7000_rsa').with(
+          source: 'http://server/key',
           user: 'cinder',
-          group: 'cinder'
+          group: 'cinder',
+          mode: '0400'
         )
       end
 
