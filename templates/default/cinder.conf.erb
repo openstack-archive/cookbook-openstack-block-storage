@@ -875,6 +875,16 @@ storwize_svc_multipath_enabled=<%= node["openstack"]["block-storage"]["storwize"
 # Allows vdisk to multi host mapping (boolean value)
 storwize_svc_multihostmap_enabled=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_multihostmap_enabled"] %>
 
+# Allow tenants to specify QOS on create (boolean value)
+storwize_svc_allow_tenant_qos=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_allow_tenant_qos"] %>
+
+<% unless node["openstack"]["block-storage"]["storwize"]["storwize_svc_stretched_cluster_partner"].nil? %>
+# If operating in stretched cluster mode, specify the name of
+# # the pool in which mirrored copies are stored.
+# (Default: Null) (string value)
+storwize_svc_stretched_cluster_partner=<%= node["openstack"]["block-storage"]["storwize"]["storwize_svc_stretched_cluster_partner"] %>
+
+<% end %>
 <% end %>
 
 <% if @enabled_drivers.include?("cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver") %>

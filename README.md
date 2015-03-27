@@ -160,6 +160,8 @@ Cinder attributes
 * `openstack['block-storage']['storwize']['storwize_svc_iscsi_chap_enabled'] - Configure CHAP authentication for iSCSI connections
 * `openstack['block-storage']['storwize']['storwize_svc_multipath_enabled'] - Connect with multipath (FC only; iSCSI multipath is controlled by Nova)
 * `openstack['block-storage']['storwize']['storwize_svc_multihostmap_enabled'] - Allows vdisk to multi host mapping
+* `openstack['block-storage']['storwize']['storwize_svc_allow_tenant_qos'] - Allow tenants to specify QOS on create
+* `openstack['block-storage']['storwize']['storwize_svc_stretched_cluster_partner'] - Enable volume-replication for stretched cluster
 
 ### FlashSystem attributes ###
 * `openstack['block-storage']['san']['san_ip'] - IP address of FlashSystem Cluster node

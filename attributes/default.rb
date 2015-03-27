@@ -179,6 +179,8 @@ default['openstack']['block-storage']['storwize']['storwize_svc_connection_proto
 default['openstack']['block-storage']['storwize']['storwize_svc_iscsi_chap_enabled'] = true
 default['openstack']['block-storage']['storwize']['storwize_svc_multipath_enabled'] = false
 default['openstack']['block-storage']['storwize']['storwize_svc_multihostmap_enabled'] = true
+default['openstack']['block-storage']['storwize']['storwize_svc_allow_tenant_qos'] = false
+default['openstack']['block-storage']['storwize']['storwize_svc_stretched_cluster_partner'] = nil
 
 # SolidFire Support
 default['openstack']['block-storage']['solidfire']['san_ip'] = node['openstack']['block-storage']['san']['san_ip']

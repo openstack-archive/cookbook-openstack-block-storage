@@ -596,7 +596,8 @@ describe 'openstack-block-storage::cinder-common' do
                storwize_svc_flashcopy_timeout=120
                storwize_svc_connection_protocol=iSCSI
                storwize_svc_iscsi_chap_enabled=true
-               storwize_svc_multihostmap_enabled=true).each do |attr|
+               storwize_svc_multihostmap_enabled=true
+               storwize_svc_allow_tenant_qos=false).each do |attr|
               expect(chef_run).to render_file(file.name).with_content(/^#{attr}$/)
             end
           end
@@ -614,7 +615,9 @@ describe 'openstack-block-storage::cinder-common' do
                storwize_svc_vol_iogrp
                storwize_svc_flashcopy_timeout
                storwize_svc_connection_protocol
-               storwize_svc_multihostmap_enabled).each do |attr|
+               storwize_svc_multihostmap_enabled
+               storwize_svc_allow_tenant_qos
+               storwize_svc_stretched_cluster_partner).each do |attr|
               node.set['openstack']['block-storage']['storwize'][attr] = "storwize_#{attr}_value"
               expect(chef_run).to render_file(file.name).with_content(/^#{attr}=storwize_#{attr}_value$/)
             end
