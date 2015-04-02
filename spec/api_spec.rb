@@ -56,27 +56,6 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to run_execute('cinder-manage db sync').with(user: 'cinder', group: 'cinder')
     end
 
-    describe 'api-paste.ini' do
-      let(:file) { chef_run.template('/etc/cinder/api-paste.ini') }
-
-      it 'should create api-paste.ini' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper owner' do
-        expect(file.owner).to eq('cinder')
-        expect(file.group).to eq('cinder')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq('644')
-      end
-
-      it 'notifies cinder-api restart' do
-        expect(file).to notify('service[cinder-api]').to(:restart)
-      end
-    end
-
     describe 'policy file' do
       it 'does not manage policy file unless specified' do
         expect(chef_run).not_to create_remote_file('/etc/cinder/policy.json')

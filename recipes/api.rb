@@ -61,15 +61,6 @@ execute 'cinder-manage db sync' do
   group node['openstack']['block-storage']['group']
 end
 
-template '/etc/cinder/api-paste.ini' do
-  source 'api-paste.ini.erb'
-  group node['openstack']['block-storage']['group']
-  owner node['openstack']['block-storage']['user']
-  mode 00644
-
-  notifies :restart, 'service[cinder-api]', :immediately
-end
-
 if node['openstack']['block-storage']['policyfile_url']
   remote_file '/etc/cinder/policy.json' do
     source node['openstack']['block-storage']['policyfile_url']

@@ -65,8 +65,7 @@ default['openstack']['block-storage']['rabbit_server_chef_role'] = 'os-ops-messa
 # This is the name of the Chef role that will install the Keystone Service API
 default['openstack']['block-storage']['keystone_service_chef_role'] = 'keystone'
 
-# Keystone PKI signing directory. Only written to the filter:authtoken section
-# of the api-paste.ini when node['openstack']['auth']['strategy'] == 'pki'
+# Keystone PKI signing directory
 default['openstack']['block-storage']['api']['auth']['cache_dir'] = '/var/cache/cinder/api'
 
 default['openstack']['block-storage']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
