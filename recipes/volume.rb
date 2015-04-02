@@ -106,10 +106,16 @@ when 'cinder.volume.drivers.netapp.nfs.NetAppDirect7modeNfsDriver'
   end
 
 when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
-  file node['openstack']['block-storage']['san']['san_private_key'] do
-    mode '0400'
-    owner node['openstack']['block-storage']['user']
-    group node['openstack']['block-storage']['group']
+  san_private_key = node['openstack']['block-storage']['storwize']['san_private_key']
+  san_private_key_url = node['openstack']['block-storage']['storwize']['san_private_key_url']
+
+  if san_private_key && san_private_key_url
+    remote_file san_private_key do
+      source san_private_key_url
+      mode '0400'
+      owner node['openstack']['block-storage']['user']
+      group node['openstack']['block-storage']['group']
+    end
   end
 
   platform_options['cinder_svc_packages'].each do |pkg|

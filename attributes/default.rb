@@ -135,6 +135,8 @@ default['openstack']['block-storage']['service_role'] = 'admin'
 default['openstack']['block-storage']['san']['san_ip'] = '127.0.0.1'
 default['openstack']['block-storage']['san']['san_login'] = 'admin'
 default['openstack']['block-storage']['san']['san_private_key'] = '/v7000_rsa'
+# The location(URL) of the san_private_key. This value may also specify HTTP(http://), FTP("ftp://"), or local(file://), if the san private key is in the local, you should also specify this attribute using(file://)
+default['openstack']['block-storage']['san']['san_private_key_url'] = nil
 
 # NFS support
 default['openstack']['block-storage']['nfs']['nas_ip'] = '127.0.0.1'
@@ -166,6 +168,7 @@ default['openstack']['block-storage']['storwize']['san_ip'] = node['openstack'][
 default['openstack']['block-storage']['storwize']['san_login'] = node['openstack']['block-storage']['san']['san_login']
 # If the key is set to nil, the san_login and san_password will be used.
 default['openstack']['block-storage']['storwize']['san_private_key'] = node['openstack']['block-storage']['san']['san_private_key']
+default['openstack']['block-storage']['storwize']['san_private_key_url'] = node['openstack']['block-storage']['san']['san_private_key_url']
 default['openstack']['block-storage']['storwize']['storwize_svc_volpool_name'] = 'volpool'
 default['openstack']['block-storage']['storwize']['storwize_svc_vol_rsize'] = 2
 default['openstack']['block-storage']['storwize']['storwize_svc_vol_warning'] = 0
