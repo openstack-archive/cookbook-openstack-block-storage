@@ -173,7 +173,7 @@ describe 'openstack-block-storage::identity_registration' do
       )
     end
 
-    it 'grants admin role to service user for service tenant' do
+    it 'grants service role to service user for service tenant' do
       expect(chef_run).to grant_role_openstack_identity_register(
         'Grant service Role to Cinder Service User for Cinder Service Tenant'
       ).with(
@@ -181,7 +181,7 @@ describe 'openstack-block-storage::identity_registration' do
         bootstrap_token: 'bootstrap-token',
         tenant_name: 'service',
         user_name: 'cinder',
-        role_name: 'admin'
+        role_name: 'service'
       )
     end
   end
