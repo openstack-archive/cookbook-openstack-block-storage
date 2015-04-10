@@ -167,7 +167,7 @@ describe 'openstack-block-storage::cinder-common' do
       context 'template contents' do
 
         context 'commonly named attributes' do
-          %w(debug verbose lock_path notification_driver
+          %w(debug verbose notification_driver
              storage_availability_zone quota_volumes quota_gigabytes quota_driver
              volume_name_template snapshot_name_template osapi_volume_workers
              use_default_quota_class quota_snapshots no_snapshot_gb_quota
@@ -190,6 +190,10 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^rbd_/)
             expect(chef_run).not_to render_file(file.name).with_content(/^netapp_/)
           end
+        end
+
+        it 'has a lock_path attribute' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r(^lock_path=/var/lock/cinder$))
         end
 
         context 'netapp driver' do
@@ -220,12 +224,16 @@ describe 'openstack-block-storage::cinder-common' do
           end
         end
 
-        it 'has a sql_connection attribute' do
+        it 'has a db connection attribute' do
           allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
             .with('block-storage', anything, '').and_return('sql_connection_value')
 
-          expect(chef_run).to render_file(file.name)
-            .with_content(/^sql_connection=sql_connection_value$/)
+          expect(chef_run).to render_config_file(file.name)
+            .with_section_content('database', /^connection=sql_connection_value$/)
+        end
+
+        it 'has a db backend attribute' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('database', /^backend=sqlalchemy$/)
         end
 
         it 'has a volume_driver attribute' do
@@ -287,6 +295,13 @@ describe 'openstack-block-storage::cinder-common' do
           it 'has osapi_volume_listen_port set' do
             expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port=8776$/)
           end
+
+          it 'has default api version set' do
+            [/^enable_v1_api=false$/,
+             /^enable_v2_api=true$/].each do |line|
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
+            end
+          end
         end
 
         it 'has a rpc_backend attribute' do
@@ -297,10 +312,7 @@ describe 'openstack-block-storage::cinder-common' do
         it 'has default RPC/AMQP options set' do
           [/^rpc_backend=cinder.openstack.common.rpc.impl_kombu$/,
            /^rpc_thread_pool_size=64$/,
-           /^rpc_conn_pool_size=30$/,
-           /^rpc_response_timeout=60$/,
-           /^amqp_durable_queues=false$/,
-           /^amqp_auto_delete=false$/].each do |line|
+           /^rpc_response_timeout=60$/].each do |line|
             expect(chef_run).to render_file(file.name).with_content(line)
           end
         end
@@ -308,6 +320,14 @@ describe 'openstack-block-storage::cinder-common' do
         context 'rabbitmq as mq service' do
           before do
             node.set['openstack']['mq']['block-storage']['service_type'] = 'rabbitmq'
+          end
+
+          it 'has default RPC/AMQP options set' do
+            [/^rpc_conn_pool_size=30$/,
+             /^amqp_durable_queues=false$/,
+             /^amqp_auto_delete=false$/].each do |line|
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
+            end
           end
 
           context 'ha attributes' do
@@ -319,12 +339,12 @@ describe 'openstack-block-storage::cinder-common' do
               allow_any_instance_of(Chef::Recipe).to receive(:rabbit_servers)
                 .and_return('rabbit_servers_value')
 
-              expect(chef_run).to render_file(file.name).with_content(/^rabbit_hosts=rabbit_servers_value$/)
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts=rabbit_servers_value$/)
             end
 
             %w(host port).each do |attr|
               it "does not have rabbit_#{attr} attribute" do
-                expect(chef_run).not_to render_file(file.name).with_content(/^rabbit_#{attr}=/)
+                expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=/)
               end
             end
           end
@@ -337,40 +357,40 @@ describe 'openstack-block-storage::cinder-common' do
             %w(host port).each do |attr|
               it "has rabbit_#{attr} attribute" do
                 node.set['openstack']['mq']['block-storage']['rabbit'][attr] = "rabbit_#{attr}_value"
-                expect(chef_run).to render_file(file.name).with_content(/^rabbit_#{attr}=rabbit_#{attr}_value$/)
+                expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=rabbit_#{attr}_value$/)
               end
             end
 
             it 'does not have a rabbit_hosts attribute' do
-              expect(chef_run).not_to render_file(file.name).with_content(/^rabbit_hosts=/)
+              expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts=/)
             end
           end
 
           %w(use_ssl userid).each do |attr|
             it "has rabbit_#{attr}" do
               node.set['openstack']['mq']['block-storage']['rabbit'][attr] = "rabbit_#{attr}_value"
-              expect(chef_run).to render_file(file.name).with_content(/^rabbit_#{attr}=rabbit_#{attr}_value$/)
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=rabbit_#{attr}_value$/)
             end
           end
 
           it 'has rabbit_password' do
-            expect(chef_run).to render_file(file.name).with_content(/^rabbit_password=#{test_pass}$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_password=#{test_pass}$/)
           end
 
           it 'has rabbit_virtual_host' do
             node.set['openstack']['mq']['block-storage']['rabbit']['vhost'] = 'vhost_value'
-            expect(chef_run).to render_file(file.name).with_content(/^rabbit_virtual_host=vhost_value$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_virtual_host=vhost_value$/)
           end
 
           it 'does not have kombu ssl version set' do
-            expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+            expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
           end
 
           it 'sets kombu ssl version' do
             node.set['openstack']['mq']['block-storage']['rabbit']['use_ssl'] = true
             node.set['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
 
-            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
           end
         end
 
@@ -379,31 +399,39 @@ describe 'openstack-block-storage::cinder-common' do
             node.set['openstack']['mq']['block-storage']['service_type'] = 'qpid'
           end
 
+          it 'has default RPC/AMQP options set' do
+            [/^rpc_conn_pool_size=30$/,
+             /^amqp_durable_queues=false$/,
+             /^amqp_auto_delete=false$/].each do |line|
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', line)
+            end
+          end
+
           %w(port username sasl_mechanisms reconnect reconnect_timeout reconnect_limit
              reconnect_interval_min reconnect_interval_max reconnect_interval heartbeat protocol
              tcp_nodelay).each do |attr|
             it "has qpid_#{attr} attribute" do
               node.set['openstack']['mq']['block-storage']['qpid'][attr] = "qpid_#{attr}_value"
-              expect(chef_run).to render_file(file.name).with_content(/^qpid_#{attr}=qpid_#{attr}_value$/)
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_#{attr}=qpid_#{attr}_value$/)
             end
           end
 
           it 'has qpid_hostname' do
             node.set['openstack']['mq']['block-storage']['qpid']['host'] = 'qpid_host_value'
-            expect(chef_run).to render_file(file.name).with_content(/^qpid_hostname=qpid_host_value$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_hostname=qpid_host_value$/)
           end
 
           it 'has qpid_password' do
-            expect(chef_run).to render_file(file.name).with_content(/^qpid_password=#{test_pass}$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_password=#{test_pass}$/)
           end
 
           it 'has default qpid topology version' do
-            expect(chef_run).to render_file(file.name).with_content(/^qpid_topology_version=1$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_topology_version=1$/)
           end
 
           it 'has qpid notification_topics' do
             node.set['openstack']['mq']['block-storage']['qpid']['notification_topic'] = 'qpid_notification_topic_value'
-            expect(chef_run).to render_file(file.name).with_content(/^notification_topics=qpid_notification_topic_value$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^notification_topics=qpid_notification_topic_value$/)
           end
         end
 
