@@ -193,7 +193,7 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         it 'has a lock_path attribute' do
-          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r(^lock_path=/var/lock/cinder$))
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r(^lock_path=/var/lib/cinder/lock$))
         end
 
         context 'netapp driver' do
@@ -971,10 +971,10 @@ describe 'openstack-block-storage::cinder-common' do
       end
     end
 
-    describe '/var/lock/cinder' do
-      let(:dir) { chef_run.directory('/var/lock/cinder') }
+    describe '/var/lib/cinder/lock' do
+      let(:dir) { chef_run.directory('/var/lib/cinder/lock') }
 
-      it 'should create the /var/lock/cinder directory' do
+      it 'should create the /var/lib/cinder/lock directory' do
         expect(chef_run).to create_directory(dir.name)
       end
 
@@ -984,7 +984,7 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       it 'has proper modes' do
-        expect(sprintf('%o', dir.mode)).to eq '700'
+        expect(sprintf('%o', dir.mode)).to eq '755'
       end
     end
 

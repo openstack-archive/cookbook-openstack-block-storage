@@ -124,7 +124,7 @@ end
 directory node['openstack']['block-storage']['lock_path'] do
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 00700
+  mode 00755
 end
 
 template '/etc/cinder/rootwrap.conf' do

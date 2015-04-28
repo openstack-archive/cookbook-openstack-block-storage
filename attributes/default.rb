@@ -40,8 +40,6 @@ default['openstack']['block-storage']['debug'] = 'False'
 # Specify policy.json remote file to import
 default['openstack']['block-storage']['policyfile_url'] = nil
 
-# Default lock_path
-default['openstack']['block-storage']['lock_path'] = '/var/lock/cinder'
 # Default notification_driver and control exchange
 default['openstack']['block-storage']['notification_driver'] = 'cinder.openstack.common.notifier.rpc_notifier'
 default['openstack']['block-storage']['control_exchange'] = 'cinder'
@@ -313,6 +311,13 @@ default['openstack']['block-storage']['volume']['default_volume_type'] = nil
 # Allow additional strings to be added to cinder.conf
 # For example: ['# Comment', 'key=value']
 default['openstack']['block-storage']['misc_cinder'] = []
+
+# Default lock_path
+# The lock_path normally uses /var/lock/cinder, but it's does not work
+# in cases like systemd, so setting lock_path to $state_path/lock like
+# in nova and neutron.
+default['openstack']['block-storage']['lock_path'] =
+  "#{node['openstack']['block-storage']['volume']['state_path']}/lock"
 
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
