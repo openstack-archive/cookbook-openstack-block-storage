@@ -6,7 +6,7 @@ require_relative 'spec_helper'
 
 describe 'openstack-block-storage::identity_registration' do
   describe 'ubuntu' do
-    let(:runner) { ChefSpec::Runner.new(UBUNTU_OPTS) }
+    let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
     let(:chef_run) { runner.converge(described_recipe) }
 
