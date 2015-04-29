@@ -6,7 +6,7 @@ require_relative 'spec_helper'
 
 describe 'openstack-block-storage::volume' do
   describe 'redhat' do
-    let(:runner) { ChefSpec::Runner.new(REDHAT_OPTS) }
+    let(:runner) { ChefSpec::SoloRunner.new(REDHAT_OPTS) }
     let(:node) { runner.node }
     let(:chef_run) { runner.converge(described_recipe) }
 
@@ -107,7 +107,7 @@ describe 'openstack-block-storage::volume' do
 
     describe 'IBM GPFS volume driver' do
       before do
-        @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS do |n|
+        @chef_run = ::ChefSpec::SoloRunner.new ::REDHAT_OPTS do |n|
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
           n.set['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = 'volumes'
         end
