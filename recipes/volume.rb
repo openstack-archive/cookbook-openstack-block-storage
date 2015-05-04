@@ -169,7 +169,7 @@ when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
     notifies :restart, 'service[cinder-volume]'
   end
 
-when 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+when 'cinder.volume.drivers.lvm.LVMVolumeDriver'
 
   platform_options['cinder_lvm_packages'].each do |pkg|
     package pkg do
