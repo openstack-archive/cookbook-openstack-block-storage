@@ -269,6 +269,81 @@ osapi_volume_workers=<%= node["openstack"]["block-storage"]["osapi_volume_worker
 #### (BoolOpt) make deprecations fatal
 
 
+######## defined in cinder.backup.manager ########
+<% if node['openstack']['block-storage']['backup']['enabled'] %>
+backup_driver=<%= node['openstack']['block-storage']['backup']['driver'] %>
+<% if node['openstack']['block-storage']['backup']['driver'] == 'cinder.backup.drivers.swift' %>
+######## defined in cinder.backup.driver.swift ########
+# The URL of the Swift endpoint (string value)
+<% if node['openstack']['block-storage']['backup']['swift']['url'] %>
+backup_swift_url=<%= node['openstack']['block-storage']['backup']['swift']['url'] %>
+<% else %>
+# backup_swift_url=<None>
+<% end %>
+
+# Info to match when looking for swift in the service catalog.
+# Format is: separated values of the form:
+# <service_type>:<service_name>:<endpoint_type> - Only used if
+# backup_swift_url is unset (string value)
+swift_catalog_info=<%= node['openstack']['block-storage']['backup']['swift']['catalog_info'] %>
+
+# Swift authentication mechanism (string value)
+backup_swift_auth=<%= node['openstack']['block-storage']['backup']['swift']['auth'] %>
+
+# Swift authentication version. Specify "1" for auth 1.0, or
+# "2" for auth 2.0 (string value)
+backup_swift_auth_version=<%= node['openstack']['block-storage']['backup']['swift']['auth_version'] %>
+
+# Swift tenant/account name. Required when connecting to an
+# auth 2.0 system (string value)
+<% if node['openstack']['block-storage']['backup']['swift']['tenant'] %>
+backup_swift_tenant=<%= node['openstack']['block-storage']['backup']['swift']['tenant'] %>
+<% else %>
+# backup_swift_tenant=<None>
+<% end %>
+
+# Swift user name (string value)
+<% if node['openstack']['block-storage']['backup']['swift']['user'] %>
+backup_swift_user=<%= node['openstack']['block-storage']['backup']['swift']['user'] %>
+<% else %>
+# backup_swift_user=<None>
+<% end %>
+
+# Swift key for authentication (string value)
+<% if node['openstack']['block-storage']['backup']['swift']['key'] %>
+backup_swift_key=<%= node['openstack']['block-storage']['backup']['swift']['key'] %>
+<% else %>
+# backup_swift_key=<None>
+<% end %>
+
+# The default Swift container to use (string value)
+backup_swift_container=<%= node['openstack']['block-storage']['backup']['swift']['container'] %>
+
+# The size in bytes of Swift backup objects (integer value)
+backup_swift_object_size=<%= node['openstack']['block-storage']['backup']['swift']['object_size'] %>
+
+# The size in bytes that changes are tracked for incremental
+# backups. backup_swift_object_size has to be multiple of
+# backup_swift_block_size. (integer value)
+backup_swift_block_size=<%= node['openstack']['block-storage']['backup']['swift']['block_size'] %>
+
+# The number of retries to make for Swift operations (integer
+# value)
+backup_swift_retry_attempts=<%= node['openstack']['block-storage']['backup']['swift']['retry_attempts'] %>
+
+# The backoff time in seconds between Swift retries (integer
+# value)
+backup_swift_retry_backoff=<%= node['openstack']['block-storage']['backup']['swift']['retry_backoff'] %>
+
+# Enable or Disable the timer to send the periodic progress
+# notifications to Ceilometer when backing up the volume to
+# the Swift backend storage. The default value is True to
+# enable the timer. (boolean value)
+backup_swift_enable_progress_timer=<%= node['openstack']['block-storage']['backup']['swift']['enable_progress_timer'] %>
+
+<% end %>
+<% end %>
+
 ######## defined in cinder.db.api ########
 
 # enable_new_services=true

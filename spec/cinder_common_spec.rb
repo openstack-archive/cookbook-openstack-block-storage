@@ -180,6 +180,50 @@ describe 'openstack-block-storage::cinder-common' do
           end
         end
 
+        context 'backup swift backend contents' do
+          before do
+            node.set['openstack']['block-storage']['backup']['enabled'] = true
+            node.set['openstack']['block-storage']['backup']['driver'] = 'cinder.backup.drivers.swift'
+          end
+
+          it 'has default attributes' do
+            %w(swift_catalog_info=object-store:swift:publicURL
+               backup_swift_auth=per_user
+               backup_swift_auth_version=1
+               backup_swift_container=volumebackups
+               backup_swift_object_size=52428800
+               backup_swift_block_size=32768
+               backup_swift_retry_attempts=3
+               backup_swift_retry_backoff=2
+               backup_swift_enable_progress_timer=True).each do |attr|
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^#{attr}$/)
+            end
+          end
+
+          it 'has override attributes' do
+            %w(url
+               auth
+               auth_version
+               tenant
+               user
+               key
+               container
+               object_size
+               block_size
+               retry_attempts
+               retry_backoff
+               enable_progress_timer).each do |attr|
+              node.set['openstack']['block-storage']['backup']['swift'][attr] = "backup_swift_#{attr}"
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^backup_swift_#{attr}=backup_swift_#{attr}$/)
+            end
+          end
+
+          it 'has a custom catalog_info' do
+            node.set['openstack']['block-storage']['backup']['swift']['catalog_info'] = 'swift_catalog_info'
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^swift_catalog_info=swift_catalog_info$/)
+          end
+        end
+
         context 'rdb driver' do
           # FIXME(galstrom21): this block needs to check all of the default
           #   rdb_* configuration options

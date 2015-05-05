@@ -63,6 +63,9 @@ default['openstack']['block-storage']['rabbit_server_chef_role'] = 'os-ops-messa
 # This is the name of the Chef role that will install the Keystone Service API
 default['openstack']['block-storage']['keystone_service_chef_role'] = 'keystone'
 
+# Whether to enable cinder-backup service or not
+default['openstack']['block-storage']['backup']['enabled'] = false
+
 # Keystone PKI signing directory
 default['openstack']['block-storage']['api']['auth']['cache_dir'] = '/var/cache/cinder/api'
 
@@ -335,6 +338,8 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_scheduler_packages' => [],
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
+    'cinder_backup_packages' => [],
+    'cinder_backup_service' => 'openstack-cinder-backup',
     'cinder_iscsitarget_packages' => ['targetcli'],
     'cinder_iscsitarget_service' => 'target',
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
@@ -356,6 +361,8 @@ when 'suse'
     'cinder_client_packages' => ['python-cinderclient'],
     'cinder_scheduler_packages' => ['openstack-cinder-scheduler'],
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
+    'cinder_backup_packages' => ['openstack-cinder-backup'],
+    'cinder_backup_service' => 'openstack-cinder-backup',
     'cinder_volume_packages' => ['openstack-cinder-volume', 'qemu-img'],
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
@@ -380,6 +387,8 @@ when 'debian'
     'cinder_volume_service' => 'cinder-volume',
     'cinder_scheduler_packages' => ['cinder-scheduler'],
     'cinder_scheduler_service' => 'cinder-scheduler',
+    'cinder_backup_packages' => ['cinder-backup'],
+    'cinder_backup_service' => 'cinder-backup',
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
     'cinder_iscsitarget_packages' => ['tgt'],
     'cinder_iscsitarget_service' => 'tgt',
@@ -391,3 +400,34 @@ when 'debian'
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end
+
+# Attributes for cinder-backup service
+default['openstack']['block-storage']['backup']['driver'] = 'cinder.backup.drivers.swift'
+
+# Swift support
+# The URL of Swift endpoint (string value)
+default['openstack']['block-storage']['backup']['swift']['url'] = nil
+# Info to match when looking for swift in the service catalog
+default['openstack']['block-storage']['backup']['swift']['catalog_info'] = 'object-store:swift:publicURL'
+# Swift authentication mechanism (string value)
+default['openstack']['block-storage']['backup']['swift']['auth'] = 'per_user'
+# Swift authentication version
+default['openstack']['block-storage']['backup']['swift']['auth_version'] = 1
+# Swift user name
+default['openstack']['block-storage']['backup']['swift']['user'] = nil
+# Swift tenant/account name. Required when connecting
+default['openstack']['block-storage']['backup']['swift']['tenant'] = nil
+# Swift key for authentication (string value)
+default['openstack']['block-storage']['backup']['swift']['key'] = nil
+# The default Swift container to use
+default['openstack']['block-storage']['backup']['swift']['container'] = 'volumebackups'
+# The size in bytes of Swift backup objects
+default['openstack']['block-storage']['backup']['swift']['object_size'] = 52428800
+# The size in bytes that changes are tracked for incremental backups
+default['openstack']['block-storage']['backup']['swift']['block_size'] = 32768
+# The number of retries to make for Swift operations
+default['openstack']['block-storage']['backup']['swift']['retry_attempts'] = 3
+# The backoff time in seconds between Swift retries
+default['openstack']['block-storage']['backup']['swift']['retry_backoff'] = 2
+# Enable or Disable the timer to send the periodic progress notifications to Ceilometer when backing up the volume to the Swift backend storage.
+default['openstack']['block-storage']['backup']['swift']['enable_progress_timer'] = 'True'

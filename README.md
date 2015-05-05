@@ -211,6 +211,23 @@ The following attributes are defined in attributes/default.rb of the common cook
 * `openstack['endpoints']['block-storage-api-bind']['port']` - The port to bind the api service to
 * `openstack['endpoints']['block-storage-api-bind']['bind_interface']` - The interface name to bind the api service to
 
+### Backup service attributes ###
+* `openstack['block-storage']['backup']['enabled']` - Whether to enable cinder backup service or not.
+* `openstack['block-storage']['backup']['driver']` - The driver for cinder backup service.
+* `openstack['block-storage']['backup']['swift']['url']` - The URL of Swift endpoint.
+* `openstack['block-storage']['backup']['swift']['catalog_info']` - Info to match when looking for swift in the service catalog.
+* `openstack['block-storage']['backup']['swift']['auth']` - Swift authentication mechanism.
+* `openstack['block-storage']['backup']['swift']['auth_version']` - Swift authentication version.
+* `openstack['block-storage']['backup']['swift']['user']` - Swift user name.
+* `openstack['block-storage']['backup']['swift']['tenant']` - Swift tenant/account name. Required when connecting.
+* `openstack['block-storage']['backup']['swift']['key']` - Swift key for authentication.
+* `openstack['block-storage']['backup']['swift']['container']` - The default Swift container to use.
+* `openstack['block-storage']['backup']['swift']['object_size']` - The size in bytes of Swift backup objects.
+* `openstack['block-storage']['backup']['swift']['block_size']` - The size in bytes that changes are tracked for incremental backups.
+* `openstack['block-storage']['backup']['swift']['retry_attempts']` - The number of retries to make for Swift operations.
+* `openstack['block-storage']['backup']['swift']['retry_backoff']` - The backoff time in seconds between Swift retries.
+* `openstack['block-storage']['backup']['swift']['enable_progress_timer']` - Enable or Disable the timer to send the periodic progress notifications to Ceilometer when backing up the volume to the Swift backend storage.
+
 If the value of the 'bind_interface' attribute is non-nil, then the block-storage service will be bound to the first IP address on that interface.  If the value of the 'bind_interface' attribute is nil, then the block-storage service will be bound to the IP address specified in the host attribute.
 
 Testing
