@@ -167,7 +167,7 @@ describe 'openstack-block-storage::cinder-common' do
       context 'template contents' do
 
         context 'commonly named attributes' do
-          %w(debug verbose notification_driver
+          %w(debug verbose host notification_driver
              storage_availability_zone quota_volumes quota_gigabytes quota_driver
              volume_name_template snapshot_name_template osapi_volume_workers
              use_default_quota_class quota_snapshots no_snapshot_gb_quota
@@ -175,7 +175,7 @@ describe 'openstack-block-storage::cinder-common' do
             it "has a #{attr_key} attribute" do
               node.set['openstack']['block-storage'][attr_key] = "#{attr_key}_value"
 
-              expect(chef_run).to render_file(file.name).with_content(/^#{attr_key}=#{attr_key}_value$/)
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^#{attr_key}=#{attr_key}_value$/)
             end
           end
         end
@@ -194,6 +194,10 @@ describe 'openstack-block-storage::cinder-common' do
 
         it 'has a lock_path attribute' do
           expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r(^lock_path=/var/lib/cinder/lock$))
+        end
+
+        it 'does not have unique host id by default' do
+          expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^host=/)
         end
 
         context 'netapp driver' do

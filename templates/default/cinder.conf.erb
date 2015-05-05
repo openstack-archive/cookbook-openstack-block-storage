@@ -139,7 +139,9 @@ api_rate_limit=<%= node["openstack"]["block-storage"]["api"]["ratelimit"] %>
 # scheduler_manager=cinder.scheduler.manager.SchedulerManager
 #### (StrOpt) full class name for the Manager for scheduler
 
-# host=cinder
+<% if node['openstack']['block-storage']['host'] -%>
+host=<%= node['openstack']['block-storage']['host'] %>
+<% end -%>
 #### (StrOpt) Name of this node.  This can be an opaque identifier.  It is
 ####          not necessarily a hostname, FQDN, or IP address.
 
