@@ -260,7 +260,7 @@ default['openstack']['block-storage']['cron']['audit_logfile'] = '/var/log/cinde
 
 default['openstack']['block-storage']['volume']['state_path'] = '/var/lib/cinder'
 default['openstack']['block-storage']['volume']['volumes_dir'] = '/var/lib/cinder/volumes'
-default['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+default['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
 default['openstack']['block-storage']['volume']['volume_group'] = 'cinder-volumes'
 default['openstack']['block-storage']['volume']['volume_group_size'] = 40
 default['openstack']['block-storage']['volume']['volume_clear_size'] = 0

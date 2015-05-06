@@ -495,7 +495,7 @@ max_gigabytes=<%= node["openstack"]["block-storage"]["max_gigabytes"] %>
 
 
 ######## defined in cinder.volume.driver ########
-<% if @enabled_drivers.include?("cinder.volume.drivers.lvm.LVMISCSIDriver") %>
+<% if @enabled_drivers.include?("cinder.volume.drivers.lvm.LVMVolumeDriver") %>
 volume_group=<%= node["openstack"]["block-storage"]["volume"]["volume_group"] %>
 #### (StrOpt) Name for the VG that will contain exported volumes
 volume_clear=<%= node["openstack"]["block-storage"]["volume"]["volume_clear"] %>

@@ -165,7 +165,7 @@ describe 'openstack-block-storage::volume' do
     describe 'create_vg' do
       let(:file) { chef_run.template('/etc/init.d/cinder-group-active') }
       before do
-        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+        node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
         node.set['openstack']['block-storage']['volume']['create_volume_group'] = true
         stub_command('vgs cinder-volumes').and_return(false)
       end

@@ -481,7 +481,7 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'lvm settings' do
           before do
-            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMISCSIDriver'
+            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
           end
 
           %w(group clear clear_size).each do |attr|
@@ -868,7 +868,7 @@ describe 'openstack-block-storage::cinder-common' do
           before do
             node.set['openstack']['block-storage']['volume']['multi_backend'] = {
               'lvm' => {
-                'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver',
+                'volume_driver' => 'cinder.volume.drivers.lvm.LVMVolumeDriver',
                 'volume_backend_name' => 'lvmdrv'
               },
               'rbd' => {
@@ -927,7 +927,7 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^enabled_backends = lvm,rbd,netapp_iscsi,netapp_nfs,ibmnas,ibmsvc,solidfire,emciscsi,vmware,gpfs$/)
 
             expect(chef_run).to render_file(file.name).with_content(/^\[lvm\]$/)
-            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.lvm\.LVMISCSIDriver$/)
+            expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.lvm\.LVMVolumeDriver$/)
 
             expect(chef_run).to render_file(file.name).with_content(/^\[rbd\]$/)
             expect(chef_run).to render_file(file.name).with_content(/^volume_driver = cinder\.volume\.drivers\.rbd\.RBDDriver$/)

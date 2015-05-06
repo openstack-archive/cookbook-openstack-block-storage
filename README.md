@@ -40,9 +40,9 @@ scheduler
 
 volume
 ----
-- Installs the cinder-volume service, sets up the iscsi helper and create volume group when using the LVMISCSIDriver
+- Installs the cinder-volume service, sets up the iscsi helper and create volume group when using the LVMVolumeDriver
 
-Defaults to the ISCSI (LVM) Driver.
+Defaults to the LVM Volume Driver.
 
 Attributes
 ==========
@@ -108,13 +108,13 @@ Cinder attributes
      - **cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver** -  IBM Storwize/SVC driver
      - **cinder.volume.drivers.ibm.gpfs.GPFSDriver** -  IBM General Parallel File System driver
      - **cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver** - IBM Storwize V7000 Unified and IBM SONAS Cinder driver
-     - **cinder.volume.drivers.lvm.LVMISCSIDriver** - LVM Driver
+     - **cinder.volume.drivers.lvm.LVMVolumeDriver** - LVM Driver
      - **cinder.volume.drivers.emc.emc_smis_iscsi.EMCSMISISCSIDriver** - EMC SMI-S iSCSI Driver
 * `openstack["block-storage"]["volume"]["volume_clear"]` - Defines the method for clearing volumes on a volume delete possible options: 'zero', 'none', 'shred' (https://review.openstack.org/#/c/12521/)
 * `openstack["block-storage"]["volume"]["volume_clear_size"]` - size in MB used to limit the cleared area on deleting a volume, to the first part of the volume only. (default 0 = all MB)
 * `openstack["block-storage"]["volume"]["volume_group"]` - Name for the VG that will contain exported volumes
 * `openstack["block-storage"]["voluem"]["volume_group_size"]` - The size (GB) of volume group (default is 40)
-* `openstack["block-storage"]["voluem"]["create_volume_group"]` - Create volume group or not when using the LVMISCSIDriver (default is false)
+* `openstack["block-storage"]["voluem"]["create_volume_group"]` - Create volume group or not when using the LVMVolumeDriver (default is false)
 * `openstack["block-storage"]["volume"]["create_volume_group_type"]` - 'file' or 'block_devices'. Create volume group from block devices or just a file for testing
 * `openstack["block-storage"]["volume"]["block_devices"]` - String of blank separated block devices to use for creating volume group when type is 'block_devices'
 * `openstack["block-storage"]["volume"]["iscsi_helper"]` - ISCSI target user-land tool to use
@@ -202,7 +202,7 @@ Cinder attributes
 * `openstack['block-storage']['ibmnas']['ibmnas_platform_type']` - Platform type to be used as backend storage
 
 ### Multiple backends attributes ###
-* `openstack['block-storage']['volume']['multi_backend']` - Hash map to indicate multiple backends sections, e.g. { 'lvm1' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm1' }, 'lvm2' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMISCSIDriver', 'volume_backend_name' => 'lvm2' } }
+* `openstack['block-storage']['volume']['multi_backend']` - Hash map to indicate multiple backends sections, e.g. { 'lvm1' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMVolumeDriver', 'volume_backend_name' => 'lvm1' }, 'lvm2' => { 'volume_driver' => 'cinder.volume.drivers.lvm.LVMVolumeDriver', 'volume_backend_name' => 'lvm2' } }
 * `default['openstack']['block-storage']['volume']['default_volume_type']` - String to indicate the volume_type that maps to one of the configured volume backends
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
