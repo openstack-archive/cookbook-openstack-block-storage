@@ -341,8 +341,17 @@ describe 'openstack-block-storage::cinder-common' do
           end
 
           it 'has default api version set' do
-            [/^enable_v1_api=false$/,
-             /^enable_v2_api=true$/].each do |line|
+            [/^enable_v1_api=False$/,
+             /^enable_v2_api=True$/].each do |line|
+              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
+            end
+          end
+
+          it 'has override api version set' do
+            node.set['openstack']['block-storage']['enable_v1_api'] = 'True'
+            node.set['openstack']['block-storage']['enable_v2_api'] = 'False'
+            [/^enable_v1_api=True$/,
+             /^enable_v2_api=False$/].each do |line|
               expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
             end
           end

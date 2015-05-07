@@ -322,6 +322,12 @@ default['openstack']['block-storage']['misc_cinder'] = []
 default['openstack']['block-storage']['lock_path'] =
   "#{node['openstack']['block-storage']['volume']['state_path']}/lock"
 
+# Whether to enable cinder v1 api or not
+default['openstack']['block-storage']['enable_v1_api'] = 'False'
+
+# Whether to enable cinder v2 api or not
+default['openstack']['block-storage']['enable_v2_api'] = 'True'
+
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
