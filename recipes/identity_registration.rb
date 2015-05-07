@@ -37,6 +37,8 @@ region = node['openstack']['block-storage']['region']
 service_tenant_name = node['openstack']['block-storage']['service_tenant_name']
 service_user = node['openstack']['block-storage']['service_user']
 service_role = node['openstack']['block-storage']['service_role']
+service_name = node['openstack']['block-storage']['service_name']
+service_type = node['openstack']['block-storage']['service_type']
 
 openstack_identity_register 'Register Service Tenant' do
   auth_uri auth_uri
@@ -50,8 +52,8 @@ end
 openstack_identity_register 'Register Cinder V2 Volume Service' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  service_name 'cinderv2'
-  service_type 'volumev2'
+  service_name service_name
+  service_type service_type
   service_description 'Cinder Volume Service V2'
   endpoint_region region
   endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s
@@ -63,8 +65,8 @@ end
 openstack_identity_register 'Register Cinder V2 Volume Endpoint' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  service_name 'cinderv2'
-  service_type 'volumev2'
+  service_name service_name
+  service_type service_type
   service_description 'Cinder Volume Service V2'
   endpoint_region region
   endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s

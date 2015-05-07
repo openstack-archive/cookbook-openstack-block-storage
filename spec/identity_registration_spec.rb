@@ -152,6 +152,25 @@ describe 'openstack-block-storage::identity_registration' do
         )
       end
 
+      it 'with different service type/name' do
+        node.set['openstack']['block-storage']['service_name'] = 'cinder'
+        node.set['openstack']['block-storage']['service_type'] = 'volume'
+
+        expect(chef_run).to create_endpoint_openstack_identity_register(
+          'Register Cinder V2 Volume Endpoint'
+        ).with(
+          auth_uri: 'http://127.0.0.1:35357/v2.0',
+          bootstrap_token: 'bootstrap-token',
+          service_name: 'cinder',
+          service_type: 'volume',
+          service_description: 'Cinder Volume Service V2',
+          endpoint_region: 'RegionOne',
+          endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
+          endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
+          endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+        )
+      end
+
       it 'with custom region override' do
         node.set['openstack']['block-storage']['region'] = 'volumeRegion'
         expect(chef_run).to create_endpoint_openstack_identity_register(
