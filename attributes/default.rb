@@ -37,6 +37,10 @@ default['openstack']['block-storage']['custom_template_banner'] = '
 default['openstack']['block-storage']['verbose'] = 'False'
 default['openstack']['block-storage']['debug'] = 'False'
 
+# Name of this node.  This can be an opaque identifier.  It is
+# not necessarily a hostname, FQDN, or IP address. (StrOpt)
+default['openstack']['block-storage']['host'] = nil
+
 # Specify policy.json remote file to import
 default['openstack']['block-storage']['policyfile_url'] = nil
 
