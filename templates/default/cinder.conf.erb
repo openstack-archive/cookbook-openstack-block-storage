@@ -53,10 +53,10 @@ log_file = /var/log/cinder/cinder.log
 #### (StrOpt) File name for the paste.deploy config for cinder-api
 
 # DEPRECATED: Deploy v1 of the Cinder API. (boolean value)
-enable_v1_api=false
+enable_v1_api=<%= node["openstack"]["block-storage"]["enable_v1_api"] %>
 
 # Deploy v2 of the Cinder API. (boolean value)
-enable_v2_api=true
+enable_v2_api=<%= node["openstack"]["block-storage"]["enable_v2_api"] %>
 
 # pybasedir=/usr/lib/python/site-packages
 #### (StrOpt) Directory where the cinder python module is installed
