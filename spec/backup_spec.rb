@@ -75,6 +75,5 @@ describe 'openstack-block-storage::backup' do
         expect(chef_run).not_to upgrade_package 'python-mysqldb'
       end
     end
-
   end
 end

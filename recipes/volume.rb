@@ -22,7 +22,8 @@
 # limitations under the License.
 #
 
-class ::Chef::Recipe # rubocop:disable Documentation
+# Chef
+class ::Chef::Recipe
   include ::Openstack
 end
 
@@ -257,7 +258,7 @@ end
 # RHEL7 doesn't need targets.conf file
 template '/etc/tgt/targets.conf' do
   source 'targets.conf.erb'
-  mode   00600
+  mode 00600
   notifies :restart, 'service[iscsitarget]', :immediately
   not_if { node['platform_family'] == 'rhel' && node['platform_version'].to_i == 7 }
 end

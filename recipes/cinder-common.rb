@@ -131,5 +131,5 @@ template '/etc/cinder/rootwrap.conf' do
   source 'rootwrap.conf.erb'
   owner 'root'
   group 'root'
-  mode   00644
+  mode 00644
 end

@@ -63,9 +63,9 @@ describe 'openstack-block-storage::volume' do
 
       it 'creates IBMNAS shares_config file' do
         expect(chef_run).to create_template(file.name).with(
-           owner: 'cinder',
-           group: 'cinder',
-           mode: '0600'
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0600'
         )
         expect(chef_run).to render_file(file.name).with_content('127.0.0.1:/ibm/fs/export')
       end
@@ -77,9 +77,9 @@ describe 'openstack-block-storage::volume' do
 
       it 'creates the nfs mount point' do
         expect(chef_run).to create_directory('/mnt/cinder-volumes').with(
-           owner: 'cinder',
-           group: 'cinder',
-           mode: '0755'
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0755'
         )
       end
     end
@@ -155,9 +155,9 @@ describe 'openstack-block-storage::volume' do
 
       it 'verifies gpfs volume directory is created with owner and mode set correctly' do
         expect(@chef_run).to create_directory('volumes').with(
-           owner: 'cinder',
-           group: 'cinder',
-           mode: '0755'
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0755'
         )
       end
     end
@@ -172,7 +172,7 @@ describe 'openstack-block-storage::volume' do
 
       describe 'template contents' do
         it 'sources /etc/rc.d/init.d/functions' do
-          expect(chef_run).to render_file(file.name).with_content(%r(^\s*. /etc/rc.d/init.d/functions$))
+          expect(chef_run).to render_file(file.name).with_content(%r{^\s*. /etc/rc.d/init.d/functions$})
         end
 
         it 'calls success and echo' do

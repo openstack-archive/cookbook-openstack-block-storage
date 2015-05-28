@@ -65,9 +65,9 @@ describe 'openstack-block-storage::volume' do
       context 'IBMNAS shares_config file' do
         it 'creates the file' do
           expect(chef_run).to create_template(file.name).with(
-           owner: 'cinder',
-           group: 'cinder',
-           mode: '0600'
+            owner: 'cinder',
+            group: 'cinder',
+            mode: '0600'
         )
         end
 
@@ -84,9 +84,9 @@ describe 'openstack-block-storage::volume' do
 
       it 'creates the nfs mount point' do
         expect(chef_run).to create_directory('/mnt/cinder-volumes').with(
-           owner: 'cinder',
-           group: 'cinder',
-           mode: '0755'
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0755'
         )
       end
     end
@@ -216,11 +216,9 @@ describe 'openstack-block-storage::volume' do
       let(:file) { chef_run.template('/etc/tgt/targets.conf') }
 
       it 'should create the targets.conf' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq '600'
+        expect(chef_run).to create_template(file.name).with(
+          mode: 0600
+        )
       end
 
       it 'notifies iscsi restart' do
@@ -277,7 +275,7 @@ describe 'openstack-block-storage::volume' do
         end
 
         it 'calls vgs with the volume name attribute' do
-          expect(chef_run).to render_file(file.name).with_content(%r(vgs #{volume_group_value} > /dev/null 2>&1))
+          expect(chef_run).to render_file(file.name).with_content(%r{vgs #{volume_group_value} > /dev/null 2>&1})
         end
 
         it 'calls vgcreate with the volume name and volume file attributes' do
@@ -315,11 +313,9 @@ describe 'openstack-block-storage::volume' do
       end
 
       it 'creates cinder emc config file' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq('644')
+        expect(chef_run).to create_template(file.name).with(
+          mode: 0644
+        )
       end
 
       describe 'template contents' do

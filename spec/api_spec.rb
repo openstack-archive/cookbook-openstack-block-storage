@@ -39,16 +39,11 @@ describe 'openstack-block-storage::api' do
       let(:dir) { chef_run.directory('/var/cache/cinder') }
 
       it 'should create the directory' do
-        expect(chef_run).to create_directory(dir.name)
-      end
-
-      it 'has proper owner' do
-        expect(dir.owner).to eq('cinder')
-        expect(dir.group).to eq('cinder')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', dir.mode)).to eq('700')
+        expect(chef_run).to create_directory(dir.name).with(
+          owner: 'cinder',
+          group: 'cinder',
+          mode: 00700
+        )
       end
     end
 

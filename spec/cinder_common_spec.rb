@@ -25,16 +25,11 @@ describe 'openstack-block-storage::cinder-common' do
       let(:dir) { chef_run.directory('/etc/cinder') }
 
       it 'should create the /etc/cinder directory' do
-        expect(chef_run).to create_directory(dir.name)
-      end
-
-      it 'has proper owner' do
-        expect(dir.owner).to eq('cinder')
-        expect(dir.group).to eq('cinder')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', dir.mode)).to eq '750'
+        expect(chef_run).to create_directory(dir.name).with(
+          owner: 'cinder',
+          group: 'cinder',
+          mode: 00750
+        )
       end
     end
 
@@ -48,16 +43,11 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       it 'should create the cinder.conf template' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper owner' do
-        expect(file.owner).to eq('cinder')
-        expect(file.group).to eq('cinder')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq '640'
+        expect(chef_run).to create_template(file.name).with(
+          owner: 'cinder',
+          group: 'cinder',
+          mode: 00640
+        )
       end
 
       context 'keystone authtoken attributes with default values' do
@@ -124,13 +114,12 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         context 'endpoint related' do
-
           it 'has auth_uri' do
-            expect(chef_run).to render_file(file.name).with_content(%r(^auth_uri = http://127.0.0.1:5000/v2.0$))
+            expect(chef_run).to render_file(file.name).with_content(%r{^auth_uri = http://127.0.0.1:5000/v2.0$})
           end
 
           it 'has identity_uri' do
-            expect(chef_run).to render_file(file.name).with_content(%r(^identity_uri = http://127.0.0.1:35357/$))
+            expect(chef_run).to render_file(file.name).with_content(%r{^identity_uri = http://127.0.0.1:35357/$})
           end
         end
 
@@ -165,7 +154,6 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       context 'template contents' do
-
         context 'commonly named attributes' do
           %w(debug verbose host notification_driver
              storage_availability_zone quota_volumes quota_gigabytes quota_driver
@@ -237,7 +225,7 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         it 'has a lock_path attribute' do
-          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r(^lock_path=/var/lib/cinder/lock$))
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r{^lock_path=/var/lib/cinder/lock$})
         end
 
         it 'does not have unique host id by default' do
@@ -839,7 +827,7 @@ describe 'openstack-block-storage::cinder-common' do
 
           it 'has wsdl_location line with attribute present' do
             node.set['openstack']['block-storage']['vmware']['vmware_wsdl_location'] = 'http://127.0.0.1/wsdl'
-            expect(chef_run).to render_file(file.name).with_content(%r(^vmware_wsdl_location = http://127.0.0.1/wsdl$))
+            expect(chef_run).to render_file(file.name).with_content(%r{^vmware_wsdl_location = http://127.0.0.1/wsdl$})
           end
         end
 
@@ -1015,7 +1003,6 @@ describe 'openstack-block-storage::cinder-common' do
           it 'set gpfs option' do
             expect(chef_run).to render_file(file.name).with_content(/^gpfs_mount_point_base = multi-gpfs-mnt$/)
           end
-
         end
 
         it 'no multiple backends configured' do
@@ -1032,16 +1019,11 @@ describe 'openstack-block-storage::cinder-common' do
       let(:dir) { chef_run.directory('/var/lib/cinder/lock') }
 
       it 'should create the /var/lib/cinder/lock directory' do
-        expect(chef_run).to create_directory(dir.name)
-      end
-
-      it 'has proper owner' do
-        expect(dir.owner).to eq('cinder')
-        expect(dir.group).to eq('cinder')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', dir.mode)).to eq '755'
+        expect(chef_run).to create_directory(dir.name).with(
+          user: 'cinder',
+          group: 'cinder',
+          mode: 00755
+        )
       end
     end
 
@@ -1061,13 +1043,13 @@ describe 'openstack-block-storage::cinder-common' do
           node.set['openstack']['block-storage']['custom_template_banner'] = 'banner'
 
           expect(chef_run).to render_file(file.name)
-          .with_content(/^banner$/)
+            .with_content(/^banner$/)
         end
 
         it 'sets the default attributes' do
           [
-            %r(^filters_path=/etc/cinder/rootwrap.d,/usr/share/cinder/rootwrap$),
-            %r(^exec_dirs=/sbin,/usr/sbin,/bin,/usr/bin$),
+            %r{^filters_path=/etc/cinder/rootwrap.d,/usr/share/cinder/rootwrap$},
+            %r{^exec_dirs=/sbin,/usr/sbin,/bin,/usr/bin$},
             /^use_syslog=False$/,
             /^syslog_log_facility=syslog$/,
             /^syslog_log_level=ERROR$/

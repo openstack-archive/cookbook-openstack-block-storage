@@ -99,13 +99,12 @@ def expect_creates_cinder_conf(service, user, group, action = :restart) # ruboco
   describe 'cinder.conf' do
     let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
 
-    it 'has proper owner' do
-      expect(file.owner).to eq(user)
-      expect(file.group).to eq(group)
-    end
-
-    it 'has proper modes' do
-      expect(sprintf('%o', file.mode)).to eq '640'
+    it 'creates the /etc/cinder/cinder.conf file' do
+      expect(chef_run).to create_template(file.name).with(
+        user: user,
+        group: group,
+        mode: 0640
+      )
     end
 
     it 'notifies service restart' do
