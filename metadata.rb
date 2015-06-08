@@ -19,10 +19,10 @@ recipe 'openstack-block-storage::backup', 'Installs the cinder-backup service'
   supports os
 end
 
-depends 'apt', '~> 2.6.1'
+depends 'apt', '~> 2.8'
 depends 'openstack-common', '>= 12.0.0'
 depends 'openstack-identity', '>= 12.0.0'
 depends 'openstack-image', '>= 12.0.0'
 depends 'selinux', '~> 0.9.0'
 depends 'python', '~> 1.4.6'
-depends 'ceph', '~> 0.8.0'
+depends 'ceph', '>= 0.8.1'
