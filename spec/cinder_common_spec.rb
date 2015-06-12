@@ -437,6 +437,14 @@ describe 'openstack-block-storage::cinder-common' do
 
             expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
           end
+
+          it 'has the default rabbit_retry_interval set' do
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_retry_interval=1$/)
+          end
+
+          it 'has the default rabbit_max_retries set' do
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_max_retries=0$/)
+          end
         end
 
         context 'qpid as mq service' do

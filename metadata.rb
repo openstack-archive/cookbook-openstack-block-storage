@@ -20,7 +20,7 @@ recipe 'openstack-block-storage::backup', 'Installs the cinder-backup service'
 end
 
 depends 'apt', '~> 2.6.1'
-depends 'openstack-common', '>= 11.0.0'
+depends 'openstack-common', '>= 11.2.0'
 depends 'openstack-identity', '>= 11.0.0'
 depends 'openstack-image', '>= 11.0.0'
 depends 'selinux', '~> 0.9.0'

@@ -1325,14 +1325,14 @@ rabbit_virtual_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["vhos
 notification_topics=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["notification_topic"] %>
 #### (ListOpt) AMQP topic used for openstack notifications
 
-# rabbit_retry_interval=1
+rabbit_retry_interval=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["rabbit_retry_interval"] %>
 #### (IntOpt) how frequently to retry connecting with RabbitMQ
 
 # rabbit_retry_backoff=2
 #### (IntOpt) how long to backoff for between retries when connecting to
 ####          RabbitMQ
 
-# rabbit_max_retries=0
+rabbit_max_retries=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["rabbit_max_retries"] %>
 #### (IntOpt) maximum retries with trying to connect to RabbitMQ (the
 ####          default of 0 implies an infinite retry count)
 
