@@ -1265,6 +1265,12 @@ notification_topics=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["notifi
 # From oslo.messaging
 #
 
+# Number of seconds after which the Rabbit broker is considered down if heartbeat's keep-alive fails (0 disable the heartbeat)
+heartbeat_timeout_threshold=<%= node['openstack']['mq']['block-storage']['rabbit']['heartbeat_timeout_threshold'] %>
+
+# How often times during the heartbeat_timeout_threshold we check the heartbeat
+heartbeat_rate=<%= node['openstack']['mq']['block-storage']['rabbit']['heartbeat_rate'] %>
+
 # from oslo/messaging/_drivers/amqp.py
 amqp_durable_queues=<%= node['openstack']['mq']['block-storage']['durable_queues'] %>
 amqp_auto_delete=<%= node['openstack']['mq']['block-storage']['auto_delete'] %>
