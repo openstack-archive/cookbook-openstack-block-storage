@@ -1265,6 +1265,12 @@ notification_topics=<%= node["openstack"]["mq"]["block-storage"]["qpid"]["notifi
 # From oslo.messaging
 #
 
+# Number of seconds after which the Rabbit broker is considered down if heartbeat's keep-alive fails (0 disable the heartbeat)
+heartbeat_timeout_threshold=<%= node['openstack']['mq']['block-storage']['rabbit']['heartbeat_timeout_threshold'] %>
+
+# How often times during the heartbeat_timeout_threshold we check the heartbeat
+heartbeat_rate=<%= node['openstack']['mq']['block-storage']['rabbit']['heartbeat_rate'] %>
+
 # from oslo/messaging/_drivers/amqp.py
 amqp_durable_queues=<%= node['openstack']['mq']['block-storage']['durable_queues'] %>
 amqp_auto_delete=<%= node['openstack']['mq']['block-storage']['auto_delete'] %>
@@ -1278,19 +1284,35 @@ rpc_conn_pool_size=<%= node["openstack"]["block-storage"]["rpc_conn_pool_size"] 
 
 ######## defined in cinder.openstack.common.rpc.impl_kombu ########
 
-<% if node["openstack"]["mq"]["block-storage"]["rabbit"]["use_ssl"] && node["openstack"]["mq"]["block-storage"]["rabbit"]["kombu_ssl_version"] %>
-kombu_ssl_version=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["kombu_ssl_version"] %>
-#### (StrOpt) SSL version to use (valid only if SSL enabled)
+<% if node['openstack']['mq']['block-storage']['rabbit']['use_ssl'] -%>
+
+# Connect over SSL for RabbitMQ. (boolean value)
+rabbit_use_ssl=true
+
+<%   if node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_version'] -%>
+# SSL version to use (valid only if SSL enabled). valid values
+# are TLSv1 and SSLv23. SSLv2 and SSLv3 may be available on
+# some distributions. (string value)
+kombu_ssl_version=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_version'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_keyfile'] -%>
+# SSL key file (valid only if SSL enabled)
+kombu_ssl_keyfile=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_keyfile'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_certfile'] -%>
+# SSL cert file (valid only if SSL enabled)
+kombu_ssl_certfile=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_certfile'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_ca_certs'] -%>
+# SSL certification authority file (valid only if SSL enabled)
+kombu_ssl_ca_certs=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_ssl_ca_certs'] %>
+<%   end -%>
+# How long to wait before reconnecting in response to an AMQP consumer cancel notification
+kombu_reconnect_delay=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_reconnect_delay'] %>
+# How long to wait before considering a reconnect attempt to have failed.
+# This value should not be longer than rpc_response_timeout
+kombu_reconnect_timeout=<%= node['openstack']['mq']['block-storage']['rabbit']['kombu_reconnect_timeout'] %>
 <% end -%>
-
-# kombu_ssl_keyfile=
-#### (StrOpt) SSL key file (valid only if SSL enabled)
-
-# kombu_ssl_certfile=
-#### (StrOpt) SSL cert file (valid only if SSL enabled)
-
-# kombu_ssl_ca_certs=
-#### (StrOpt) SSL certification authority file (valid only if SSL enabled)
 
 <% if node["openstack"]["mq"]["block-storage"]["rabbit"]["ha"] -%>
 rabbit_hosts=<%= @rabbit_hosts %>
@@ -1309,9 +1331,6 @@ rabbit_host=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["host"] %>
 rabbit_port=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["port"] %>
 #### (IntOpt) The RabbitMQ broker port where a single node is used
 <% end -%>
-
-rabbit_use_ssl=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["use_ssl"] %>
-#### (BoolOpt) connect over SSL for RabbitMQ
 
 rabbit_userid=<%= node["openstack"]["mq"]["block-storage"]["rabbit"]["userid"] %>
 #### (StrOpt) the RabbitMQ userid
