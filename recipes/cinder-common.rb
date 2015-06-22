@@ -57,7 +57,7 @@ when 'cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver'
 when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
   ibmnas_pass = get_password 'user', node['openstack']['block-storage']['ibmnas']['nas_login']
 when 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
-  vmware_host_pass = get_secret node['openstack']['block-storage']['vmware']['secret_name']
+  vmware_host_pass = get_password 'token', node['openstack']['block-storage']['vmware']['secret_name']
 end
 
 glance_api_endpoint = internal_endpoint 'image-api'

@@ -27,7 +27,7 @@ class ::Chef::Recipe # rubocop:disable Documentation
 end
 
 identity_admin_endpoint = admin_endpoint 'identity-admin'
-bootstrap_token = get_secret 'openstack_identity_bootstrap_token'
+bootstrap_token = get_password 'token', 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
 admin_cinder_api_endpoint = admin_endpoint 'block-storage-api'
 internal_cinder_api_endpoint = internal_endpoint 'block-storage-api'
