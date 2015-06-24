@@ -1031,6 +1031,24 @@ connection=<%= @sql_connection %>
 ####          100=Everything
 
 
+[keymgr]
+
+#
+# Options defined in cinder.keymgr
+#
+
+# The full class name of the key manager API class (string value)
+api_class=<%= node['openstack']['block-storage']['keymgr']['api_class'] %>
+
+#
+# Options defined in cinder.keymgr.conf_key_mgr
+#
+
+# Fixed key returned by key manager, specified in hex (string value)
+<% if node["openstack"]["block-storage"]["keymgr"]["fixed_key"] -%>
+fixed_key=<%= node["openstack"]["block-storage"]["keymgr"]["fixed_key"] %>
+<% end -%>
+
 [keystone_authtoken]
 
 #

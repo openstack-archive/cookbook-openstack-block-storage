@@ -232,6 +232,10 @@ The following attributes are defined in attributes/default.rb of the common cook
 * `openstack['block-storage']['backup']['swift']['retry_backoff']` - The backoff time in seconds between Swift retries.
 * `openstack['block-storage']['backup']['swift']['enable_progress_timer']` - Enable or Disable the timer to send the periodic progress notifications to Ceilometer when backing up the volume to the Swift backend storage.
 
+### Keymgr configuration attributes ###
+* `openstack['block-storage']['keymgr']['api_class']` - The key manager api class to use.
+* `openstack['block-storage']['keymgr']['fixed_key']` - The fixed key returned by key manager, specified in hex (string value).
+
 If the value of the 'bind_interface' attribute is non-nil, then the block-storage service will be bound to the first IP address on that interface.  If the value of the 'bind_interface' attribute is nil, then the block-storage service will be bound to the IP address specified in the host attribute.
 
 Testing

@@ -232,6 +232,20 @@ describe 'openstack-block-storage::cinder-common' do
           expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^host=/)
         end
 
+        it 'has keymgr api_class attribute default set' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('keymgr', /^api_class=cinder.keymgr.conf_key_mgr.ConfKeyManager$/)
+        end
+
+        it 'does not have keymgr attribute fixed_key set by default' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^fixed_key=$/)
+        end
+
+        it 'allow override for keymgr attribute fixed_key' do
+          chef_run.node.set['openstack']['block-storage']['keymgr']['fixed_key'] = '1111111111111111111111111111111111111111111111111111111111111111'
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('keymgr', /^fixed_key=1111111111111111111111111111111111111111111111111111111111111111$/)
+        end
+
         context 'netapp driver' do
           # FIXME(galstrom21): this block needs to check all of the default
           #   netapp_* configuration options

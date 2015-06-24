@@ -334,6 +334,12 @@ default['openstack']['block-storage']['enable_v1_api'] = 'False'
 # Whether to enable cinder v2 api or not
 default['openstack']['block-storage']['enable_v2_api'] = 'True'
 
+# The full class name of the key manager api class
+default['openstack']['block-storage']['keymgr']['api_class'] = 'cinder.keymgr.conf_key_mgr.ConfKeyManager'
+
+# Fixed key returned by key manager, specified in hex
+default['openstack']['block-storage']['keymgr']['fixed_key'] = nil
+
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
