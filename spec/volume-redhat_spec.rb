@@ -110,6 +110,17 @@ describe 'openstack-block-storage::volume' do
         @chef_run = ::ChefSpec::SoloRunner.new ::REDHAT_OPTS do |n|
           n.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
           n.set['openstack']['block-storage']['gpfs']['gpfs_mount_point_base'] = 'volumes'
+          n.set['openstack']['block-storage']['volume']['multi_backend'] =
+          {
+            'gpfs01' => {
+              'gpfs_mount_point_base' => 'gpfs_volume01',
+              'volume_driver' => 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
+            },
+            'gpfs02' => {
+              'gpfs_mount_point_base' => 'gpfs_volume02',
+              'volume_driver' => 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
+            }
+          }
         end
 
         @conf = '/etc/cinder/cinder.conf'
@@ -155,6 +166,19 @@ describe 'openstack-block-storage::volume' do
 
       it 'verifies gpfs volume directory is created with owner and mode set correctly' do
         expect(@chef_run).to create_directory('volumes').with(
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0755'
+        )
+      end
+
+      it 'verifies mount point base is created in multi backend case' do
+        expect(@chef_run).to create_directory('gpfs_volume01').with(
+          owner: 'cinder',
+          group: 'cinder',
+          mode: '0755'
+        )
+        expect(@chef_run).to create_directory('gpfs_volume02').with(
           owner: 'cinder',
           group: 'cinder',
           mode: '0755'

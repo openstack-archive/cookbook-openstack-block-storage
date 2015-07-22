@@ -141,6 +141,19 @@ when 'cinder.volume.drivers.ibm.gpfs.GPFSDriver'
     group node['openstack']['block-storage']['group']
     recursive true
   end
+  multi_backend = node['openstack']['block-storage']['volume']['multi_backend']
+  unless multi_backend.nil?
+    multi_backend.each do |_drv, options|
+      options.select { |optkey, _optvalue| optkey == 'gpfs_mount_point_base' }.each do |_optkey, optvalue|
+        directory optvalue do
+          mode '0755'
+          owner node['openstack']['block-storage']['user']
+          group node['openstack']['block-storage']['group']
+          recursive true
+        end
+      end
+    end
+  end
 
 when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
   directory node['openstack']['block-storage']['ibmnas']['mount_point_base'] do
