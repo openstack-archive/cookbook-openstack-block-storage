@@ -1052,7 +1052,7 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         it 'does not set default_volume_type' do
-          expect(chef_run).to_not render_file(file.name).with_content(/^default_volume_type=.+$/)
+          expect(chef_run).to_not render_file(file.name).with_content(/^default_volume_type=.*$/)
         end
       end
     end
