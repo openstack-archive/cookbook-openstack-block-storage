@@ -68,7 +68,7 @@ describe 'openstack-block-storage::volume' do
             owner: 'cinder',
             group: 'cinder',
             mode: '0600'
-        )
+          )
         end
 
         it 'sets the ibmnas access_ip attribute' do
@@ -328,18 +328,18 @@ describe 'openstack-block-storage::volume' do
         %w(StorageType EcomServerPort EcomUserName).each do |attr|
           it "has an emc #{attr} setting" do
             node.set['openstack']['block-storage']['emc'][attr] = "emc_#{attr}_value"
-            expect(chef_run).to render_file(file.name).with_content(/^<#{attr}>emc_#{attr}_value<\/#{attr}>$/)
+            expect(chef_run).to render_file(file.name).with_content(%r{^<#{attr}>emc_#{attr}_value</#{attr}>$})
           end
         end
 
         it 'has a EcomServerIP' do
           node.set['openstack']['block-storage']['emc']['EcomServerIP'] = 'emc_EcomServerIP_value'
-          expect(chef_run).to render_file(file.name).with_content(/^<EcomServerIp>emc_EcomServerIP_value<\/EcomServerIp>$/)
+          expect(chef_run).to render_file(file.name).with_content(%r{^<EcomServerIp>emc_EcomServerIP_value</EcomServerIp>$})
         end
 
         it 'has EcomPassword' do
           node.set['openstack']['block-storage']['emc']['EcomUserName'] = 'emc_username'
-          expect(chef_run).to render_file(file.name).with_content(/^<EcomPassword>emc_test_pass<\/EcomPassword>$/)
+          expect(chef_run).to render_file(file.name).with_content(%r{^<EcomPassword>emc_test_pass</EcomPassword>$})
         end
 
         it 'does not have MaskingView when not specified' do
@@ -348,8 +348,7 @@ describe 'openstack-block-storage::volume' do
 
         it 'has MaskingView when specified' do
           node.set['openstack']['block-storage']['emc']['MaskingView'] = 'testMaskingView'
-
-          expect(chef_run).to render_file(file.name).with_content(/^<MaskingView>testMaskingView<\/MaskingView>$/)
+          expect(chef_run).to render_file(file.name).with_content(%r{^<MaskingView>testMaskingView</MaskingView>$})
         end
       end
     end

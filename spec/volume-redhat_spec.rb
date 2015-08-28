@@ -16,14 +16,6 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to upgrade_package('MySQL-python')
     end
 
-    it 'upgrades db2 python packages if explicitly told' do
-      node.set['openstack']['db']['block-storage']['service_type'] = 'db2'
-
-      ['python-ibm-db', 'python-ibm-db-sa'].each do |pkg|
-        expect(chef_run).to upgrade_package(pkg)
-      end
-    end
-
     it 'upgrades postgresql python packages if explicitly told' do
       node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
 
