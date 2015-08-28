@@ -33,6 +33,9 @@ end
 db_user = node['openstack']['db']['block-storage']['username']
 db_pass = get_password 'db', 'cinder'
 sql_connection = db_uri('block-storage', db_user, db_pass)
+if node['openstack']['endpoints']['db']['enabled_slave']
+  slave_connection = db_uri('block-storage', db_user, db_pass, true)
+end
 
 mq_service_type = node['openstack']['mq']['block-storage']['service_type']
 
@@ -100,6 +103,7 @@ template '/etc/cinder/cinder.conf' do
   mode 00640
   variables(
     sql_connection: sql_connection,
+    slave_connection: slave_connection,
     mq_service_type: mq_service_type,
     mq_password: mq_password,
     rabbit_hosts: rabbit_hosts,
