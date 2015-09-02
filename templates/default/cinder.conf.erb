@@ -1031,6 +1031,9 @@ connection=<%= @sql_connection %>
 # sql_connection_debug=0
 #### (IntOpt) Verbosity of SQL debugging information. 0=None,
 ####          100=Everything
+<% if node['openstack']['endpoints']['db']['enabled_slave'] %>
+slave_connection=<%= @slave_connection %>
+<% end %>
 
 
 [keymgr]

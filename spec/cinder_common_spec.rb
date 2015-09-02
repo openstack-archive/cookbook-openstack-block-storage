@@ -275,11 +275,25 @@ describe 'openstack-block-storage::cinder-common' do
         end
 
         it 'has a db connection attribute' do
+          node.set['openstack']['endpoints']['db']['enabled_slave'] = false
           allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
-            .with('block-storage', anything, '').and_return('sql_connection_value')
+            .and_return('sql_connection_value')
 
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('database', /^connection=sql_connection_value$/)
+          expect(chef_run).to_not render_config_file(file.name)
+            .with_section_content('database', /^slave_connection=sql_connection_value$/)
+        end
+
+        it 'has a slave db connection attribute' do
+          node.set['openstack']['endpoints']['db']['enabled_slave'] = true
+          allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
+            .and_return('sql_connection_value')
+
+          expect(chef_run).to render_config_file(file.name)
+            .with_section_content('database', /^connection=sql_connection_value$/)
+          expect(chef_run).to render_config_file(file.name)
+            .with_section_content('database', /^slave_connection=sql_connection_value$/)
         end
 
         it 'has a db backend attribute' do
