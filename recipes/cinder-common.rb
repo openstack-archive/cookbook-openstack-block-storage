@@ -11,9 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
-class ::Chef::Recipe # rubocop:disable Documentation
+# Make Openstack object available in Chef::Recipe
+class ::Chef::Recipe
   include ::Openstack
 end
 
@@ -32,39 +31,32 @@ end
 
 db_user = node['openstack']['db']['block-storage']['username']
 db_pass = get_password 'db', 'cinder'
-sql_connection = db_uri('block-storage', db_user, db_pass)
+node.default['openstack']['block-storage']['conf_secrets']
+  .[]('database')['connection'] =
+  db_uri('block-storage', db_user, db_pass)
+
 if node['openstack']['endpoints']['db']['enabled_slave']
-  slave_connection = db_uri('block-storage', db_user, db_pass, true)
+  node.default['openstack']['block-storage']['conf_secrets']
+    .[]('database')['slave_connection'] =
+    db_uri('block-storage', db_user, db_pass, true)
 end
 
-mq_service_type = node['openstack']['mq']['block-storage']['service_type']
-
-if mq_service_type == 'rabbitmq'
-  if node['openstack']['mq']['block-storage']['rabbit']['ha']
-    rabbit_hosts = rabbit_servers
-  end
-  mq_password = get_password 'user', node['openstack']['mq']['block-storage']['rabbit']['userid']
-elsif mq_service_type == 'qpid'
-  mq_password = get_password 'user', node['openstack']['mq']['block-storage']['qpid']['username']
+if node['openstack']['block-storage']['conf']['DEFAULT']['rpc_backend'] == 'rabbit'
+  user = node['openstack']['mq']['block-storage']['rabbit']['userid']
+  node.default['openstack']['block-storage']['conf_secrets']
+    .[]('oslo_messaging_rabbit')['rabbit_userid'] = user
+  node.default['openstack']['block-storage']['conf_secrets']
+    .[]('oslo_messaging_rabbit')['rabbit_password'] =
+    get_password 'user', user
 end
 
-case node['openstack']['block-storage']['volume']['driver']
-when 'cinder.volume.drivers.ibm.storwize_svc.StorwizeSVCDriver'
-  if node['openstack']['block-storage']['storwize']['san_private_key'].to_s.empty?
-    storwize_pass = get_password 'user', node['openstack']['block-storage']['storwize']['san_login']
-  end
-when 'cinder.volume.drivers.solidfire.SolidFire'
-  solidfire_pass = get_password 'user', node['openstack']['block-storage']['solidfire']['san_login']
-when 'cinder.volume.drivers.ibm.flashsystem.FlashSystemDriver'
-  flashsystem_pass = get_password 'user', node['openstack']['block-storage']['flashsystem']['san_login']
-when 'cinder.volume.drivers.ibm.ibmnas.IBMNAS_NFSDriver'
-  ibmnas_pass = get_password 'user', node['openstack']['block-storage']['ibmnas']['nas_login']
-when 'cinder.volume.drivers.vmware.vmdk.VMwareVcVmdkDriver'
-  vmware_host_pass = get_password 'token', node['openstack']['block-storage']['vmware']['secret_name']
-end
-
-glance_api_endpoint = internal_endpoint 'image-api'
-cinder_api_bind = endpoint 'block-storage-api-bind'
+glance_api_endpoint = internal_endpoint 'image_api'
+cinder_api_bind = node['openstack']['bind_service']['block-storage']['public']
+identity_endpoint = public_endpoint 'identity'
+node.default['openstack']['block-storage']['conf_secrets']
+  .[]('keystone_authtoken')['password'] =
+  get_password 'service', 'openstack-block-storage'
+auth_url = auth_uri_transform(identity_endpoint.to_s, node['openstack']['api']['auth']['version'])
 
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
@@ -73,67 +65,53 @@ directory '/etc/cinder' do
   action :create
 end
 
-multi_backend_sections = {}
-multi_backend = node['openstack']['block-storage']['volume']['multi_backend']
-if multi_backend.nil?
-  enabled_drivers = [node['openstack']['block-storage']['volume']['driver']]
-else
-  enabled_drivers = []
-  multi_backend.each do |drv, options|
-    optlines = []
-    options.each do |optkey, optvalue|
-      optlines.push "#{optkey} = #{optvalue}"
-      enabled_drivers.push optvalue if optkey == 'volume_driver'
-    end
-    multi_backend_sections[drv] = optlines
-  end
+node.default['openstack']['block-storage']['conf'].tap do |conf|
+  conf['DEFAULT']['glance_host'] = glance_api_endpoint.host
+  conf['DEFAULT']['glance_port'] = glance_api_endpoint.port
+  conf['DEFAULT']['glance_api_servers'] = "#{glance_api_endpoint.scheme}://#{glance_api_endpoint.host}:#{glance_api_endpoint.port}"
+  conf['DEFAULT']['osapi_volume_listen'] = cinder_api_bind.host
+  conf['DEFAULT']['osapi_volume_listen_port'] = cinder_api_bind.port
+  conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
-identity_endpoint = internal_endpoint 'identity-internal'
-identity_admin_endpoint = admin_endpoint 'identity-admin'
-service_pass = get_password 'service', 'openstack-block-storage'
-
-auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['block-storage']['api']['auth']['version'])
-identity_uri = identity_uri_transform(identity_admin_endpoint)
+# merge all config options and secrets to be used in the nova.conf.erb
+cinder_conf_options = merge_config_options 'block-storage'
 
 template '/etc/cinder/cinder.conf' do
-  source 'cinder.conf.erb'
+  source 'openstack-service.conf.erb'
+  cookbook 'openstack-common'
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
   mode 00640
   variables(
-    sql_connection: sql_connection,
-    slave_connection: slave_connection,
-    mq_service_type: mq_service_type,
-    mq_password: mq_password,
-    rabbit_hosts: rabbit_hosts,
-    glance_scheme: glance_api_endpoint.scheme,
-    glance_host: glance_api_endpoint.host,
-    glance_port: glance_api_endpoint.port,
-    ibmnas_pass: ibmnas_pass,
-    solidfire_pass: solidfire_pass,
-    flashsystem_pass: flashsystem_pass,
-    storwize_pass: storwize_pass,
-    volume_api_bind_address: cinder_api_bind.host,
-    volume_api_bind_port: cinder_api_bind.port,
-    vmware_host_pass: vmware_host_pass,
-    enabled_drivers: enabled_drivers,
-    multi_backend_sections: multi_backend_sections,
-    auth_uri: auth_uri,
-    identity_uri: identity_uri,
-    service_pass: service_pass
+    service_config: cinder_conf_options
   )
 end
 
-directory node['openstack']['block-storage']['lock_path'] do
+# delete all secrets saved in the attribute
+# node['openstack']['block-storage']['conf_secrets'] after creating the cinder.conf
+ruby_block "delete all attributes in node['openstack']['block-storage']['conf_secrets']" do
+  block do
+    node.rm(:openstack, :'block-storage', :conf_secrets)
+  end
+end
+
+directory node['openstack']['block-storage']['conf']['oslo_concurrency']['lock_path'] do
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
+  recursive true
   mode 00755
 end
 
-template '/etc/cinder/rootwrap.conf' do
-  source 'rootwrap.conf.erb'
-  owner 'root'
-  group 'root'
-  mode 00644
+if node['openstack']['block-storage']['use_rootwrap']
+  template '/etc/cinder/rootwrap.conf' do
+    source 'openstack-service.conf.erb'
+    cookbook 'openstack-common'
+    owner 'root'
+    group 'root'
+    mode 00644
+    variables(
+      service_config: node['openstack']['block-storage']['rootwrap']['conf']
+    )
+  end
 end

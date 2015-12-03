@@ -10,11 +10,6 @@ ChefSpec::Coverage.start! { add_filter 'openstack-block-storage' }
 require 'chef/application'
 
 LOG_LEVEL = :fatal
-SUSE_OPTS = {
-  platform: 'suse',
-  version: '11.3',
-  log_level: LOG_LEVEL
-}
 REDHAT_OPTS = {
   platform: 'redhat',
   version: '7.1',
@@ -95,7 +90,7 @@ def expect_runs_openstack_common_logging_recipe
   end
 end
 
-def expect_creates_cinder_conf(service, user, group, action = :restart) # rubocop:disable MethodLength
+def expect_creates_cinder_conf(service, user, group, action = :restart)
   describe 'cinder.conf' do
     let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
 

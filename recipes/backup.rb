@@ -16,8 +16,6 @@
 # limitations under the License.
 #
 
-return unless node['openstack']['block-storage']['backup']['enabled']
-
 include_recipe 'openstack-block-storage::cinder-common'
 
 platform_options = node['openstack']['block-storage']['platform']

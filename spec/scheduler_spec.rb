@@ -37,46 +37,5 @@ describe 'openstack-block-storage::scheduler' do
       expect(chef_run).to upgrade_package 'python-psycopg2'
       expect(chef_run).not_to upgrade_package 'python-mysqldb'
     end
-
-    it 'does not setup cron when no metering' do
-      expect(chef_run.cron('cinder-volume-usage-audit')).to be_nil
-    end
-
-    it 'creates cron metering default' do
-      allow_any_instance_of(Chef::Recipe).to receive(:search)
-        .with(:node, 'roles:os-block-storage-scheduler')
-        .and_return([OpenStruct.new(name: 'fauxhai.local')])
-      node.set['openstack']['telemetry'] = true
-
-      cron = chef_run.cron 'cinder-volume-usage-audit'
-      bin_str = '/usr/bin/cinder-volume-usage-audit > /var/log/cinder/audit.log'
-      expect(cron.command).to match(/#{bin_str}/)
-      crontests = [[:minute, '00'], [:hour, '*'], [:day, '*'],
-                   [:weekday, '*'], [:month, '*'], [:user, 'cinder']]
-      crontests.each do |k, v|
-        expect(cron.send(k)).to eq v
-        expect(chef_run).to create_cron('cinder-volume-usage-audit')
-      end
-      expect(cron.action).to include :create
-    end
-
-    it 'creates cron metering custom' do
-      crontests = [[:minute, '50'], [:hour, '23'], [:day, '6'],
-                   [:weekday, '5'], [:month, '11'], [:user, 'foobar']]
-      allow_any_instance_of(Chef::Recipe).to receive(:search)
-        .with(:node, 'roles:os-block-storage-scheduler')
-        .and_return([OpenStruct.new(name: 'foobar')])
-      node.set['openstack']['telemetry'] = true
-      crontests.each do |k, v|
-        node.set['openstack']['block-storage']['cron'][k.to_s] = v
-      end
-      node.set['openstack']['block-storage']['user'] = 'foobar'
-
-      cron = chef_run.cron 'cinder-volume-usage-audit'
-      crontests.each do |k, v|
-        expect(cron.send(k)).to eq v
-      end
-      expect(cron.action).to include :delete
-    end
   end
 end

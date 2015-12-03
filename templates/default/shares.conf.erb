@@ -1,5 +1,0 @@
-<%= node["openstack"]["block-storage"]["custom_template_banner"] %>
-
-<% node["openstack"]["block-storage"]["netapp"]["netapp_server_hostname"].each do |h| %>
-<%= h %>:<%= @export %>
-<% end %>

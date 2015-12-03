@@ -28,7 +28,6 @@ platform_options = node['openstack']['block-storage']['platform']
 platform_options['cinder_scheduler_packages'].each do |pkg|
   package pkg do
     options platform_options['package_overrides']
-
     action :upgrade
   end
 end
@@ -45,25 +44,4 @@ service 'cinder-scheduler' do
   supports status: true, restart: true
   action [:enable, :start]
   subscribes :restart, 'template[/etc/cinder/cinder.conf]'
-end
-
-audit_bin_dir = platform_family?('debian') ? '/usr/bin' : '/usr/local/bin'
-audit_log = node['openstack']['block-storage']['cron']['audit_logfile']
-
-if node['openstack']['telemetry']
-  scheduler_role = node['openstack']['block-storage']['scheduler_role']
-  results = search(:node, "roles:#{scheduler_role}")
-  cron_node = results.map { |a| a.name }.sort[0]
-  Chef::Log.debug("Volume audit cron node: #{cron_node}")
-
-  cron 'cinder-volume-usage-audit' do
-    day node['openstack']['block-storage']['cron']['day'] || '*'
-    hour node['openstack']['block-storage']['cron']['hour'] || '*'
-    minute node['openstack']['block-storage']['cron']['minute']
-    month node['openstack']['block-storage']['cron']['month'] || '*'
-    weekday node['openstack']['block-storage']['cron']['weekday'] || '*'
-    command "#{audit_bin_dir}/cinder-volume-usage-audit > #{audit_log} 2>&1"
-    action cron_node == node.name ? :create : :delete
-    user node['openstack']['block-storage']['user']
-  end
 end

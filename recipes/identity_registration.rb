@@ -21,17 +21,17 @@
 #
 
 require 'uri'
-
-class ::Chef::Recipe # rubocop:disable Documentation
+# Make Openstack object available in Chef::Recipe
+class ::Chef::Recipe
   include ::Openstack
 end
 
-identity_admin_endpoint = admin_endpoint 'identity-admin'
+identity_admin_endpoint = admin_endpoint 'identity'
 bootstrap_token = get_password 'token', 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
-admin_cinder_api_endpoint = admin_endpoint 'block-storage-api'
-internal_cinder_api_endpoint = internal_endpoint 'block-storage-api'
-public_cinder_api_endpoint = public_endpoint 'block-storage-api'
+admin_cinder_api_endpoint = admin_endpoint 'block-storage'
+internal_cinder_api_endpoint = internal_endpoint 'block-storage'
+public_cinder_api_endpoint = public_endpoint 'block-storage'
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
 service_tenant_name = node['openstack']['block-storage']['service_tenant_name']
@@ -45,7 +45,6 @@ openstack_identity_register 'Register Service Tenant' do
   bootstrap_token bootstrap_token
   tenant_name service_tenant_name
   tenant_description 'Service Tenant'
-
   action :create_tenant
 end
 
@@ -74,6 +73,40 @@ openstack_identity_register 'Register Cinder V2 Volume Endpoint' do
   endpoint_publicurl ::URI.decode public_cinder_api_endpoint.to_s
   action :create_endpoint
 end
+
+# --------------------- WORKAROUND --------------------------------------#
+# Currently this bug is still open
+# (https://bugs.launchpad.net/horizon/+bug/1415712) and we need to register and
+# enable the cinder v1 api to make it available via the dashboard. This should
+# be removed with the final mitaka release.
+
+openstack_identity_register 'Register Cinder V1 Volume Service' do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  service_name ((service_name).gsub(/v2/, ''))
+  service_type ((service_type).gsub(/v2/, ''))
+  service_description 'Cinder Volume Service V1'
+  endpoint_region region
+  endpoint_adminurl ((::URI.decode admin_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_internalurl ((::URI.decode internal_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_publicurl ((::URI.decode public_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  action :create_service
+end
+
+openstack_identity_register 'Register Cinder V1 Volume Endpoint' do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  service_name ((service_name).gsub(/v2/, ''))
+  service_type ((service_type).gsub(/v2/, ''))
+  service_description 'Cinder Volume Service V1'
+  endpoint_region region
+  endpoint_adminurl ((::URI.decode admin_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_internalurl ((::URI.decode internal_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_publicurl ((::URI.decode public_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  action :create_endpoint
+end
+
+# --------------------- WORKAROUND --------------------------------------#
 
 openstack_identity_register 'Register Cinder Service User' do
   auth_uri auth_uri

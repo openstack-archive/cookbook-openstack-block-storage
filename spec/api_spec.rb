@@ -35,8 +35,8 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).not_to upgrade_package('python-mysqldb')
     end
 
-    describe '/var/cache/cinder' do
-      let(:dir) { chef_run.directory('/var/cache/cinder') }
+    describe '/var/cache/cinder/api' do
+      let(:dir) { chef_run.directory('/var/cache/cinder/api') }
 
       it 'should create the directory' do
         expect(chef_run).to create_directory(dir.name).with(
