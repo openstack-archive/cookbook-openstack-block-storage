@@ -124,14 +124,13 @@ end
 
 # The OpenStack Volume (Cinder) API endpoint
 %w(public internal admin).each do |ep_type|
-  default['openstack']['endpoints']['block-storage'][ep_type]['scheme'] = 'http'
-  default['openstack']['endpoints']['block-storage'][ep_type]['path'] = '/v2/%(tenant_id)s'
-  %w(endpoints bind_service).each do |type|
-    default['openstack'][type]['block-storage'][ep_type]['host'] = '127.0.0.1'
-    default['openstack'][type]['block-storage'][ep_type]['port'] = '8776'
-  end
+  default['openstack']['endpoints'][ep_type]['block-storage']['scheme'] = 'http'
+  default['openstack']['endpoints'][ep_type]['block-storage']['path'] = '/v2/%(tenant_id)s'
+  default['openstack']['endpoints'][ep_type]['block-storage']['host'] = '127.0.0.1'
+  default['openstack']['endpoints'][ep_type]['block-storage']['port'] = '8776'
 end
-
+default['openstack']['bind_service']['all']['block-storage']['host'] = '127.0.0.1'
+default['openstack']['bind_service']['all']['block-storage']['port'] = '8776'
 # ============================= rootwrap Configuration ===================
 # use cinder root wrap
 default['openstack']['block-storage']['use_rootwrap'] = true

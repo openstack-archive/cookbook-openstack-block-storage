@@ -61,9 +61,9 @@ describe 'openstack-block-storage::identity_registration' do
         internal_url = 'http://internal.host:456/internal_path'
         public_url = 'https://public.host:789/public_path'
 
-        node.set['openstack']['endpoints']['block-storage']['internal']['uri'] = internal_url
-        node.set['openstack']['endpoints']['block-storage']['admin']['uri'] = admin_url
-        node.set['openstack']['endpoints']['block-storage']['public']['uri'] = public_url
+        node.set['openstack']['endpoints']['internal']['block-storage']['uri'] = internal_url
+        node.set['openstack']['endpoints']['admin']['block-storage']['uri'] = admin_url
+        node.set['openstack']['endpoints']['public']['block-storage']['uri'] = public_url
 
         expect(chef_run).to create_endpoint_openstack_identity_register(
           'Register Cinder V2 Volume Endpoint'

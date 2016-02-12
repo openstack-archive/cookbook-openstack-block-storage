@@ -51,7 +51,7 @@ if node['openstack']['block-storage']['conf']['DEFAULT']['rpc_backend'] == 'rabb
 end
 
 glance_api_endpoint = internal_endpoint 'image_api'
-cinder_api_bind = node['openstack']['bind_service']['block-storage']['public']
+cinder_api_bind = node['openstack']['bind_service']['all']['block-storage']
 identity_endpoint = public_endpoint 'identity'
 node.default['openstack']['block-storage']['conf_secrets']
   .[]('keystone_authtoken')['password'] =
