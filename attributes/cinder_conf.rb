@@ -5,7 +5,6 @@ default['openstack']['block-storage']['conf'].tap do |conf|
     conf['DEFAULT']['log_config'] = '/etc/openstack/logging.conf'
   end
   conf['DEFAULT']['rpc_backend'] = node['openstack']['mq']['service_type']
-  conf['DEFAULT']['my_ip'] = '127.0.0.1'
   conf['DEFAULT']['auth_strategy'] = 'keystone'
   conf['DEFAULT']['control_exchange'] = 'cinder'
   conf['DEFAULT']['volume_group'] = 'cinder-volumes'
