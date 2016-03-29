@@ -24,10 +24,6 @@ describe 'openstack-block-storage::scheduler' do
       expect(chef_run).to enable_service 'openstack-cinder-scheduler'
     end
 
-    it 'does not upgrade stevedore' do
-      expect(chef_run).not_to upgrade_python_pip 'stevedore'
-    end
-
     it 'upgrades mysql python package' do
       expect(chef_run).to upgrade_package 'MySQL-python'
     end
