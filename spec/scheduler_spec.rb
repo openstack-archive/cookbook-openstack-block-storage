@@ -12,8 +12,7 @@ describe 'openstack-block-storage::scheduler' do
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'
-
-    expect_creates_cinder_conf 'service[cinder-scheduler]', 'cinder', 'cinder'
+    include_examples 'creates_cinder_conf', 'service[cinder-scheduler]', 'cinder', 'cinder'
 
     it 'upgrades cinder scheduler package' do
       expect(chef_run).to upgrade_package 'cinder-scheduler'

@@ -12,8 +12,7 @@ describe 'openstack-block-storage::api' do
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'
-
-    expect_creates_cinder_conf 'service[cinder-api]', 'cinder', 'cinder'
+    include_examples 'creates_cinder_conf', 'service[cinder-api]', 'cinder', 'cinder'
 
     it 'upgrades cinder api packages' do
       expect(chef_run).to upgrade_package('cinder-api')

@@ -90,7 +90,7 @@ def expect_runs_openstack_common_logging_recipe
   end
 end
 
-def expect_creates_cinder_conf(service, user, group, action = :restart)
+shared_examples 'creates_cinder_conf' do |service, user, group, action = :restart|
   describe 'cinder.conf' do
     let(:file) { chef_run.template('/etc/cinder/cinder.conf') }
 
@@ -104,6 +104,29 @@ def expect_creates_cinder_conf(service, user, group, action = :restart)
 
     it 'notifies service restart' do
       expect(file).to notify(service).to(action)
+    end
+
+    it do
+      [
+        /^auth_type = v2password$/,
+        /^region_name = RegionOne$/,
+        /^username = cinder/,
+        /^tenant_name = service$/,
+        %r{^signing_dir = /var/cache/cinder/api$},
+        %r{^auth_url = http://127.0.0.1:5000/v2.0$},
+        /^password = cinder-pass$/
+      ].each do |line|
+        expect(chef_run).to render_config_file(file.name)
+          .with_section_content('keystone_authtoken', line)
+      end
+    end
+
+    it 'has oslo_messaging_notifications conf values' do
+      [
+        /^driver = cinder.openstack.common.notifier.rpc_notifier$/
+      ].each do |line|
+        expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_notifications', line)
+      end
     end
   end
 end
