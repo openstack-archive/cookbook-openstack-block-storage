@@ -83,26 +83,26 @@ end
 openstack_identity_register 'Register Cinder V1 Volume Service' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  service_name ((service_name).gsub(/v2/, ''))
-  service_type ((service_type).gsub(/v2/, ''))
+  service_name (service_name.gsub(/v2/, ''))
+  service_type (service_type.gsub(/v2/, ''))
   service_description 'Cinder Volume Service V1'
   endpoint_region region
-  endpoint_adminurl ((::URI.decode admin_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
-  endpoint_internalurl ((::URI.decode internal_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
-  endpoint_publicurl ((::URI.decode public_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_adminurl (::URI.decode admin_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
+  endpoint_internalurl (::URI.decode internal_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
+  endpoint_publicurl (::URI.decode public_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
   action :create_service
 end
 
 openstack_identity_register 'Register Cinder V1 Volume Endpoint' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
-  service_name ((service_name).gsub(/v2/, ''))
-  service_type ((service_type).gsub(/v2/, ''))
+  service_name (service_name.gsub(/v2/, ''))
+  service_type (service_type.gsub(/v2/, ''))
   service_description 'Cinder Volume Service V1'
   endpoint_region region
-  endpoint_adminurl ((::URI.decode admin_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
-  endpoint_internalurl ((::URI.decode internal_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
-  endpoint_publicurl ((::URI.decode public_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+  endpoint_adminurl (::URI.decode admin_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
+  endpoint_internalurl (::URI.decode internal_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
+  endpoint_publicurl (::URI.decode public_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
   action :create_endpoint
 end
 
