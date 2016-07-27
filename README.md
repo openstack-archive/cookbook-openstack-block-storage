@@ -28,7 +28,7 @@ Cookbooks
 
 The following cookbooks are dependencies:
 
-- 'apt', '~> 2.8'
+- 'apt', '~> 4.0'
 - 'openstack-common', '>= 13.0.0'
 - 'openstack-identity', '>= 13.0.0'
 - 'openstack-image', '>= 13.0.0'

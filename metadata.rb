@@ -13,7 +13,7 @@ version '14.0.0'
   supports os
 end
 
-depends 'apt', '~> 2.8'
+depends 'apt', '~> 4.0'
 depends 'openstack-common', '>= 14.0.0'
 depends 'openstack-identity', '>= 14.0.0'
 depends 'openstack-image', '>= 14.0.0'
