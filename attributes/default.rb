@@ -49,7 +49,7 @@ default['openstack']['block-storage']['rabbit_server_chef_role'] = 'os-ops-messa
 default['openstack']['block-storage']['keystone_service_chef_role'] = 'keystone'
 
 default['openstack']['block-storage']['service_user'] = 'cinder'
-default['openstack']['block-storage']['service_tenant_name'] = 'service'
+default['openstack']['block-storage']['project'] = 'service'
 default['openstack']['block-storage']['service_role'] = 'service'
 default['openstack']['block-storage']['service_name'] = 'cinderv2'
 default['openstack']['block-storage']['service_type'] = 'volumev2'

@@ -108,12 +108,14 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
 
     it do
       [
-        /^auth_type = v2password$/,
+        /^auth_type = v3password$/,
         /^region_name = RegionOne$/,
         /^username = cinder/,
-        /^tenant_name = service$/,
+        /^project_name = service$/,
+        /^user_domain_name = Default/,
+        /^project_domain_name = Default/,
         %r{^signing_dir = /var/cache/cinder/api$},
-        %r{^auth_url = http://127.0.0.1:5000/v2.0$},
+        %r{^auth_url = http://127.0.0.1:5000/v3$},
         /^password = cinder-pass$/
       ].each do |line|
         expect(chef_run).to render_config_file(file.name)

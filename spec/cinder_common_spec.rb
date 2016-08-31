@@ -77,13 +77,11 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'endpoint related' do
           it 'has auth_uri' do
-            expect(chef_run).to render_file(file.name).with_content(%r{^auth_url = http://127.0.0.1:5000/v2.0$})
+            expect(chef_run).to render_file(file.name).with_content(%r{^auth_url = http://127.0.0.1:5000/v3$})
           end
         end
 
-        it 'has no auth_version when auth_version is v2.0' do
-          node.set['openstack']['block-storage']['api']['auth']['version'] = 'v2.0'
-
+        it do
           expect(chef_run).not_to render_file(file.name).with_content(/^auth_version = v2.0$/)
         end
 

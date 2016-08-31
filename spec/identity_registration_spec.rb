@@ -12,153 +12,117 @@ describe 'openstack-block-storage::identity_registration' do
 
     include_context 'block-storage-stubs'
 
-    it 'registers service tenant' do
-      expect(chef_run).to create_tenant_openstack_identity_register(
-        'Register Service Tenant'
+    connection_params = {
+      openstack_auth_url: 'http://127.0.0.1:35357/v3/auth/tokens',
+      openstack_username: 'admin',
+      openstack_api_key: 'emc_test_pass',
+      openstack_project_name: 'admin',
+      openstack_domain_name: 'default'
+    }
+    service_name = 'cinderv2'
+    service_type = 'volumev2'
+    service_user = 'cinder'
+    url = 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+    region = 'RegionOne'
+    project_name = 'service'
+    role_name = 'service'
+    password = 'cinder-pass'
+    domain_name = 'Default'
+
+    it "registers #{project_name} Project" do
+      expect(chef_run).to create_openstack_project(
+        project_name
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'service',
-        tenant_description: 'Service Tenant'
+        connection_params: connection_params
       )
     end
 
-    it 'registers cinder v2 volume service' do
-      expect(chef_run).to create_service_openstack_identity_register(
-        'Register Cinder V2 Volume Service'
+    it "registers #{service_name} service" do
+      expect(chef_run).to create_openstack_service(
+        service_name
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        service_name: 'cinderv2',
-        service_type: 'volumev2',
-        service_description: 'Cinder Volume Service V2',
-        endpoint_region: 'RegionOne',
-        endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-        endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-        endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+        connection_params: connection_params,
+        type: service_type
       )
     end
 
-    context 'registers v2 volume endpoint' do
-      it 'with default values' do
-        expect(chef_run).to create_endpoint_openstack_identity_register(
-          'Register Cinder V2 Volume Endpoint'
-        ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          service_name: 'cinderv2',
-          service_type: 'volumev2',
-          service_description: 'Cinder Volume Service V2',
-          endpoint_region: 'RegionOne',
-          endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
-        )
+    context "registers #{service_name} endpoint" do
+      %w(admin internal public).each do |interface|
+        it "#{interface} endpoint with default values" do
+          expect(chef_run).to create_openstack_endpoint(
+            service_type
+          ).with(
+            service_name: service_name,
+            # interface: interface,
+            url: url,
+            region: region,
+            connection_params: connection_params
+          )
+        end
       end
+      %w(admin internal public).each do |interface|
+        it "#{interface} with different service type/name and registers v1 endpoint" do
+          node.set['openstack']['block-storage']['service_name'] = 'cinder'
+          node.set['openstack']['block-storage']['service_type'] = 'volume'
 
-      it 'with all different URLs' do
-        admin_url = 'https://admin.host:123/admin_path'
-        internal_url = 'http://internal.host:456/internal_path'
-        public_url = 'https://public.host:789/public_path'
-
-        node.set['openstack']['endpoints']['internal']['block-storage']['uri'] = internal_url
-        node.set['openstack']['endpoints']['admin']['block-storage']['uri'] = admin_url
-        node.set['openstack']['endpoints']['public']['block-storage']['uri'] = public_url
-
-        expect(chef_run).to create_endpoint_openstack_identity_register(
-          'Register Cinder V2 Volume Endpoint'
-        ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          service_name: 'cinderv2',
-          service_type: 'volumev2',
-          service_description: 'Cinder Volume Service V2',
-          endpoint_region: 'RegionOne',
-          endpoint_adminurl: admin_url,
-          endpoint_internalurl: internal_url,
-          endpoint_publicurl: public_url
-        )
-      end
-
-      it 'with different service type/name' do
-        node.set['openstack']['block-storage']['service_name'] = 'cinder'
-        node.set['openstack']['block-storage']['service_type'] = 'volume'
-
-        expect(chef_run).to create_endpoint_openstack_identity_register(
-          'Register Cinder V2 Volume Endpoint'
-        ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          service_name: 'cinder',
-          service_type: 'volume',
-          service_description: 'Cinder Volume Service V2',
-          endpoint_region: 'RegionOne',
-          endpoint_adminurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_internalurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s',
-          endpoint_publicurl: 'http://127.0.0.1:8776/v2/%(tenant_id)s'
-        )
+          expect(chef_run).to create_openstack_endpoint(
+            'volume'
+          ).with(
+            service_name: 'cinder',
+            # interface: interface,
+            url: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
+            region: 'RegionOne',
+            connection_params: connection_params
+          )
+        end
       end
 
       it 'with custom region override' do
         node.set['openstack']['block-storage']['region'] = 'volumeRegion'
-        expect(chef_run).to create_endpoint_openstack_identity_register(
-          'Register Cinder V2 Volume Endpoint'
-        ).with(endpoint_region: 'volumeRegion')
+        expect(chef_run).to create_openstack_endpoint(
+          service_type
+        ).with(region: 'volumeRegion')
       end
     end
 
     it 'registers service user' do
-      expect(chef_run).to create_user_openstack_identity_register(
-        'Register Cinder Service User'
+      expect(chef_run).to create_openstack_user(
+        service_user
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'service',
-        user_name: 'cinder',
-        user_pass: 'cinder-pass',
-        user_enabled: true
+        project_name: project_name,
+        role_name: role_name,
+        password: password,
+        connection_params: connection_params
       )
     end
 
-    it 'grants service role to service user for service tenant' do
-      expect(chef_run).to grant_role_openstack_identity_register(
-        'Grant service Role to Cinder Service User for Cinder Service Tenant'
+    it do
+      expect(chef_run).to grant_domain_openstack_user(
+        service_user
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'service',
-        user_name: 'cinder',
-        role_name: 'service'
+        domain_name: domain_name,
+        role_name: role_name,
+        connection_params: connection_params
       )
     end
+
     it do
-      expect(chef_run).to create_service_openstack_identity_register(
-        'Register Cinder V1 Volume Service'
+      expect(chef_run).to grant_role_openstack_user(
+        service_user
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        service_name: 'cinder',
-        service_type: 'volume',
-        service_description: 'Cinder Volume Service V1',
-        endpoint_region: 'RegionOne',
-        endpoint_adminurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
-        endpoint_internalurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
-        endpoint_publicurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s'
+        project_name: project_name,
+        role_name: role_name,
+        password: password,
+        connection_params: connection_params
       )
     end
-    it do
-      expect(chef_run).to create_endpoint_openstack_identity_register(
-        'Register Cinder V1 Volume Endpoint'
+
+    it 'registers cinder v1 volume service' do
+      expect(chef_run).to create_openstack_service(
+        'cinder'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        service_name: 'cinder',
-        service_type: 'volume',
-        service_description: 'Cinder Volume Service V1',
-        endpoint_region: 'RegionOne',
-        endpoint_adminurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
-        endpoint_internalurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
-        endpoint_publicurl: 'http://127.0.0.1:8776/v1/%(tenant_id)s'
+        connection_params: connection_params,
+        type: 'volume'
       )
     end
   end

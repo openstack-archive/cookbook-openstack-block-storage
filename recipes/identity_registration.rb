@@ -27,102 +27,112 @@ class ::Chef::Recipe
 end
 
 identity_admin_endpoint = admin_endpoint 'identity'
-bootstrap_token = get_password 'token', 'openstack_identity_bootstrap_token'
-auth_uri = ::URI.decode identity_admin_endpoint.to_s
-admin_cinder_api_endpoint = admin_endpoint 'block-storage'
-internal_cinder_api_endpoint = internal_endpoint 'block-storage'
-public_cinder_api_endpoint = public_endpoint 'block-storage'
+auth_url = ::URI.decode identity_admin_endpoint.to_s
+
+interfaces = {
+  public: { url: public_endpoint('block-storage') },
+  internal: { url: internal_endpoint('block-storage') },
+  admin: { url: admin_endpoint('block-storage') }
+}
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
-service_tenant_name = node['openstack']['block-storage']['service_tenant_name']
+service_project_name = node['openstack']['block-storage']['conf']['keystone_authtoken']['project_name']
 service_user = node['openstack']['block-storage']['service_user']
+admin_user = node['openstack']['identity']['admin_user']
+admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
+admin_project = node['openstack']['identity']['admin_project']
+admin_domain = node['openstack']['identity']['admin_domain_name']
+service_domain_name = node['openstack']['block-storage']['conf']['keystone_authtoken']['user_domain_name']
 service_role = node['openstack']['block-storage']['service_role']
 service_name = node['openstack']['block-storage']['service_name']
 service_type = node['openstack']['block-storage']['service_type']
 
-openstack_identity_register 'Register Service Tenant' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  tenant_name service_tenant_name
-  tenant_description 'Service Tenant'
-  action :create_tenant
+connection_params = {
+  openstack_auth_url:     "#{auth_url}/auth/tokens",
+  openstack_username:     admin_user,
+  openstack_api_key:      admin_pass,
+  openstack_project_name: admin_project,
+  openstack_domain_name:    admin_domain
+}
+
+# Register VolumeV2 Service
+openstack_service service_name do
+  type service_type
+  connection_params connection_params
 end
 
-openstack_identity_register 'Register Cinder V2 Volume Service' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name service_name
-  service_type service_type
-  service_description 'Cinder Volume Service V2'
-  endpoint_region region
-  endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode internal_cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode public_cinder_api_endpoint.to_s
-  action :create_service
+interfaces.each do |interface, res|
+  # Register VolumeV2 Endpoints
+  openstack_endpoint service_type do
+    service_name service_name
+    interface interface.to_s
+    url res[:url].to_s
+    region region
+    connection_params connection_params
+  end
 end
 
-openstack_identity_register 'Register Cinder V2 Volume Endpoint' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name service_name
-  service_type service_type
-  service_description 'Cinder Volume Service V2'
-  endpoint_region region
-  endpoint_adminurl ::URI.decode admin_cinder_api_endpoint.to_s
-  endpoint_internalurl ::URI.decode internal_cinder_api_endpoint.to_s
-  endpoint_publicurl ::URI.decode public_cinder_api_endpoint.to_s
-  action :create_endpoint
+# Register Service Project
+openstack_project service_project_name do
+  connection_params connection_params
 end
 
+# Register Service User
+openstack_user service_user do
+  project_name service_project_name
+  role_name service_role
+  password service_pass
+  connection_params connection_params
+end
+
+## Grant Service role to Service User for Service Tenant ##
+openstack_user service_user do
+  role_name service_role
+  project_name service_project_name
+  connection_params connection_params
+  action :grant_role
+end
+
+openstack_user service_user do
+  domain_name service_domain_name
+  role_name service_role
+  connection_params connection_params
+  action :grant_domain
+end
 # --------------------- WORKAROUND --------------------------------------#
 # Currently this bug is still open
 # (https://bugs.launchpad.net/horizon/+bug/1415712) and we need to register and
 # enable the cinder v1 api to make it available via the dashboard. This should
 # be removed with the final mitaka release.
 
-openstack_identity_register 'Register Cinder V1 Volume Service' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name (service_name.gsub(/v2/, ''))
-  service_type (service_type.gsub(/v2/, ''))
-  service_description 'Cinder Volume Service V1'
-  endpoint_region region
-  endpoint_adminurl (::URI.decode admin_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  endpoint_internalurl (::URI.decode internal_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  endpoint_publicurl (::URI.decode public_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  action :create_service
+# openstack_identity_register 'Register Cinder V1 Volume Service' do
+#   auth_uri auth_uri
+#   bootstrap_token bootstrap_token
+#   service_name ((service_name).gsub(/v2/, ''))
+#   service_type ((service_type).gsub(/v2/, ''))
+#   service_description 'Cinder Volume Service V1'
+#   endpoint_region region
+#   endpoint_adminurl ((::URI.decode admin_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+#   endpoint_internalurl ((::URI.decode internal_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+#   endpoint_publicurl ((::URI.decode public_cinder_api_endpoint.to_s).gsub(/v2/, 'v1'))
+#   action :create_service
+# end
+
+# Register Volume Service
+openstack_service 'cinder' do
+  type 'volume'
+  connection_params connection_params
 end
 
-openstack_identity_register 'Register Cinder V1 Volume Endpoint' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  service_name (service_name.gsub(/v2/, ''))
-  service_type (service_type.gsub(/v2/, ''))
-  service_description 'Cinder Volume Service V1'
-  endpoint_region region
-  endpoint_adminurl (::URI.decode admin_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  endpoint_internalurl (::URI.decode internal_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  endpoint_publicurl (::URI.decode public_cinder_api_endpoint.to_s.gsub(/v2/, 'v1'))
-  action :create_endpoint
+interfaces.each do |interface, res|
+  # Register VolumeV1 Endpoints
+  openstack_endpoint 'volume' do
+    service_name 'cinder'
+    interface interface.to_s
+    url (::URI.decode res[:url].to_s).gsub(/v2/, 'v1')
+    region region
+    connection_params connection_params
+  end
 end
 
 # --------------------- WORKAROUND --------------------------------------#
-
-openstack_identity_register 'Register Cinder Service User' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  tenant_name service_tenant_name
-  user_name service_user
-  user_pass service_pass
-  user_enabled true # Not required as this is the default
-  action :create_user
-end
-
-openstack_identity_register 'Grant service Role to Cinder Service User for Cinder Service Tenant' do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  tenant_name service_tenant_name
-  user_name service_user
-  role_name service_role
-  action :grant_role
-end
