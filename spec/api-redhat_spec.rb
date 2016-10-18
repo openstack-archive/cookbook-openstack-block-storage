@@ -13,7 +13,7 @@ describe 'openstack-block-storage::api' do
     include_context 'block-storage-stubs'
 
     it 'upgrades cinder api package' do
-      expect(chef_run).to upgrade_package 'python-cinderclient'
+      expect(chef_run).to upgrade_package 'openstack-cinder'
     end
 
     it 'upgrades mysql python package' do

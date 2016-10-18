@@ -41,7 +41,7 @@ if node['openstack']['endpoints']['db']['enabled_slave']
     db_uri('block-storage', db_user, db_pass, true)
 end
 
-if node['openstack']['block-storage']['conf']['DEFAULT']['rpc_backend'] == 'rabbit'
+unless node['openstack']['block-storage']['conf']['DEFAULT']['rpc_backend'].nil?
   user = node['openstack']['mq']['block-storage']['rabbit']['userid']
   node.default['openstack']['block-storage']['conf_secrets']
     .[]('oslo_messaging_rabbit')['rabbit_userid'] = user

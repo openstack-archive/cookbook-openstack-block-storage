@@ -77,9 +77,8 @@ when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['block-storage']['volume']['iscsi_helper'] = 'lioadm'
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['openstack-cinder'],
-    'cinder_api_packages' => ['python-cinderclient'],
+    'cinder_api_packages' => ['openstack-cinder'],
     'cinder_api_service' => 'openstack-cinder-api',
-    'cinder_client_packages' => ['python-cinderclient'],
     'cinder_volume_packages' => ['qemu-img'],
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_scheduler_packages' => [],
@@ -100,7 +99,7 @@ when 'debian'
   # operating system user and group names
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['cinder-common'],
-    'cinder_api_packages' => ['cinder-api', 'python-cinderclient'],
+    'cinder_api_packages' => ['cinder-api'],
     'cinder_api_service' => 'cinder-api',
     'cinder_volume_packages' => ['cinder-volume', 'qemu-utils'],
     'cinder_volume_service' => 'cinder-volume',
