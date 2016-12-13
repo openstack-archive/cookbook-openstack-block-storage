@@ -58,6 +58,9 @@ shared_context 'block-storage-stubs' do
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('user', 'ibmnas_admin')
       .and_return('test_pass')
+    allow_any_instance_of(Chef::Recipe).to receive(:rabbit_transport_url)
+      .with('block-storage')
+      .and_return('rabbit://guest:mypass@127.0.0.1:5672')
     allow(Chef::Application).to receive(:fatal!)
   end
 end

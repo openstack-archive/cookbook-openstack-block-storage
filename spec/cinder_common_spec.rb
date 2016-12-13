@@ -192,8 +192,8 @@ describe 'openstack-block-storage::cinder-common' do
             expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port = 8776$/)
           end
         end
-        it 'has default RPC/AMQP options set' do
-          [/^rpc_backend = rabbit/].each do |line|
+        it 'has default transport_url/AMQP options set' do
+          [%r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$}].each do |line|
             expect(chef_run).to render_file(file.name).with_content(line)
           end
         end
@@ -214,15 +214,6 @@ describe 'openstack-block-storage::cinder-common' do
             it 'does not have a rabbit_hosts attribute' do
               expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts = /)
             end
-          end
-
-          it 'has rabbit_userid' do
-            node.set['openstack']['mq']['block-storage']['rabbit']['userid'] = 'rabbit_userid_value'
-            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_userid = rabbit_userid_value$/)
-          end
-
-          it 'has rabbit_password' do
-            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_password = #{test_pass}$/)
           end
 
           it 'has rabbit_virtual_host' do

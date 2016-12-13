@@ -41,13 +41,8 @@ if node['openstack']['endpoints']['db']['enabled_slave']
     db_uri('block-storage', db_user, db_pass, true)
 end
 
-unless node['openstack']['block-storage']['conf']['DEFAULT']['rpc_backend'].nil?
-  user = node['openstack']['mq']['block-storage']['rabbit']['userid']
-  node.default['openstack']['block-storage']['conf_secrets']
-    .[]('oslo_messaging_rabbit')['rabbit_userid'] = user
-  node.default['openstack']['block-storage']['conf_secrets']
-    .[]('oslo_messaging_rabbit')['rabbit_password'] =
-    get_password 'user', user
+if node['openstack']['mq']['service_type'] == 'rabbit'
+  node.default['openstack']['block-storage']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'block-storage'
 end
 
 glance_api_endpoint = internal_endpoint 'image_api'
