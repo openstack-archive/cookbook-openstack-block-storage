@@ -6,6 +6,7 @@ default['openstack']['block-storage']['conf'].tap do |conf|
   end
   conf['DEFAULT']['auth_strategy'] = 'keystone'
   conf['DEFAULT']['control_exchange'] = 'cinder'
+  conf['DEFAULT']['glance_api_version'] = '2'
   conf['DEFAULT']['volume_group'] = 'cinder-volumes'
   conf['DEFAULT']['state_path'] = '/var/lib/cinder'
   conf['keystone_authtoken']['auth_type'] = 'v3password'
