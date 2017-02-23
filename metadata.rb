@@ -7,14 +7,14 @@ source_url 'https://github.com/openstack/cookbook-openstack-block-storage' if re
 license 'Apache 2.0'
 description 'The OpenStack Advanced Volume Management service Cinder.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '14.0.0'
+version '15.0.0'
 
 %w(ubuntu redhat centos).each do |os|
   supports os
 end
 
 depends 'apt', '~> 5.0'
-depends 'openstack-common', '>= 14.0.0'
-depends 'openstack-identity', '>= 14.0.0'
-depends 'openstack-image', '>= 14.0.0'
+depends 'openstack-common', '>= 15.0.0'
+depends 'openstack-identity', '>= 15.0.0'
+depends 'openstack-image', '>= 15.0.0'
 depends 'openstackclient'
