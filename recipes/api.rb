@@ -43,22 +43,9 @@ node['openstack']['db']['python_packages'][db_type].each do |pkg|
   end
 end
 
-directory node['openstack']['block-storage']['conf']['keystone_authtoken']['signing_dir'] do
-  owner node['openstack']['block-storage']['user']
-  group node['openstack']['block-storage']['group']
-  recursive true
-  mode 00700
-end
-
-service 'cinder-api' do
-  service_name platform_options['cinder_api_service']
-  supports status: true, restart: true
-  action :enable
-  subscribes :restart, [
-    'template[/etc/cinder/cinder.conf]',
-    'remote_file[/etc/cinder/policy.json]'
-  ]
-end
+# Todo(jr): Runs via wsgi in apache2 now, need to find a nice way to
+# trigger apache2 restart. Also disable the default installed wsgi
+# service and use our template based setup
 
 execute 'cinder-manage db sync' do
   user node['openstack']['block-storage']['user']

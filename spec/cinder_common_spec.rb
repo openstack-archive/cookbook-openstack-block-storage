@@ -51,33 +51,30 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       context 'keystone authtoken attributes with default values' do
-        it 'sets memcached server(s)' do
+        it 'does not set memcached server(s)' do
           expect(chef_run).not_to render_file(file.name).with_content(/^memcached_servers = $/)
         end
 
-        it 'sets memcache security strategy' do
+        it 'does not set memcache security strategy' do
           expect(chef_run).not_to render_file(file.name).with_content(/^memcache_security_strategy = $/)
         end
 
-        it 'sets memcache secret key' do
+        it 'does not set memcache secret key' do
           expect(chef_run).not_to render_file(file.name).with_content(/^memcache_secret_key = $/)
         end
 
-        it 'sets cafile' do
+        it 'does not set cafile' do
           expect(chef_run).not_to render_file(file.name).with_content(/^cafile = $/)
         end
       end
 
       context 'keystone authtoken attributes' do
-        it 'has signing_dir' do
-          node.set['openstack']['block-storage']['conf']['keystone_authtoken']['signing_dir'] = 'auth_cache_dir'
-
-          expect(chef_run).to render_file(file.name).with_content(/^signing_dir = auth_cache_dir$/)
-        end
-
         context 'endpoint related' do
           it 'has auth_uri' do
-            expect(chef_run).to render_file(file.name).with_content(%r{^auth_url = http://127.0.0.1:5000/v3$})
+            expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', %r{^auth_uri = http://127.0.0.1:5000/v3$})
+          end
+          it 'has auth_url' do
+            expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', %r{^auth_url = http://127.0.0.1:35357/v3$})
           end
         end
 
@@ -85,43 +82,13 @@ describe 'openstack-block-storage::cinder-common' do
           expect(chef_run).not_to render_file(file.name).with_content(/^auth_version = v2.0$/)
         end
 
-        it 'has an admin tenant name' do
-          node.set['openstack']['block-storage']['conf']['keystone_authtoken']['admin_tenant_name'] = 'tenant_name'
-
-          expect(chef_run).to render_file(file.name).with_content(/^admin_tenant_name = tenant_name$/)
-        end
-
-        it 'has an admin user' do
-          node.set['openstack']['block-storage']['conf']['keystone_authtoken']['admin_user'] = 'username'
-
-          expect(chef_run).to render_file(file.name).with_content(/^admin_user = username$/)
-        end
-
         it 'has an admin password' do
           # (fgimenez) the get_password mocking is set in spec/spec_helper.rb
-          expect(chef_run).to render_file(file.name).with_content(/^password = cinder-pass$/)
+          expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', /^password = cinder-pass$/)
         end
       end
 
       context 'template contents' do
-        context 'commonly named attributes' do
-          %w(debug verbose host notification_driver
-             osapi_volume_worker control_exchange).each do |attr_key|
-            it "has a #{attr_key} attribute" do
-              node.set['openstack']['block-storage']['conf']['DEFAULT'][attr_key] = "#{attr_key}_value"
-
-              expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^#{attr_key} = #{attr_key}_value$/)
-            end
-          end
-        end
-
-        context 'backup swift backend contents' do
-          before do
-            node.set['openstack']['block-storage']['backup']['enabled'] = true
-            node.set['openstack']['block-storage']['backup']['driver'] = 'cinder.backup.drivers.swift'
-          end
-        end
-
         it 'has a lock_path attribute' do
           expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', %r{^lock_path = /var/lib/cinder/tmp})
         end
@@ -151,50 +118,22 @@ describe 'openstack-block-storage::cinder-common' do
             .with_section_content('database', /^connection = sql_connection_value$/)
         end
 
-        it 'has a slave db connection attribute' do
-          allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
-            .and_return('sql_connection_value')
-
-          expect(chef_run).to render_config_file(file.name)
-            .with_section_content('database', /^connection = sql_connection_value$/)
-        end
-
-        it 'has a volume_driver attribute' do
-          node.set['openstack']['block-storage']['conf']['DEFAULT']['volume_driver'] = 'volume_driver_value'
-          expect(chef_run).to render_file(file.name).with_content(/^volume_driver = volume_driver_value$/)
-        end
-
-        it 'has a state_path attribute' do
-          node.set['openstack']['block-storage']['conf']['DEFAULT']['state_path'] = 'state_path_value'
-          expect(chef_run).to render_file(file.name).with_content(/^state_path = state_path_value$/)
-        end
-
-        context 'glance endpoint' do
-          it 'has a glance_api_servers attribute' do
-            expect(chef_run).to render_file(file.name).with_content(%r{^glance_api_servers = http://127.0.0.1:9292$})
-          end
-
-          it 'has a glance host attribute' do
-            expect(chef_run).to render_file(file.name).with_content(/^glance_host = 127.0.0.1$/)
-          end
-
-          it 'has a glance port attribute' do
-            expect(chef_run).to render_file(file.name).with_content(/^glance_port = 9292$/)
-          end
+        it 'has a glance_api_servers attribute' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', %r{^glance_api_servers = http://127.0.0.1:9292$})
         end
 
         context 'cinder endpoint' do
           it 'has osapi_volume_listen set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen = 127.0.0.1$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^osapi_volume_listen = 127.0.0.1$/)
           end
 
           it 'has osapi_volume_listen_port set' do
-            expect(chef_run).to render_file(file.name).with_content(/^osapi_volume_listen_port = 8776$/)
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^osapi_volume_listen_port = 8776$/)
           end
         end
         it 'has default transport_url/AMQP options set' do
           [%r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$}].each do |line|
-            expect(chef_run).to render_file(file.name).with_content(line)
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
           end
         end
 
@@ -204,21 +143,9 @@ describe 'openstack-block-storage::cinder-common' do
               node.set['openstack']['mq']['block-storage']['rabbit']['ha'] = false
             end
 
-            %w(host port).each do |attr|
-              it "has rabbit_#{attr} attribute" do
-                node.set['openstack']['block-storage']['conf']['oslo_messaging_rabbit']["rabbit_#{attr}"] = "rabbit_#{attr}_value"
-                expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr} = rabbit_#{attr}_value$/)
-              end
-            end
-
             it 'does not have a rabbit_hosts attribute' do
               expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts = /)
             end
-          end
-
-          it 'has rabbit_virtual_host' do
-            node.set['openstack']['block-storage']['conf']['oslo_messaging_rabbit']['rabbit_virtual_host'] = 'vhost_value'
-            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_virtual_host = vhost_value$/)
           end
         end
 
@@ -241,11 +168,6 @@ describe 'openstack-block-storage::cinder-common' do
           before do
             node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
           end
-        end
-
-        it 'has volume_driver attribute' do
-          node.set['openstack']['block-storage']['conf']['DEFAULT']['volume_driver'] = 'volume_driver_value'
-          expect(chef_run).to render_file(file.name).with_content(/^volume_driver = volume_driver_value$/)
         end
 
         context 'netapp ISCSI settings' do
@@ -293,6 +215,7 @@ describe 'openstack-block-storage::cinder-common' do
         end
       end
     end
+
     it do
       expect(chef_run).to run_ruby_block("delete all attributes in node['openstack']['block-storage']['conf_secrets']")
     end

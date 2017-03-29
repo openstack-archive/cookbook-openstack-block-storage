@@ -12,14 +12,10 @@ describe 'openstack-block-storage::api' do
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'
-    include_examples 'creates_cinder_conf', 'service[cinder-api]', 'cinder', 'cinder'
+    include_examples 'creates_cinder_conf', 'service[cinder-apache2]', 'cinder', 'cinder'
 
     it 'upgrades cinder api packages' do
       expect(chef_run).to upgrade_package('cinder-api')
-    end
-
-    it 'starts cinder api on boot' do
-      expect(chef_run).to enable_service('cinder-api')
     end
 
     it 'upgrades mysql python package' do
@@ -31,18 +27,6 @@ describe 'openstack-block-storage::api' do
 
       expect(chef_run).to upgrade_package('python-psycopg2')
       expect(chef_run).not_to upgrade_package('python-mysqldb')
-    end
-
-    describe '/var/cache/cinder/api' do
-      let(:dir) { chef_run.directory('/var/cache/cinder/api') }
-
-      it 'should create the directory' do
-        expect(chef_run).to create_directory(dir.name).with(
-          owner: 'cinder',
-          group: 'cinder',
-          mode: 00700
-        )
-      end
     end
 
     it 'runs db migrations' do

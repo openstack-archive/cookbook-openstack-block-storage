@@ -48,11 +48,13 @@ end
 glance_api_endpoint = internal_endpoint 'image_api'
 cinder_api_bind = node['openstack']['bind_service']['all']['block-storage']
 cinder_api_bind_address = bind_address cinder_api_bind
-identity_endpoint = public_endpoint 'identity'
+identity_endpoint = internal_endpoint 'identity'
+identity_admin_endpoint = admin_endpoint 'identity'
 node.default['openstack']['block-storage']['conf_secrets']
   .[]('keystone_authtoken')['password'] =
   get_password 'service', 'openstack-block-storage'
-auth_url = auth_uri_transform(identity_endpoint.to_s, node['openstack']['api']['auth']['version'])
+auth_uri = identity_endpoint.to_s
+auth_url = identity_admin_endpoint.to_s
 
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
@@ -62,17 +64,31 @@ directory '/etc/cinder' do
 end
 
 node.default['openstack']['block-storage']['conf'].tap do |conf|
-  conf['DEFAULT']['glance_host'] = glance_api_endpoint.host
-  conf['DEFAULT']['glance_port'] = glance_api_endpoint.port
   conf['DEFAULT']['my_ip'] = cinder_api_bind_address
-  conf['DEFAULT']['glance_api_servers'] = "#{glance_api_endpoint.scheme}://#{glance_api_endpoint.host}:#{glance_api_endpoint.port}"
+  conf['DEFAULT']['glance_api_servers'] = glance_api_endpoint.to_s
   conf['DEFAULT']['osapi_volume_listen'] = cinder_api_bind_address
   conf['DEFAULT']['osapi_volume_listen_port'] = cinder_api_bind.port
+  conf['keystone_authtoken']['auth_uri'] = auth_uri
   conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
-# merge all config options and secrets to be used in the nova.conf.erb
+# Todo(jr): Make this configurable depending on backend to be used
+# This needs to be explicitly configured since Ocata
+node.default['openstack']['block-storage']['conf'].tap do |conf|
+  conf['DEFAULT']['enabled_backends'] = 'lvm'
+  conf['lvm']['volume_driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
+  conf['lvm']['volume_group'] = 'cinder-volumes'
+  conf['lvm']['iscsi_protocol'] = 'iscsi'
+  conf['lvm']['iscsi_helper'] = 'tgtadm'
+end
+
+# merge all config options and secrets to be used in the cinder.conf.erb
 cinder_conf_options = merge_config_options 'block-storage'
+
+service 'cinder-apache2' do
+  service_name 'apache2'
+  action :nothing
+end
 
 template '/etc/cinder/cinder.conf' do
   source 'openstack-service.conf.erb'
@@ -83,6 +99,7 @@ template '/etc/cinder/cinder.conf' do
   variables(
     service_config: cinder_conf_options
   )
+  notifies :restart, 'service[cinder-apache2]'
 end
 
 # delete all secrets saved in the attribute

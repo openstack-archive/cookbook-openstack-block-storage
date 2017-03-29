@@ -60,22 +60,6 @@ describe 'openstack-block-storage::identity_registration' do
           )
         end
       end
-      %w(admin internal public).each do |interface|
-        it "#{interface} with different service type/name and registers v1 endpoint" do
-          node.set['openstack']['block-storage']['service_name'] = 'cinder'
-          node.set['openstack']['block-storage']['service_type'] = 'volume'
-
-          expect(chef_run).to create_openstack_endpoint(
-            'volume'
-          ).with(
-            service_name: 'cinder',
-            # interface: interface,
-            url: 'http://127.0.0.1:8776/v1/%(tenant_id)s',
-            region: 'RegionOne',
-            connection_params: connection_params
-          )
-        end
-      end
 
       it 'with custom region override' do
         node.set['openstack']['block-storage']['region'] = 'volumeRegion'
@@ -114,15 +98,6 @@ describe 'openstack-block-storage::identity_registration' do
         role_name: role_name,
         password: password,
         connection_params: connection_params
-      )
-    end
-
-    it 'registers cinder v1 volume service' do
-      expect(chef_run).to create_openstack_service(
-        'cinder'
-      ).with(
-        connection_params: connection_params,
-        type: 'volume'
       )
     end
   end

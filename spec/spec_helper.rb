@@ -32,9 +32,6 @@ shared_context 'block-storage-stubs' do
       .with('db', anything)
       .and_return('')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
-      .with('token', 'openstack_identity_bootstrap_token')
-      .and_return('bootstrap-token')
-    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('token', 'rbd_secret_uuid')
       .and_return('b0ff3bba-e07b-49b1-beed-09a45552b1ad')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
@@ -111,14 +108,14 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
 
     it do
       [
-        /^auth_type = v3password$/,
+        /^auth_type = password$/,
         /^region_name = RegionOne$/,
         /^username = cinder/,
         /^project_name = service$/,
         /^user_domain_name = Default/,
         /^project_domain_name = Default/,
-        %r{^signing_dir = /var/cache/cinder/api$},
-        %r{^auth_url = http://127.0.0.1:5000/v3$},
+        %r{^auth_uri = http://127.0.0.1:5000/v3$},
+        %r{^auth_url = http://127.0.0.1:35357/v3$},
         /^password = cinder-pass$/
       ].each do |line|
         expect(chef_run).to render_config_file(file.name)

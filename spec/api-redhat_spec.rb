@@ -26,9 +26,5 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to upgrade_package 'python-psycopg2'
       expect(chef_run).not_to upgrade_package 'MySQL-python'
     end
-
-    it 'starts cinder api on boot' do
-      expect(chef_run).to enable_service 'openstack-cinder-api'
-    end
   end
 end
