@@ -86,7 +86,12 @@ end
 cinder_conf_options = merge_config_options 'block-storage'
 
 service 'cinder-apache2' do
-  service_name 'apache2'
+  case node['platform_family']
+  when 'debian'
+    service_name 'apache2'
+  when 'rhel'
+    service_name 'httpd'
+  end
   action :nothing
 end
 
