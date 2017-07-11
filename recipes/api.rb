@@ -57,6 +57,6 @@ if node['openstack']['block-storage']['policyfile_url']
     source node['openstack']['block-storage']['policyfile_url']
     owner node['openstack']['block-storage']['user']
     group node['openstack']['block-storage']['group']
-    mode 00644
+    mode 0o0644
   end
 end

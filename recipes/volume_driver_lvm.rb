@@ -41,9 +41,15 @@ when 'file'
     not_if "vgs #{vg_name}"
   end
 
+  cookbook_file '/etc/systemd/system/cinder-group-active.service' do
+    source 'cinder-group-active.service'
+    mode '0644'
+    action :create_if_missing
+  end
+
   template '/etc/init.d/cinder-group-active' do
     source 'cinder-group-active.erb'
-    mode '755'
+    mode '0755'
     variables(
       volume_name: vg_name,
       volume_file: vg_file

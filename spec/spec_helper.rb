@@ -98,7 +98,7 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
       expect(chef_run).to create_template(file.name).with(
         user: user,
         group: group,
-        mode: 0640
+        mode: 0o640
       )
     end
 

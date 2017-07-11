@@ -28,7 +28,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_directory(dir.name).with(
           owner: 'cinder',
           group: 'cinder',
-          mode: 00750
+          mode: 0o0750
         )
       end
     end
@@ -46,7 +46,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_template(file.name).with(
           owner: 'cinder',
           group: 'cinder',
-          mode: 00640
+          mode: 0o0640
         )
       end
 
@@ -185,7 +185,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_directory(dir.name).with(
           user: 'cinder',
           group: 'cinder',
-          mode: 00755
+          mode: 0o0755
         )
       end
     end
@@ -197,7 +197,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_template(file.name).with(
           user: 'root',
           group: 'root',
-          mode: 0644
+          mode: 0o644
         )
       end
 

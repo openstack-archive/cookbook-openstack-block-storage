@@ -54,7 +54,7 @@ describe 'openstack-block-storage::volume' do
 
       it 'should create the targets.conf' do
         expect(chef_run).to create_template(file.name).with(
-          mode: 0600
+          mode: 0o600
         )
       end
 

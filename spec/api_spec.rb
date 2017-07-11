@@ -45,7 +45,8 @@ describe 'openstack-block-storage::api' do
           expect(chef_run).to create_remote_file('/etc/cinder/policy.json').with(
             user: 'cinder',
             group: 'cinder',
-            mode: 00644)
+            mode: 0o0644
+          )
         end
       end
     end

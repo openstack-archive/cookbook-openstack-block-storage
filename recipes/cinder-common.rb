@@ -59,7 +59,7 @@ auth_url = identity_admin_endpoint.to_s
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 00750
+  mode 0o0750
   action :create
 end
 
@@ -100,7 +100,7 @@ template '/etc/cinder/cinder.conf' do
   cookbook 'openstack-common'
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 00640
+  mode 0o0640
   variables(
     service_config: cinder_conf_options
   )
@@ -119,7 +119,7 @@ directory node['openstack']['block-storage']['conf']['oslo_concurrency']['lock_p
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
   recursive true
-  mode 00755
+  mode 0o0755
 end
 
 if node['openstack']['block-storage']['use_rootwrap']
@@ -128,7 +128,7 @@ if node['openstack']['block-storage']['use_rootwrap']
     cookbook 'openstack-common'
     owner 'root'
     group 'root'
-    mode 00644
+    mode 0o0644
     variables(
       service_config: node['openstack']['block-storage']['rootwrap']['conf']
     )

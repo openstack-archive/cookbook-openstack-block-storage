@@ -1,0 +1,18 @@
+[Unit]
+SourcePath=/etc/init.d/cinder-group-active
+Description=LSB: cinder volume group active script
+After=remote-fs.target
+After=network-online.target
+After=systemd-journald-dev-log.socket
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=true
+ExecStart=/etc/init.d/cinder-group-active start
+ExecStop=/etc/init.d/cinder-group-active stop
