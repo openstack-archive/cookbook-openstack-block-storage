@@ -32,7 +32,7 @@ auth_url = ::URI.decode identity_admin_endpoint.to_s
 interfaces = {
   public: { url: public_endpoint('block-storage') },
   internal: { url: internal_endpoint('block-storage') },
-  admin: { url: admin_endpoint('block-storage') }
+  admin: { url: admin_endpoint('block-storage') },
 }
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
@@ -52,7 +52,7 @@ connection_params = {
   openstack_username:     admin_user,
   openstack_api_key:      admin_pass,
   openstack_project_name: admin_project,
-  openstack_domain_name:    admin_domain
+  openstack_domain_name:    admin_domain,
 }
 
 # Register VolumeV2 Service

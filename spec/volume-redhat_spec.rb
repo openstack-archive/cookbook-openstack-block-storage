@@ -23,8 +23,8 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).not_to upgrade_package('MySQL-python')
     end
 
-    it 'upgrades qemu img package' do
-      expect(chef_run).to upgrade_package('qemu-img')
+    it 'upgrades qemu-img-ev package' do
+      expect(chef_run).to upgrade_package('qemu-img-ev')
     end
 
     it 'upgrades cinder iscsi package' do

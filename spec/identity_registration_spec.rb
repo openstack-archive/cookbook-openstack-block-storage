@@ -17,7 +17,7 @@ describe 'openstack-block-storage::identity_registration' do
       openstack_username: 'admin',
       openstack_api_key: 'emc_test_pass',
       openstack_project_name: 'admin',
-      openstack_domain_name: 'default'
+      openstack_domain_name: 'default',
     }
     service_name = 'cinderv2'
     service_type = 'volumev2'

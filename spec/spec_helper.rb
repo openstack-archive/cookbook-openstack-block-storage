@@ -13,12 +13,12 @@ LOG_LEVEL = :fatal
 REDHAT_OPTS = {
   platform: 'redhat',
   version: '7.1',
-  log_level: LOG_LEVEL
+  log_level: LOG_LEVEL,
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '16.04',
-  log_level: LOG_LEVEL
+  log_level: LOG_LEVEL,
 }.freeze
 
 shared_context 'block-storage-stubs' do
@@ -116,7 +116,7 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
         /^project_domain_name = Default/,
         %r{^auth_uri = http://127.0.0.1:5000/v3$},
         %r{^auth_url = http://127.0.0.1:35357/v3$},
-        /^password = cinder-pass$/
+        /^password = cinder-pass$/,
       ].each do |line|
         expect(chef_run).to render_config_file(file.name)
           .with_section_content('keystone_authtoken', line)
@@ -125,7 +125,7 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
 
     it 'has oslo_messaging_notifications conf values' do
       [
-        /^driver = cinder.openstack.common.notifier.rpc_notifier$/
+        /^driver = cinder.openstack.common.notifier.rpc_notifier$/,
       ].each do |line|
         expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_notifications', line)
       end
