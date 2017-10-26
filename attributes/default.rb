@@ -71,7 +71,7 @@ default['openstack']['block-storage']['volume']['block_devices'] = nil
 default['openstack']['block-storage']['user'] = 'cinder'
 default['openstack']['block-storage']['group'] = 'cinder'
 
-case platform_family
+case node['platform_family']
 when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
   default['openstack']['block-storage']['volume']['iscsi_helper'] = 'lioadm'
