@@ -23,6 +23,7 @@ describe 'openstack-block-storage::identity_registration' do
     service_type = 'volumev2'
     service_user = 'cinder'
     url = 'http://127.0.0.1:8776/v2/%(tenant_id)s'
+    url_v3 = 'http://127.0.0.1:8776/v3/%(tenant_id)s'
     region = 'RegionOne'
     project_name = 'service'
     role_name = 'service'
@@ -46,6 +47,15 @@ describe 'openstack-block-storage::identity_registration' do
       )
     end
 
+    it 'registers cinderv3 service' do
+      expect(chef_run).to create_openstack_service(
+        'cinderv3'
+      ).with(
+        connection_params: connection_params,
+        type: 'volumev3'
+      )
+    end
+
     context "registers #{service_name} endpoint" do
       %w(admin internal public).each do |interface|
         it "#{interface} endpoint with default values" do
@@ -55,6 +65,18 @@ describe 'openstack-block-storage::identity_registration' do
             service_name: service_name,
             # interface: interface,
             url: url,
+            region: region,
+            connection_params: connection_params
+          )
+        end
+
+        it "volumev3 #{interface} endpoint with default values" do
+          expect(chef_run).to create_openstack_endpoint(
+            'volumev3'
+          ).with(
+            service_name: 'cinderv3',
+            # interface: interface,
+            url: url_v3,
             region: region,
             connection_params: connection_params
           )
@@ -74,16 +96,6 @@ describe 'openstack-block-storage::identity_registration' do
         service_user
       ).with(
         domain_name: domain_name,
-        project_name: project_name,
-        password: password,
-        connection_params: connection_params
-      )
-    end
-
-    it do
-      expect(chef_run).to grant_role_openstack_user(
-        service_user
-      ).with(
         project_name: project_name,
         role_name: role_name,
         password: password,

@@ -71,6 +71,16 @@ default['openstack']['block-storage']['volume']['block_devices'] = nil
 default['openstack']['block-storage']['user'] = 'cinder'
 default['openstack']['block-storage']['group'] = 'cinder'
 
+# Cinder WSGI app SSL settings
+default['openstack']['block-storage']['ssl']['enabled'] = false
+default['openstack']['block-storage']['ssl']['certfile'] = ''
+default['openstack']['block-storage']['ssl']['chainfile'] = ''
+default['openstack']['block-storage']['ssl']['keyfile'] = ''
+default['openstack']['block-storage']['ssl']['ca_certs_path'] = ''
+default['openstack']['block-storage']['ssl']['cert_required'] = false
+default['openstack']['block-storage']['ssl']['protocol'] = ''
+default['openstack']['block-storage']['ssl']['ciphers'] = ''
+
 case node['platform_family']
 when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
@@ -79,14 +89,14 @@ when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_common_packages' => ['openstack-cinder'],
     'cinder_api_packages' => ['openstack-cinder'],
     'cinder_api_service' => 'openstack-cinder-api',
-    'cinder_volume_packages' => ['qemu-img-ev'],
+    'cinder_volume_packages' => ['qemu-img-ev', 'scsi-target-utils'],
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_scheduler_packages' => [],
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
     'cinder_backup_packages' => [],
     'cinder_backup_service' => 'openstack-cinder-backup',
-    'cinder_iscsitarget_packages' => ['targetcli'],
-    'cinder_iscsitarget_service' => 'target',
+    'cinder_iscsitarget_packages' => ['targetcli', 'dbus-python'],
+    'cinder_iscsitarget_service' => 'tgtd',
     'cinder_ceph_packages' => ['python-ceph', 'ceph-common'],
     'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
     'cinder_emc_packages' => ['pywbem'],
@@ -101,7 +111,7 @@ when 'debian'
     'cinder_common_packages' => ['cinder-common'],
     'cinder_api_packages' => ['cinder-api'],
     'cinder_api_service' => 'cinder-api',
-    'cinder_volume_packages' => ['cinder-volume', 'qemu-utils'],
+    'cinder_volume_packages' => ['cinder-volume', 'qemu-utils', 'thin-provisioning-tools'],
     'cinder_volume_service' => 'cinder-volume',
     'cinder_scheduler_packages' => ['cinder-scheduler'],
     'cinder_scheduler_service' => 'cinder-scheduler',
@@ -115,7 +125,7 @@ when 'debian'
     'cinder_svc_packages' => ['sysfsutils'],
     'cinder_lvm_packages' => ['lvm2'],
     'cinder_flashsystem_packages' => ['sysfsutils'],
-    'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
+    'package_overrides' => '',
   }
 end
 

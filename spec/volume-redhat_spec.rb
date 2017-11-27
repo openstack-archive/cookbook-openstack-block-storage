@@ -16,13 +16,6 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to upgrade_package('MySQL-python')
     end
 
-    it 'upgrades postgresql python packages if explicitly told' do
-      node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-
-      expect(chef_run).to upgrade_package('python-psycopg2')
-      expect(chef_run).not_to upgrade_package('MySQL-python')
-    end
-
     it 'upgrades qemu-img-ev package' do
       expect(chef_run).to upgrade_package('qemu-img-ev')
     end
@@ -41,7 +34,7 @@ describe 'openstack-block-storage::volume' do
 
     context 'ISCSI' do
       it 'starts iscsi target on boot' do
-        expect(chef_run).to enable_service('target')
+        expect(chef_run).to enable_service('iscsitarget')
       end
     end
   end

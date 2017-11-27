@@ -22,6 +22,10 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to upgrade_package 'qemu-utils'
     end
 
+    it 'upgrades thin provisioning tools package' do
+      expect(chef_run).to upgrade_package 'thin-provisioning-tools'
+    end
+
     it 'starts cinder volume' do
       expect(chef_run).to start_service 'cinder-volume'
     end
@@ -36,13 +40,6 @@ describe 'openstack-block-storage::volume' do
 
     it 'upgrades mysql python packages by default' do
       expect(chef_run).to upgrade_package 'python-mysqldb'
-    end
-
-    it 'upgrades postgresql python packages if explicitly told' do
-      node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-
-      expect(chef_run).to upgrade_package 'python-psycopg2'
-      expect(chef_run).not_to upgrade_package 'python-mysqldb'
     end
 
     it 'upgrades cinder iscsi package' do

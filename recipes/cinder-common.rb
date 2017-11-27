@@ -67,7 +67,7 @@ node.default['openstack']['block-storage']['conf'].tap do |conf|
   conf['DEFAULT']['my_ip'] = cinder_api_bind_address
   conf['DEFAULT']['glance_api_servers'] = glance_api_endpoint.to_s
   conf['DEFAULT']['osapi_volume_listen'] = cinder_api_bind_address
-  conf['DEFAULT']['osapi_volume_listen_port'] = cinder_api_bind.port
+  conf['DEFAULT']['osapi_volume_listen_port'] = cinder_api_bind['port']
   conf['keystone_authtoken']['auth_uri'] = auth_uri
   conf['keystone_authtoken']['auth_url'] = auth_url
 end

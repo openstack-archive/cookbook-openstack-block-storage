@@ -28,13 +28,6 @@ describe 'openstack-block-storage::backup' do
       it 'upgrades mysql python package' do
         expect(chef_run).to upgrade_package 'MySQL-python'
       end
-
-      it 'upgrades postgresql python packages if explicitly told' do
-        node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-
-        expect(chef_run).to upgrade_package 'python-psycopg2'
-        expect(chef_run).not_to upgrade_package 'MySQL-python'
-      end
     end
   end
 end

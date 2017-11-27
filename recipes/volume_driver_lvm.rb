@@ -35,38 +35,22 @@ when 'file'
   vg_file = "#{node['openstack']['block-storage']['conf']['DEFAULT']['state_path']}/#{vg_name}.img"
 
   # create volume group
-  execute 'Create Cinder volume group' do
+  execute 'Create Cinder loopback file' do
     command "dd if=/dev/zero of=#{vg_file} bs=1M seek=#{seek_count} count=0; vgcreate #{vg_name} $(losetup --show -f #{vg_file})"
     action :run
-    not_if "vgs #{vg_name}"
+    not_if "pvs | grep -c #{vg_name}"
   end
-
-  cookbook_file '/etc/systemd/system/cinder-group-active.service' do
-    source 'cinder-group-active.service'
-    mode '0644'
-    action :create_if_missing
-  end
-
-  template '/etc/init.d/cinder-group-active' do
-    source 'cinder-group-active.erb'
-    mode '0755'
-    variables(
-      volume_name: vg_name,
-      volume_file: vg_file
-    )
-    notifies :start, 'service[cinder-group-active]', :immediately
-  end
-
-  service 'cinder-group-active' do
-    service_name 'cinder-group-active'
-    action [:enable, :start]
-  end
-
 when 'block_devices'
   block_devices = node['openstack']['block-storage']['volume']['block_devices']
-  execute 'Create Cinder volume group with block devices' do
-    command "pvcreate #{block_devices}; vgcreate #{vg_name} #{block_devices}"
-    action :run
+
+  lvm_physical_volume block_devices do
+    action :create
+    not_if "pvs | grep -c #{block_devices}"
+  end
+
+  lvm_volume_group vg_name do
+    physical_volumes [block_devices]
+    wipe_signatures true
     not_if "vgs #{vg_name}"
   end
 end

@@ -55,18 +55,35 @@ connection_params = {
   openstack_domain_name:    admin_domain,
 }
 
-# Register VolumeV2 Service
+# Register Volume Service
 openstack_service service_name do
   type service_type
   connection_params connection_params
 end
 
 interfaces.each do |interface, res|
-  # Register VolumeV2 Endpoints
+  # Register Volume Endpoints
   openstack_endpoint service_type do
     service_name service_name
     interface interface.to_s
     url res[:url].to_s
+    region region
+    connection_params connection_params
+  end
+end
+
+# Workaround to enable Volume support in Horizon
+# this may break in future releases of chef-client
+openstack_service 'cinderv3' do
+  type 'volumev3'
+  connection_params connection_params
+end
+
+interfaces.each do |interface, res|
+  openstack_endpoint 'volumev3' do
+    service_name 'cinderv3'
+    interface interface.to_s
+    url res[:url].to_s.gsub('/v2', '/v3')
     region region
     connection_params connection_params
   end
@@ -81,14 +98,8 @@ end
 openstack_user service_user do
   project_name service_project_name
   domain_name service_domain_name
+  role_name service_role
   password service_pass
   connection_params connection_params
-end
-
-## Grant Service role to Service User for Service Tenant ##
-openstack_user service_user do
-  role_name service_role
-  project_name service_project_name
-  connection_params connection_params
-  action :grant_role
+  action [:create, :grant_role]
 end

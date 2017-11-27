@@ -12,7 +12,7 @@ require 'chef/application'
 LOG_LEVEL = :fatal
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '7.1',
+  version: '7.3',
   log_level: LOG_LEVEL,
 }.freeze
 UBUNTU_OPTS = {
@@ -58,6 +58,8 @@ shared_context 'block-storage-stubs' do
     allow_any_instance_of(Chef::Recipe).to receive(:rabbit_transport_url)
       .with('block-storage')
       .and_return('rabbit://guest:mypass@127.0.0.1:5672')
+    stub_command('/usr/sbin/httpd -t').and_return(true)
+    stub_command('/usr/sbin/apache2 -t').and_return(true)
     allow(Chef::Application).to receive(:fatal!)
   end
 end

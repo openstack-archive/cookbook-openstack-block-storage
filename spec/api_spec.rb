@@ -22,13 +22,6 @@ describe 'openstack-block-storage::api' do
       expect(chef_run).to upgrade_package('python-mysqldb')
     end
 
-    it 'upgrades postgresql python packages if explicitly told' do
-      node.set['openstack']['db']['block-storage']['service_type'] = 'postgresql'
-
-      expect(chef_run).to upgrade_package('python-psycopg2')
-      expect(chef_run).not_to upgrade_package('python-mysqldb')
-    end
-
     it 'runs db migrations' do
       expect(chef_run).to run_execute('cinder-manage db sync').with(user: 'cinder', group: 'cinder')
     end
