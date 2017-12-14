@@ -27,6 +27,7 @@ end
 
 include_recipe 'openstack-block-storage::cinder-common'
 
+bind_service = node['openstack']['bind_service']['all']['block-storage']
 platform_options = node['openstack']['block-storage']['platform']
 
 platform_options['cinder_api_packages'].each do |pkg|
@@ -43,10 +44,6 @@ node['openstack']['db']['python_packages'][db_type].each do |pkg|
   end
 end
 
-# Todo(jr): Runs via wsgi in apache2 now, need to find a nice way to
-# trigger apache2 restart. Also disable the default installed wsgi
-# service and use our template based setup
-
 execute 'cinder-manage db sync' do
   user node['openstack']['block-storage']['user']
   group node['openstack']['block-storage']['group']
@@ -59,4 +56,29 @@ if node['openstack']['block-storage']['policyfile_url']
     group node['openstack']['block-storage']['group']
     mode 0o0644
   end
+end
+
+# remove the cinder-wsgi.conf automatically generated from package
+apache_config 'cinder-wsgi' do
+  enable false
+end
+
+web_app 'cinder-api' do
+  template 'wsgi-template.conf.erb'
+  daemon_process 'cinder-wsgi'
+  server_host bind_service['host']
+  server_port bind_service['port']
+  server_entry '/usr/bin/cinder-wsgi'
+  log_dir node['apache']['log_dir']
+  run_dir node['apache']['run_dir']
+  user node['openstack']['block-storage']['user']
+  group node['openstack']['block-storage']['group']
+  use_ssl node['openstack']['block-storage']['ssl']['enabled']
+  cert_file node['openstack']['block-storage']['ssl']['certfile']
+  chain_file node['openstack']['block-storage']['ssl']['chainfile']
+  key_file node['openstack']['block-storage']['ssl']['keyfile']
+  ca_certs_path node['openstack']['block-storage']['ssl']['ca_certs_path']
+  cert_required node['openstack']['block-storage']['ssl']['cert_required']
+  protocol node['openstack']['block-storage']['ssl']['protocol']
+  ciphers node['openstack']['block-storage']['ssl']['ciphers']
 end

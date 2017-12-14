@@ -71,6 +71,16 @@ default['openstack']['block-storage']['volume']['block_devices'] = nil
 default['openstack']['block-storage']['user'] = 'cinder'
 default['openstack']['block-storage']['group'] = 'cinder'
 
+# Cinder WSGI app SSL settings
+default['openstack']['block-storage']['ssl']['enabled'] = false
+default['openstack']['block-storage']['ssl']['certfile'] = ''
+default['openstack']['block-storage']['ssl']['chainfile'] = ''
+default['openstack']['block-storage']['ssl']['keyfile'] = ''
+default['openstack']['block-storage']['ssl']['ca_certs_path'] = ''
+default['openstack']['block-storage']['ssl']['cert_required'] = false
+default['openstack']['block-storage']['ssl']['protocol'] = ''
+default['openstack']['block-storage']['ssl']['ciphers'] = ''
+
 case platform_family
 when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   # operating system user and group names
