@@ -35,7 +35,7 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'starts iscsi target on boot' do
-      expect(chef_run).to enable_service 'tgt'
+      expect(chef_run).to enable_service 'iscsitarget'
     end
 
     it 'upgrades mysql python packages by default' do
@@ -43,11 +43,11 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'upgrades cinder iscsi package' do
-      expect(chef_run).to upgrade_package 'tgt'
+      expect(chef_run).to upgrade_package 'targetcli'
     end
 
     describe 'targets.conf' do
-      let(:file) { chef_run.template('/etc/tgt/targets.conf') }
+      let(:file) { chef_run.template('/etc/target/targets.conf') }
 
       it 'should create the targets.conf' do
         expect(chef_run).to create_template(file.name).with(

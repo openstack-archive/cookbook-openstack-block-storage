@@ -65,7 +65,7 @@ service 'iscsitarget' do
   action :enable
 end
 
-template '/etc/tgt/targets.conf' do
+template '/etc/target/targets.conf' do
   source 'targets.conf.erb'
   mode 0o0600
   notifies :restart, 'service[iscsitarget]', :immediately
