@@ -164,12 +164,6 @@ describe 'openstack-block-storage::cinder-common' do
           end
         end
 
-        context 'rbd attributes' do
-          before do
-            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.rbd.RBDDriver'
-          end
-        end
-
         context 'netapp ISCSI settings' do
           before do
             node.set['openstack']['block-storage']['conf']['DEFAULT']['volume_driver'] = 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
