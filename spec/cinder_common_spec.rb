@@ -69,15 +69,6 @@ describe 'openstack-block-storage::cinder-common' do
       end
 
       context 'keystone authtoken attributes' do
-        context 'endpoint related' do
-          it 'has auth_uri' do
-            expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', %r{^auth_uri = http://127.0.0.1:5000/v3$})
-          end
-          it 'has auth_url' do
-            expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', %r{^auth_url = http://127.0.0.1:35357/v3$})
-          end
-        end
-
         it do
           expect(chef_run).not_to render_file(file.name).with_content(/^auth_version = v2.0$/)
         end

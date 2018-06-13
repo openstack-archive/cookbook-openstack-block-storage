@@ -9,16 +9,19 @@ ChefSpec::Coverage.start! { add_filter 'openstack-block-storage' }
 
 require 'chef/application'
 
-LOG_LEVEL = :fatal
+RSpec.configure do |config|
+  config.color = true
+  config.formatter = :documentation
+  config.log_level = :fatal
+end
+
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '7.3',
-  log_level: LOG_LEVEL,
+  version: '7.4',
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '16.04',
-  log_level: LOG_LEVEL,
 }.freeze
 
 shared_context 'block-storage-stubs' do
@@ -110,8 +113,7 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
         /^project_name = service$/,
         /^user_domain_name = Default/,
         /^project_domain_name = Default/,
-        %r{^auth_uri = http://127.0.0.1:5000/v3$},
-        %r{^auth_url = http://127.0.0.1:35357/v3$},
+        %r{^auth_url = http://127.0.0.1:5000/v3$},
         /^password = cinder-pass$/,
       ].each do |line|
         expect(chef_run).to render_config_file(file.name)
