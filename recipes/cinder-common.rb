@@ -48,12 +48,12 @@ end
 glance_api_endpoint = internal_endpoint 'image_api'
 cinder_api_bind = node['openstack']['bind_service']['all']['block-storage']
 cinder_api_bind_address = bind_address cinder_api_bind
-identity_endpoint = public_endpoint 'identity'
+identity_endpoint = internal_endpoint 'identity'
 node.default['openstack']['block-storage']['conf_secrets']
   .[]('keystone_authtoken')['password'] =
   get_password 'service', 'openstack-block-storage'
 
-auth_url = auth_uri_transform identity_endpoint.to_s, node['openstack']['api']['auth']['version']
+auth_url = ::URI.decode identity_endpoint.to_s
 
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
