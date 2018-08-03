@@ -14,7 +14,7 @@ describe 'openstack-block-storage::backup' do
 
     describe 'enable cinder backup service' do
       before do
-        node.set['openstack']['block-storage']['backup']['enabled'] = true
+        node.override['openstack']['block-storage']['backup']['enabled'] = true
       end
 
       it 'starts cinder backup' do

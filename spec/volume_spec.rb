@@ -60,7 +60,7 @@ describe 'openstack-block-storage::volume' do
       end
 
       it 'has ubuntu include' do
-        node.set['openstack']['block-storage']['volume']['volumes_dir'] = 'volumes_dir_value'
+        node.override['openstack']['block-storage']['volume']['volumes_dir'] = 'volumes_dir_value'
 
         expect(chef_run).to render_file(file.name).with_content('include /etc/tgt/conf.d/*.conf')
         expect(chef_run).not_to render_file(file.name).with_content('include volumes_dir_value/*')

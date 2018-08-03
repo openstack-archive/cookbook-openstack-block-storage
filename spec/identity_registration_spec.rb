@@ -84,7 +84,7 @@ describe 'openstack-block-storage::identity_registration' do
       end
 
       it 'with custom region override' do
-        node.set['openstack']['block-storage']['region'] = 'volumeRegion'
+        node.override['openstack']['block-storage']['region'] = 'volumeRegion'
         expect(chef_run).to create_openstack_endpoint(
           service_type
         ).with(region: 'volumeRegion')

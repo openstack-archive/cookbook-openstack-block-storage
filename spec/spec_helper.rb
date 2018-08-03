@@ -64,7 +64,7 @@ end
 shared_examples 'common-logging' do
   context 'when syslog.use is true' do
     before do
-      node.set['openstack']['block-storage']['syslog']['use'] = true
+      node.override['openstack']['block-storage']['syslog']['use'] = true
     end
 
     it 'runs logging recipe if node attributes say to' do
@@ -74,7 +74,7 @@ shared_examples 'common-logging' do
 
   context 'when syslog.use is false' do
     before do
-      node.set['openstack']['block-storage']['syslog']['use'] = false
+      node.override['openstack']['block-storage']['syslog']['use'] = false
     end
 
     it 'runs logging recipe if node attributes say to' do

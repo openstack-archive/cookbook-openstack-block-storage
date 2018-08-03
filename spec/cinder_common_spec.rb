@@ -9,8 +9,8 @@ describe 'openstack-block-storage::cinder-common' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
     let(:chef_run) do
-      node.set['openstack']['mq']['host'] = '127.0.0.1'
-      node.set['openstack']['mq']['block-storage']['rabbit']['notification_topic'] = 'rabbit_topic'
+      node.override['openstack']['mq']['host'] = '127.0.0.1'
+      node.override['openstack']['mq']['block-storage']['rabbit']['notification_topic'] = 'rabbit_topic'
 
       runner.converge(described_recipe)
     end
@@ -94,7 +94,7 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'syslog use' do
           it 'sets the log_config value when syslog is in use' do
-            node.set['openstack']['block-storage']['syslog']['use'] = true
+            node.override['openstack']['block-storage']['syslog']['use'] = true
 
             expect(chef_run).to render_file(file.name)
               .with_content(%r{^log_config = /etc/openstack/logging.conf$})
@@ -131,7 +131,7 @@ describe 'openstack-block-storage::cinder-common' do
         context 'rabbitmq as mq service' do
           context 'non ha attributes' do
             before do
-              node.set['openstack']['mq']['block-storage']['rabbit']['ha'] = false
+              node.override['openstack']['mq']['block-storage']['rabbit']['ha'] = false
             end
 
             it 'does not have a rabbit_hosts attribute' do
@@ -142,14 +142,14 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'lvm settings' do
           before do
-            node.set['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
+            node.override['openstack']['block-storage']['volume']['driver'] = 'cinder.volume.drivers.lvm.LVMVolumeDriver'
           end
         end
 
         context 'commonly named volume attributes' do
           %w(iscsi_ip_address iscsi_port iscsi_helper volumes_dir).each do |attr|
             it "has volume related #{attr} attribute" do
-              node.set['openstack']['block-storage']['conf']['DEFAULT'][attr] = "common_volume_#{attr}_value"
+              node.override['openstack']['block-storage']['conf']['DEFAULT'][attr] = "common_volume_#{attr}_value"
               expect(chef_run).to render_file(file.name).with_content(/^#{attr} = common_volume_#{attr}_value$/)
             end
           end
@@ -157,7 +157,7 @@ describe 'openstack-block-storage::cinder-common' do
 
         context 'netapp ISCSI settings' do
           before do
-            node.set['openstack']['block-storage']['conf']['DEFAULT']['volume_driver'] = 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
+            node.override['openstack']['block-storage']['conf']['DEFAULT']['volume_driver'] = 'cinder.volume.drivers.netapp.NetAppISCSIDriver'
           end
         end
       end

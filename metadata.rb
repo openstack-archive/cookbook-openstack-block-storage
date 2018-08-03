@@ -4,15 +4,15 @@ maintainer_email 'openstack-dev@lists.openstack.org'
 license          'Apache-2.0'
 description      'The OpenStack Advanced Volume Management service Cinder.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '17.0.0'
+version          '18.0.0'
 
 %w(ubuntu redhat centos).each do |os|
   supports os
 end
 
-depends 'openstack-common', '>= 17.0.0'
-depends 'openstack-identity', '>= 17.0.0'
-depends 'openstack-image', '>= 17.0.0'
+depends 'openstack-common', '>= 18.0.0'
+depends 'openstack-identity', '>= 18.0.0'
+depends 'openstack-image', '>= 18.0.0'
 depends 'openstackclient'
 
 depends 'lvm'
