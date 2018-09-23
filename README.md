@@ -16,7 +16,7 @@ https://github.com/openstack/openstack-chef contains documentation for
 using this cookbook in the context of a full OpenStack deployment. Cinder is
 currently installed from packages.
 
-https://docs.openstack.org/developer/cinder
+https://docs.openstack.org/cinder/latest/
 
 Requirements
 ============
