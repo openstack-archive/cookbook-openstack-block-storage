@@ -29,20 +29,20 @@ platform_options['cinder_common_packages'].each do |pkg|
   end
 end
 
-db_user = node['openstack']['db']['block-storage']['username']
+db_user = node['openstack']['db']['block_storage']['username']
 db_pass = get_password 'db', 'cinder'
 node.default['openstack']['block-storage']['conf_secrets']
   .[]('database')['connection'] =
-  db_uri('block-storage', db_user, db_pass)
+  db_uri('block_storage', db_user, db_pass)
 
 if node['openstack']['endpoints']['db']['enabled_slave']
   node.default['openstack']['block-storage']['conf_secrets']
     .[]('database')['slave_connection'] =
-    db_uri('block-storage', db_user, db_pass, true)
+    db_uri('block_storage', db_user, db_pass, true)
 end
 
 if node['openstack']['mq']['service_type'] == 'rabbit'
-  node.default['openstack']['block-storage']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'block-storage'
+  node.default['openstack']['block-storage']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'block_storage'
 end
 
 glance_api_endpoint = internal_endpoint 'image_api'
