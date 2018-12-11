@@ -15,6 +15,7 @@ depends 'openstack-identity', '>= 18.0.0'
 depends 'openstack-image', '>= 18.0.0'
 depends 'openstackclient'
 
+depends 'apache2', '5.0.1'
 depends 'lvm'
 depends 'selinux'
 
