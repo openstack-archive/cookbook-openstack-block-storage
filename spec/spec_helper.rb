@@ -53,7 +53,7 @@ shared_context 'block-storage-stubs' do
       .with('user', 'ibmnas_admin')
       .and_return('test_pass')
     allow_any_instance_of(Chef::Recipe).to receive(:rabbit_transport_url)
-      .with('block-storage')
+      .with('block_storage')
       .and_return('rabbit://guest:mypass@127.0.0.1:5672')
     stub_command('/usr/sbin/httpd -t').and_return(true)
     stub_command('/usr/sbin/apache2 -t').and_return(true)
