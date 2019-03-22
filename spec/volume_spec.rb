@@ -43,7 +43,7 @@ describe 'openstack-block-storage::volume' do
     end
 
     it 'upgrades cinder iscsi package' do
-      expect(chef_run).to upgrade_package 'targetcli'
+      expect(chef_run).to upgrade_package 'targetcli-fb'
     end
 
     describe 'targets.conf' do

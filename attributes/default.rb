@@ -116,7 +116,7 @@ when 'debian'
     'cinder_scheduler_service' => 'cinder-scheduler',
     'cinder_backup_packages' => ['cinder-backup'],
     'cinder_backup_service' => 'cinder-backup',
-    'cinder_iscsitarget_packages' => ['targetcli'],
+    'cinder_iscsitarget_packages' => ['targetcli-fb'],
     'cinder_iscsitarget_service' => 'tgt',
     'cinder_nfs_packages' => ['nfs-common'],
     'cinder_emc_packages' => ['python-pywbem'],
