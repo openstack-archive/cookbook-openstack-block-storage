@@ -125,6 +125,9 @@ when 'debian'
     'cinder_flashsystem_packages' => ['sysfsutils'],
     'package_overrides' => '',
   }
+  if platform?('ubuntu') && node['platform_version'].to_f >= 18.04
+    default['openstack']['block-storage']['platform']['cinder_iscsitarget_packages'] = ['targetcli-fb']
+  end
 end
 
 # ******************** OpenStack Volume Endpoints *****************************
