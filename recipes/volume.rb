@@ -64,10 +64,3 @@ service 'iscsitarget' do
   supports status: true, restart: true
   action :enable
 end
-
-template '/etc/target/targets.conf' do
-  source 'targets.conf.erb'
-  mode 0o0600
-  notifies :restart, 'service[iscsitarget]', :immediately
-  notifies :restart, 'service[cinder-volume]', :immediately
-end

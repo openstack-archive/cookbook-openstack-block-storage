@@ -1,9 +1,0 @@
-<%= node["openstack"]["block-storage"]["custom_template_banner"] %>
-
-<% if node['platform_family'].include?('rhel') %>
-include <%= node['openstack']['block-storage']['conf']['DEFAULT']['state_path'] %>/volumes/*
-<% end %>
-<% if node['platform_family'].include?('debian') %>
-include /etc/tgt/conf.d/*.conf
-<% end %>
-default-driver iscsi
