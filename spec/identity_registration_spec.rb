@@ -57,7 +57,7 @@ describe 'openstack-block-storage::identity_registration' do
     end
 
     context "registers #{service_name} endpoint" do
-      %w(admin internal public).each do |interface|
+      %w(internal public).each do |interface|
         it "#{interface} endpoint with default values" do
           expect(chef_run).to create_openstack_endpoint(
             service_type

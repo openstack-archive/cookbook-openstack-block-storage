@@ -130,7 +130,7 @@ end
 # ******************** OpenStack Volume Endpoints *****************************
 
 # The OpenStack Volume (Cinder) API endpoint
-%w(public internal admin).each do |ep_type|
+%w(public internal).each do |ep_type|
   default['openstack']['endpoints'][ep_type]['block-storage']['scheme'] = 'http'
   default['openstack']['endpoints'][ep_type]['block-storage']['path'] = '/v2/%(tenant_id)s'
   default['openstack']['endpoints'][ep_type]['block-storage']['host'] = '127.0.0.1'

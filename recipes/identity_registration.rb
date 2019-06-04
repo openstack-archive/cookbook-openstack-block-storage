@@ -32,7 +32,6 @@ auth_url = ::URI.decode identity_endpoint.to_s
 interfaces = {
   public: { url: public_endpoint('block-storage') },
   internal: { url: internal_endpoint('block-storage') },
-  admin: { url: admin_endpoint('block-storage') },
 }
 service_pass = get_password 'service', 'openstack-block-storage'
 region = node['openstack']['block-storage']['region']
