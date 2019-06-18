@@ -13,7 +13,7 @@ describe 'openstack-block-storage::identity_registration' do
     include_context 'block-storage-stubs'
 
     connection_params = {
-      openstack_auth_url: 'http://127.0.0.1:5000/v3/auth/tokens',
+      openstack_auth_url: 'http://127.0.0.1:5000/v3',
       openstack_username: 'admin',
       openstack_api_key: 'emc_test_pass',
       openstack_project_name: 'admin',
