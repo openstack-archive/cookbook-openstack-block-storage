@@ -12,7 +12,35 @@ describe 'openstack-block-storage::api' do
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'
-    include_examples 'creates_cinder_conf', 'service[cinder-apache2]', 'cinder', 'cinder'
+    include_examples 'creates_cinder_conf', 'execute[Clear cinder-api apache restart]', 'cinder', 'cinder', 'run'
+
+    it do
+      expect(chef_run).to nothing_execute('Clear cinder-api apache restart')
+        .with(
+          command: 'rm -f /var/chef/cache/cinder-api-apache-restarted'
+        )
+    end
+
+    %w(
+      /etc/cinder/cinder.conf
+      /etc/apache2/sites-available/cinder-api.conf
+    ).each do |f|
+      it "#{f} notifies execute[Clear cinder-api apache restart]" do
+        expect(chef_run.template(f)).to notify('execute[Clear cinder-api apache restart]').to(:run).immediately
+      end
+    end
+
+    it do
+      expect(chef_run).to run_execute('cinder-api apache restart')
+        .with(
+          command: 'touch /var/chef/cache/cinder-api-apache-restarted',
+          creates: '/var/chef/cache/cinder-api-apache-restarted'
+        )
+    end
+
+    it do
+      expect(chef_run.execute('cinder-api apache restart')).to notify('service[apache2]').to(:restart).immediately
+    end
 
     it 'upgrades cinder api packages' do
       expect(chef_run).to upgrade_package('cinder-api')
