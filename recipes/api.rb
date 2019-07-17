@@ -30,6 +30,16 @@ include_recipe 'openstack-block-storage::cinder-common'
 bind_service = node['openstack']['bind_service']['all']['block-storage']
 platform_options = node['openstack']['block-storage']['platform']
 
+# create file to prevent installation of non-working configuration
+file '/etc/apache2/conf-available/cinder-wsgi.conf' do
+  owner 'root'
+  group 'www-data'
+  mode '0640'
+  action :create
+  content '# Chef openstack-block-storage: file to block config from package'
+  only_if { platform_family? 'debian' }
+end
+
 platform_options['cinder_api_packages'].each do |pkg|
   package pkg do
     options platform_options['package_overrides']
