@@ -83,13 +83,8 @@ end
 # merge all config options and secrets to be used in the cinder.conf.erb
 cinder_conf_options = merge_config_options 'block-storage'
 
-service 'cinder-apache2' do
-  case node['platform_family']
-  when 'debian'
-    service_name 'apache2'
-  when 'rhel'
-    service_name 'httpd'
-  end
+execute 'Clear cinder-api apache restart' do
+  command "rm -f #{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
   action :nothing
 end
 
@@ -102,7 +97,7 @@ template '/etc/cinder/cinder.conf' do
   variables(
     service_config: cinder_conf_options
   )
-  notifies :restart, 'service[cinder-apache2]'
+  notifies :run, 'execute[Clear cinder-api apache restart]', :immediately
 end
 
 # delete all secrets saved in the attribute

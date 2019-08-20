@@ -92,3 +92,19 @@ web_app 'cinder-api' do
   protocol node['openstack']['block-storage']['ssl']['protocol']
   ciphers node['openstack']['block-storage']['ssl']['ciphers']
 end
+
+# Hack until Apache cookbook has lwrp's for proper use of notify restart
+# apache2 after keystone if completely configured. Whenever a cinder
+# config is updated, have it notify the resource which clears the lock
+# so the service can be restarted.
+# TODO(ramereth): This should be removed once this cookbook is updated
+# to use the newer apache2 cookbook which uses proper resources.
+edit_resource(:template, "#{node['apache']['dir']}/sites-available/cinder-api.conf") do
+  notifies :run, 'execute[Clear cinder-api apache restart]', :immediately
+end
+
+execute 'cinder-api apache restart' do
+  command "touch #{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
+  creates "#{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
+  notifies :restart, 'service[apache2]', :immediately
+end
