@@ -97,32 +97,24 @@ when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     'cinder_backup_service' => 'openstack-cinder-backup',
     'cinder_iscsitarget_packages' => ['targetcli', 'dbus-python'],
     'cinder_iscsitarget_service' => 'target',
-    'cinder_nfs_packages' => ['nfs-utils', 'nfs-utils-lib'],
-    'cinder_emc_packages' => ['pywbem'],
-    'cinder_svc_packages' => ['sysfsutils'],
     'cinder_lvm_packages' => ['lvm2'],
-    'cinder_flashsystem_packages' => ['sysfsutils'],
     'package_overrides' => '',
   }
 when 'debian'
   # operating system user and group names
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['cinder-common'],
-    'cinder_api_packages' => ['cinder-api'],
+    'cinder_api_packages' => ['libapache2-mod-wsgi-py3', 'python3-cinder', 'cinder-api'],
     'cinder_api_service' => 'cinder-api',
-    'cinder_volume_packages' => ['cinder-volume', 'qemu-utils', 'thin-provisioning-tools'],
+    'cinder_volume_packages' => ['python3-cinder', 'cinder-volume', 'qemu-utils', 'thin-provisioning-tools'],
     'cinder_volume_service' => 'cinder-volume',
-    'cinder_scheduler_packages' => ['cinder-scheduler'],
+    'cinder_scheduler_packages' => ['python3-cinder', 'cinder-scheduler'],
     'cinder_scheduler_service' => 'cinder-scheduler',
-    'cinder_backup_packages' => ['cinder-backup'],
+    'cinder_backup_packages' => ['python3-cinder', 'cinder-backup'],
     'cinder_backup_service' => 'cinder-backup',
     'cinder_iscsitarget_packages' => ['targetcli-fb'],
     'cinder_iscsitarget_service' => 'tgt',
-    'cinder_nfs_packages' => ['nfs-common'],
-    'cinder_emc_packages' => ['python-pywbem'],
-    'cinder_svc_packages' => ['sysfsutils'],
     'cinder_lvm_packages' => ['lvm2'],
-    'cinder_flashsystem_packages' => ['sysfsutils'],
     'package_overrides' => '',
   }
 end

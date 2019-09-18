@@ -26,8 +26,8 @@ describe 'openstack-block-storage::scheduler' do
       expect(chef_run).to enable_service 'cinder-scheduler'
     end
 
-    it 'upgrades mysql python package' do
-      expect(chef_run).to upgrade_package 'python-mysqldb'
+    it 'upgrades mysql python3 package' do
+      expect(chef_run).to upgrade_package 'python3-mysqldb'
     end
   end
 end

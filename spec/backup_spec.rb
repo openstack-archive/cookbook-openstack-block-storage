@@ -29,8 +29,8 @@ describe 'openstack-block-storage::backup' do
         expect(chef_run.service('cinder-backup')).to subscribe_to('template[/etc/cinder/cinder.conf]')
       end
 
-      it 'upgrades mysql python package' do
-        expect(chef_run).to upgrade_package 'python-mysqldb'
+      it 'upgrades mysql python3 package' do
+        expect(chef_run).to upgrade_package 'python3-mysqldb'
       end
     end
   end

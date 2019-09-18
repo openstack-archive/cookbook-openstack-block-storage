@@ -38,8 +38,8 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to enable_service 'iscsitarget'
     end
 
-    it 'upgrades mysql python packages by default' do
-      expect(chef_run).to upgrade_package 'python-mysqldb'
+    it 'upgrades mysql python3 packages by default' do
+      expect(chef_run).to upgrade_package 'python3-mysqldb'
     end
 
     it 'upgrades cinder iscsi package' do
