@@ -3,8 +3,15 @@ maintainer       'Chef OpenStack'
 maintainer_email 'openstack-discuss@lists.openstack.org'
 license          'Apache-2.0'
 description      'The OpenStack Advanced Volume Management service Cinder.'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '18.0.0'
+
+recipe 'api', 'Installs the cinder-api and sets up the cinder database'
+recipe 'backup', 'Installs the cinder-backup service'
+recipe 'cinder-common', 'Defines the common pieces of repeated code from the other recipes'
+recipe 'identity_registration', 'Defines the cinder service/user/endpoints in keystone'
+recipe 'scheduler', 'Installs the cinder-scheduler service'
+recipe 'volume_driver_lvm', 'Configures lvm as the cinder storage backend'
+recipe 'volume', 'Installs the cinder-volume service'
 
 %w(ubuntu redhat centos).each do |os|
   supports os
@@ -19,6 +26,6 @@ depends 'apache2', '5.0.1'
 depends 'lvm'
 depends 'selinux'
 
-issues_url 'https://launchpad.net/openstack-chef' if respond_to?(:issues_url)
-source_url 'https://github.com/openstack/cookbook-openstack-block-storage' if respond_to?(:source_url)
-chef_version '>= 12.5' if respond_to?(:chef_version)
+issues_url 'https://launchpad.net/openstack-chef'
+source_url 'https://opendev.org/openstack/cookbook-openstack-block-storage'
+chef_version '>= 14.0'
