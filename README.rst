@@ -139,6 +139,8 @@ License and Author
 +-----------------+---------------------------------------------------+
 | **Author**      | Christoph Albers (c.albers@x-ion.de)              |
 +-----------------+---------------------------------------------------+
+| **Author**      | Lance Albertson (lance@osuosl.org)                |
++-----------------+---------------------------------------------------+
 
 +-----------------+---------------------------------------------------+
 | **Copyright**   | Copyright (c) 2012, Rackspace US, Inc.            |
@@ -150,6 +152,8 @@ License and Author
 | **Copyright**   | Copyright (c) 2013-2014, SUSE Linux GmbH          |
 +-----------------+---------------------------------------------------+
 | **Copyright**   | Copyright (c) 2013-2015, IBM, Corp.               |
++-----------------+---------------------------------------------------+
+| **Copyright**   | Copyright (c) 2019, Oregon State University       |
 +-----------------+---------------------------------------------------+
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
