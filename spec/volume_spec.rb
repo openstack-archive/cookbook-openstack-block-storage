@@ -8,7 +8,7 @@ describe 'openstack-block-storage::volume' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'

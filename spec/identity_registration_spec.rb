@@ -8,7 +8,7 @@ describe 'openstack-block-storage::identity_registration' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'block-storage-stubs'
 
@@ -83,11 +83,16 @@ describe 'openstack-block-storage::identity_registration' do
         end
       end
 
-      it 'with custom region override' do
-        node.override['openstack']['block-storage']['region'] = 'volumeRegion'
-        expect(chef_run).to create_openstack_endpoint(
-          service_type
-        ).with(region: 'volumeRegion')
+      context 'with custom region override' do
+        cached(:chef_run) do
+          node.override['openstack']['block-storage']['region'] = 'volumeRegion'
+          runner.converge(described_recipe)
+        end
+        it do
+          expect(chef_run).to create_openstack_endpoint(
+            service_type
+          ).with(region: 'volumeRegion')
+        end
       end
     end
 

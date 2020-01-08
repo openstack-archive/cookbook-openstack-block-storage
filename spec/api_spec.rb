@@ -8,7 +8,7 @@ describe 'openstack-block-storage::api' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'block-storage-stubs'
     include_examples 'common-logging'
@@ -60,8 +60,11 @@ describe 'openstack-block-storage::api' do
       it 'does not manage policy file unless specified' do
         expect(chef_run).not_to create_remote_file('/etc/cinder/policy.json')
       end
-      describe 'policy file specified' do
-        before { node.override['openstack']['block-storage']['policyfile_url'] = 'http://server/mypolicy.json' }
+      context 'policy file specified' do
+        cached(:chef_run) do
+          node.override['openstack']['block-storage']['policyfile_url'] = 'http://server/mypolicy.json'
+          runner.converge(described_recipe)
+        end
         let(:remote_policy) { chef_run.remote_file('/etc/cinder/policy.json') }
 
         it 'manages policy file when remote file is specified' do

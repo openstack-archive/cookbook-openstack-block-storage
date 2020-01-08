@@ -4,25 +4,22 @@
 
 require 'chefspec'
 require 'chefspec/berkshelf'
-
-ChefSpec::Coverage.start! { add_filter 'openstack-block-storage' }
-
 require 'chef/application'
 
 RSpec.configure do |config|
   config.color = true
   config.formatter = :documentation
-  config.log_level = :fatal
+  config.log_level = :warn
   config.file_cache_path = '/var/chef/cache'
 end
 
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '7.4',
+  version: '7',
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
-  version: '16.04',
+  version: '18.04',
 }.freeze
 
 shared_context 'block-storage-stubs' do
@@ -64,8 +61,9 @@ end
 
 shared_examples 'common-logging' do
   context 'when syslog.use is true' do
-    before do
+    cached(:chef_run) do
       node.override['openstack']['block-storage']['syslog']['use'] = true
+      runner.converge(described_recipe)
     end
 
     it 'runs logging recipe if node attributes say to' do
@@ -74,8 +72,9 @@ shared_examples 'common-logging' do
   end
 
   context 'when syslog.use is false' do
-    before do
+    cached(:chef_run) do
       node.override['openstack']['block-storage']['syslog']['use'] = false
+      runner.converge(described_recipe)
     end
 
     it 'runs logging recipe if node attributes say to' do
