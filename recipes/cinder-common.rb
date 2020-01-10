@@ -83,8 +83,13 @@ end
 # merge all config options and secrets to be used in the cinder.conf.erb
 cinder_conf_options = merge_config_options 'block-storage'
 
-execute 'Clear cinder-api apache restart' do
-  command "rm -f #{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
+# service['apache2'] is defined in the apache2_default_install resource
+# but other resources are currently unable to reference it.  To work
+# around this issue, define the following helper in your cookbook:
+service 'apache2' do
+  extend Apache2::Cookbook::Helpers
+  service_name lazy { apache_platform_service_name }
+  supports restart: true, status: true, reload: true
   action :nothing
 end
 
@@ -97,7 +102,7 @@ template '/etc/cinder/cinder.conf' do
   variables(
     service_config: cinder_conf_options
   )
-  notifies :run, 'execute[Clear cinder-api apache restart]', :immediately
+  notifies :restart, 'service[apache2]'
 end
 
 # delete all secrets saved in the attribute

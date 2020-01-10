@@ -87,7 +87,7 @@ when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['block-storage']['volume']['iscsi_helper'] = 'lioadm'
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['openstack-cinder'],
-    'cinder_api_packages' => ['openstack-cinder'],
+    'cinder_api_packages' => ['openstack-cinder', 'mod_wsgi'],
     'cinder_api_service' => 'openstack-cinder-api',
     'cinder_volume_packages' => ['qemu-img-ev'],
     'cinder_volume_service' => 'openstack-cinder-volume',

@@ -36,13 +36,12 @@ Cookbooks
 
 The following cookbooks are dependencies:
 
-- 'apache2', '5.0.1'
+- 'apache2', '~> 8.0'
 - 'lvm'
 - 'openstackclient'
 - 'openstack-common', '>= 18.0.0'
 - 'openstack-identity', '>= 18.0.0'
 - 'openstack-image', '>= 18.0.0'
-- 'selinux'
 
 Attributes
 ==========

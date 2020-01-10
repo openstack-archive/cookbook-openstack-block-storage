@@ -17,14 +17,12 @@ recipe 'volume', 'Installs the cinder-volume service'
   supports os
 end
 
+depends 'apache2', '~> 8.0'
+depends 'lvm'
+depends 'openstackclient'
 depends 'openstack-common', '>= 18.0.0'
 depends 'openstack-identity', '>= 18.0.0'
 depends 'openstack-image', '>= 18.0.0'
-depends 'openstackclient'
-
-depends 'apache2', '5.0.1'
-depends 'lvm'
-depends 'selinux'
 
 issues_url 'https://launchpad.net/openstack-chef'
 source_url 'https://opendev.org/openstack/cookbook-openstack-block-storage'

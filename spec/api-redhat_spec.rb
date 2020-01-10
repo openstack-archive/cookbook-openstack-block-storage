@@ -12,8 +12,13 @@ describe 'openstack-block-storage::api' do
 
     include_context 'block-storage-stubs'
 
+    it do
+      expect(chef_run).to_not create_file('/etc/apache2/conf-available/cinder-wsgi.conf')
+    end
+
     it 'upgrades cinder api package' do
       expect(chef_run).to upgrade_package 'openstack-cinder'
+      expect(chef_run).to upgrade_package 'mod_wsgi'
     end
 
     it 'upgrades mysql python package' do

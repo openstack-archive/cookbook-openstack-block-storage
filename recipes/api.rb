@@ -23,6 +23,7 @@
 # Make Openstack object available in Chef::Recipe
 class ::Chef::Recipe
   include ::Openstack
+  include Apache2::Cookbook::Helpers
 end
 
 include_recipe 'openstack-block-storage::cinder-common'
@@ -68,43 +69,42 @@ if node['openstack']['block-storage']['policyfile_url']
   end
 end
 
+# Finds and appends the listen port to the apache2_install[openstack]
+# resource which is defined in openstack-identity::server-apache.
+apache_resource = find_resource(:apache2_install, 'openstack')
+
+if apache_resource
+  apache_resource.listen = [apache_resource.listen, "#{bind_service['host']}:#{bind_service['port']}"].flatten
+else
+  apache2_install 'openstack' do
+    listen "#{bind_service['host']}:#{bind_service['port']}"
+  end
+end
+
+apache2_module 'wsgi'
+apache2_module 'ssl' if node['openstack']['block-storage']['ssl']['enabled']
+
 # remove the cinder-wsgi.conf automatically generated from package
-apache_config 'cinder-wsgi' do
-  enable false
+apache2_conf 'cinder-wsgi' do
+  action :disable
 end
 
-web_app 'cinder-api' do
-  template 'wsgi-template.conf.erb'
-  daemon_process 'cinder-wsgi'
-  server_host bind_service['host']
-  server_port bind_service['port']
-  server_entry '/usr/bin/cinder-wsgi'
-  log_dir node['apache']['log_dir']
-  run_dir node['apache']['run_dir']
-  user node['openstack']['block-storage']['user']
-  group node['openstack']['block-storage']['group']
-  use_ssl node['openstack']['block-storage']['ssl']['enabled']
-  cert_file node['openstack']['block-storage']['ssl']['certfile']
-  chain_file node['openstack']['block-storage']['ssl']['chainfile']
-  key_file node['openstack']['block-storage']['ssl']['keyfile']
-  ca_certs_path node['openstack']['block-storage']['ssl']['ca_certs_path']
-  cert_required node['openstack']['block-storage']['ssl']['cert_required']
-  protocol node['openstack']['block-storage']['ssl']['protocol']
-  ciphers node['openstack']['block-storage']['ssl']['ciphers']
+template "#{apache_dir}/sites-available/cinder-api.conf" do
+  extend Apache2::Cookbook::Helpers
+  source 'wsgi-template.conf.erb'
+  variables(
+    daemon_process: 'cinder-wsgi',
+    server_host: bind_service['host'],
+    server_port: bind_service['port'],
+    server_entry: '/usr/bin/cinder-wsgi',
+    log_dir: default_log_dir,
+    run_dir: lock_dir,
+    user: node['openstack']['block-storage']['user'],
+    group: node['openstack']['block-storage']['group']
+  )
+  notifies :restart, 'service[apache2]'
 end
 
-# Hack until Apache cookbook has lwrp's for proper use of notify restart
-# apache2 after keystone if completely configured. Whenever a cinder
-# config is updated, have it notify the resource which clears the lock
-# so the service can be restarted.
-# TODO(ramereth): This should be removed once this cookbook is updated
-# to use the newer apache2 cookbook which uses proper resources.
-edit_resource(:template, "#{node['apache']['dir']}/sites-available/cinder-api.conf") do
-  notifies :run, 'execute[Clear cinder-api apache restart]', :immediately
-end
-
-execute 'cinder-api apache restart' do
-  command "touch #{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
-  creates "#{Chef::Config[:file_cache_path]}/cinder-api-apache-restarted"
+apache2_site 'cinder-api' do
   notifies :restart, 'service[apache2]', :immediately
 end

@@ -1,6 +1,18 @@
 source 'https://supermarket.chef.io'
 
-%w(client -image -identity -common).each do |cookbook|
+solver :ruby, :required
+
+%w(
+  client
+  -common
+  -dns
+  -identity
+  -image
+  -integration-test
+  -network
+  -ops-database
+  -ops-messaging
+).each do |cookbook|
   if Dir.exist?("../cookbook-openstack#{cookbook}")
     cookbook "openstack#{cookbook}", path: "../cookbook-openstack#{cookbook}"
   else
