@@ -1,5 +1,10 @@
 # encoding: UTF-8
 #
+# Cookbook:: openstack-block-storage
+# Recipe:: cinder-common
+#
+# Copyright:: 2019-2020, Oregon State Univerity
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,11 +27,9 @@ end
 
 platform_options = node['openstack']['block-storage']['platform']
 
-platform_options['cinder_common_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-    action :upgrade
-  end
+package platform_options['cinder_common_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 db_user = node['openstack']['db']['block_storage']['username']
@@ -42,7 +45,8 @@ if node['openstack']['endpoints']['db']['enabled_slave']
 end
 
 if node['openstack']['mq']['service_type'] == 'rabbit'
-  node.default['openstack']['block-storage']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'block_storage'
+  node.default['openstack']['block-storage']['conf_secrets']['DEFAULT']['transport_url'] =
+    rabbit_transport_url 'block_storage'
 end
 
 glance_api_endpoint = internal_endpoint 'image_api'
@@ -58,7 +62,7 @@ auth_url = ::URI.decode identity_endpoint.to_s
 directory '/etc/cinder' do
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 0o0750
+  mode '750'
   action :create
 end
 
@@ -98,7 +102,8 @@ template '/etc/cinder/cinder.conf' do
   cookbook 'openstack-common'
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
-  mode 0o0640
+  mode '640'
+  sensitive true
   variables(
     service_config: cinder_conf_options
   )
@@ -117,7 +122,7 @@ directory node['openstack']['block-storage']['conf']['oslo_concurrency']['lock_p
   group node['openstack']['block-storage']['group']
   owner node['openstack']['block-storage']['user']
   recursive true
-  mode 0o0755
+  mode '755'
 end
 
 if node['openstack']['block-storage']['use_rootwrap']
@@ -126,7 +131,7 @@ if node['openstack']['block-storage']['use_rootwrap']
     cookbook 'openstack-common'
     owner 'root'
     group 'root'
-    mode 0o0644
+    mode '644'
     variables(
       service_config: node['openstack']['block-storage']['rootwrap']['conf']
     )

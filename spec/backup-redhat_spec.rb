@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 

@@ -1,7 +1,9 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 # Recipe:: volume_driver_lvm
+#
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +19,9 @@
 #
 
 platform_options = node['openstack']['block-storage']['platform']
-platform_options['cinder_lvm_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-    action :upgrade
-  end
+package platform_options['cinder_lvm_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 # TODO: (jklare) this whole section should be refactored and probably include an

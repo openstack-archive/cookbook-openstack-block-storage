@@ -1,13 +1,14 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 # Recipe:: volume
 #
-# Copyright 2012, Rackspace US, Inc.
-# Copyright 2012-2013, AT&T Services, Inc.
-# Copyright 2013, Opscode, Inc.
-# Copyright 2013-2014, SUSE Linux Gmbh.
-# Copyright 2013, IBM, Corp.
+# Copyright:: 2012, Rackspace US, Inc.
+# Copyright:: 2012-2013, AT&T Services, Inc.
+# Copyright:: 2013, Opscode, Inc.
+# Copyright:: 2013-2014, SUSE Linux Gmbh.
+# Copyright:: 2013, IBM, Corp.
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,25 +32,19 @@ include_recipe 'openstack-block-storage::cinder-common'
 
 platform_options = node['openstack']['block-storage']['platform']
 
-platform_options['cinder_volume_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-    action :upgrade
-  end
+package platform_options['cinder_volume_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 db_type = node['openstack']['db']['block_storage']['service_type']
-node['openstack']['db']['python_packages'][db_type].each do |pkg|
-  package pkg do
-    action :upgrade
-  end
+package node['openstack']['db']['python_packages'][db_type] do
+  action :upgrade
 end
 
-platform_options['cinder_iscsitarget_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-    action :upgrade
-  end
+package platform_options['cinder_iscsitarget_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 service 'cinder-volume' do

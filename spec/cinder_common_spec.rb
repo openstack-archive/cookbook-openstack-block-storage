@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -36,7 +36,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_directory(dir.name).with(
           owner: 'cinder',
           group: 'cinder',
-          mode: 0o0750
+          mode: '750'
         )
       end
     end
@@ -46,9 +46,12 @@ describe 'openstack-block-storage::cinder-common' do
 
       it 'should create the cinder.conf template' do
         expect(chef_run).to create_template(file.name).with(
+          source: 'openstack-service.conf.erb',
+          cookbook: 'openstack-common',
           owner: 'cinder',
           group: 'cinder',
-          mode: 0o0640
+          mode: '640',
+          sensitive: true
         )
       end
 
@@ -168,7 +171,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_directory(dir.name).with(
           user: 'cinder',
           group: 'cinder',
-          mode: 0o0755
+          mode: '755'
         )
       end
     end
@@ -180,7 +183,7 @@ describe 'openstack-block-storage::cinder-common' do
         expect(chef_run).to create_template(file.name).with(
           user: 'root',
           group: 'root',
-          mode: 0o644
+          mode: '644'
         )
       end
 

@@ -20,9 +20,9 @@ https://docs.openstack.org/cinder/latest/
 Requirements
 ============
 
-- Chef 14 or higher
-- chefdk 3.2.30 for testing (also includes berkshelf for cookbook
-  dependency resolution)
+- Chef 15 or higher
+- Chef Workstation 0.15.18 for testing (also includes berkshelf for
+  cookbook dependency resolution)
 
 Platform
 ========
@@ -39,9 +39,9 @@ The following cookbooks are dependencies:
 - 'apache2', '~> 8.0'
 - 'lvm'
 - 'openstackclient'
-- 'openstack-common', '>= 18.0.0'
-- 'openstack-identity', '>= 18.0.0'
-- 'openstack-image', '>= 18.0.0'
+- 'openstack-common', '>= 19.0.0'
+- 'openstack-identity', '>= 19.0.0'
+- 'openstack-image', '>= 19.0.0'
 
 Attributes
 ==========
@@ -152,7 +152,7 @@ License and Author
 +-----------------+---------------------------------------------------+
 | **Copyright**   | Copyright (c) 2013-2015, IBM, Corp.               |
 +-----------------+---------------------------------------------------+
-| **Copyright**   | Copyright (c) 2019, Oregon State University       |
+| **Copyright**   | Copyright (c) 2019-2020, Oregon State University  |
 +-----------------+---------------------------------------------------+
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may

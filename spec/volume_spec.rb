@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -14,16 +14,8 @@ describe 'openstack-block-storage::volume' do
     include_examples 'common-logging'
     include_examples 'creates_cinder_conf', 'service[cinder-volume]', 'cinder', 'cinder'
 
-    it 'upgrades cinder volume packages' do
-      expect(chef_run).to upgrade_package 'cinder-volume'
-    end
-
-    it 'upgrades qemu utils package' do
-      expect(chef_run).to upgrade_package 'qemu-utils'
-    end
-
-    it 'upgrades thin provisioning tools package' do
-      expect(chef_run).to upgrade_package 'thin-provisioning-tools'
+    it do
+      expect(chef_run).to upgrade_package %w(python3-cinder cinder-volume qemu-utils thin-provisioning-tools)
     end
 
     it 'starts cinder volume' do

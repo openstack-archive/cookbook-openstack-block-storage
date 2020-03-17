@@ -1,12 +1,13 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 # Recipe:: api
 #
-# Copyright 2012, Rackspace US, Inc.
-# Copyright 2012-2013, AT&T Services, Inc.
-# Copyright 2013, Opscode, Inc.
-# Copyright 2013-2014, SUSE Linux Gmbh.
+# Copyright:: 2012, Rackspace US, Inc.
+# Copyright:: 2012-2013, AT&T Services, Inc.
+# Copyright:: 2013, Opscode, Inc.
+# Copyright:: 2013-2014, SUSE Linux Gmbh.
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,18 +42,14 @@ file '/etc/apache2/conf-available/cinder-wsgi.conf' do
   only_if { platform_family? 'debian' }
 end
 
-platform_options['cinder_api_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-    action :upgrade
-  end
+package platform_options['cinder_api_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 db_type = node['openstack']['db']['block_storage']['service_type']
-node['openstack']['db']['python_packages'][db_type].each do |pkg|
-  package pkg do
-    action :upgrade
-  end
+package node['openstack']['db']['python_packages'][db_type] do
+  action :upgrade
 end
 
 execute 'cinder-manage db sync' do
@@ -65,7 +62,7 @@ if node['openstack']['block-storage']['policyfile_url']
     source node['openstack']['block-storage']['policyfile_url']
     owner node['openstack']['block-storage']['user']
     group node['openstack']['block-storage']['group']
-    mode 0o0644
+    mode '644'
   end
 end
 

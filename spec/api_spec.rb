@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -23,10 +23,8 @@ describe 'openstack-block-storage::api' do
       )
     end
 
-    it 'upgrades cinder api packages' do
-      expect(chef_run).to upgrade_package('libapache2-mod-wsgi-py3')
-      expect(chef_run).to upgrade_package('python3-cinder')
-      expect(chef_run).to upgrade_package('cinder-api')
+    it do
+      expect(chef_run).to upgrade_package %w(libapache2-mod-wsgi-py3 python3-cinder cinder-api)
     end
 
     it 'upgrades mysql python3 package' do
@@ -162,7 +160,7 @@ describe 'openstack-block-storage::api' do
           expect(chef_run).to create_remote_file('/etc/cinder/policy.json').with(
             user: 'cinder',
             group: 'cinder',
-            mode: 0o0644
+            mode: '644'
           )
         end
       end

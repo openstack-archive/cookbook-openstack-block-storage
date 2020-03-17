@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require 'chefspec'
 require 'chefspec/berkshelf'
@@ -126,7 +126,7 @@ shared_examples 'creates_cinder_conf' do |service, user, group, action = :restar
       expect(chef_run).to create_template(file.name).with(
         user: user,
         group: group,
-        mode: 0o640
+        mode: '640'
       )
     end
 

@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -20,8 +20,8 @@ describe 'openstack-block-storage::volume' do
       expect(chef_run).to upgrade_package('qemu-img-ev')
     end
 
-    it 'upgrades cinder iscsi package' do
-      expect(chef_run).to upgrade_package('targetcli')
+    it do
+      expect(chef_run).to upgrade_package %w(targetcli dbus-python)
     end
 
     it 'starts cinder volume' do

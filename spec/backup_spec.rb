@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -13,8 +13,8 @@ describe 'openstack-block-storage::backup' do
     include_context 'block-storage-stubs'
 
     describe 'enable cinder backup service' do
-      it 'upgrades cinder backup package' do
-        expect(chef_run).to upgrade_package 'cinder-backup'
+      it do
+        expect(chef_run).to upgrade_package %w(python3-cinder cinder-backup)
       end
 
       it 'starts cinder backup' do

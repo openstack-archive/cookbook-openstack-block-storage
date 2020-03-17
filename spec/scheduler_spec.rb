@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 
 require_relative 'spec_helper'
 
@@ -14,8 +14,8 @@ describe 'openstack-block-storage::scheduler' do
     include_examples 'common-logging'
     include_examples 'creates_cinder_conf', 'service[cinder-scheduler]', 'cinder', 'cinder'
 
-    it 'upgrades cinder scheduler package' do
-      expect(chef_run).to upgrade_package 'cinder-scheduler'
+    it do
+      expect(chef_run).to upgrade_package %w(python3-cinder cinder-scheduler)
     end
 
     it 'starts cinder scheduler' do

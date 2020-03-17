@@ -1,13 +1,14 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-block-storage
+# Cookbook:: openstack-block-storage
 # Attributes:: default
 #
-# Copyright 2012, DreamHost
-# Copyright 2012, Rackspace US, Inc.
-# Copyright 2012-2013, AT&T Services, Inc.
-# Copyright 2013, Opscode, Inc.
-# Copyright 2013-2014, IBM, Corp
+# Copyright:: 2012, DreamHost
+# Copyright:: 2012, Rackspace US, Inc.
+# Copyright:: 2012-2013, AT&T Services, Inc.
+# Copyright:: 2013, Opscode, Inc.
+# Copyright:: 2013-2014, IBM, Corp
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -87,34 +88,45 @@ when 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['block-storage']['volume']['iscsi_helper'] = 'lioadm'
   default['openstack']['block-storage']['platform'] = {
     'cinder_common_packages' => ['openstack-cinder'],
-    'cinder_api_packages' => ['openstack-cinder', 'mod_wsgi'],
+    'cinder_api_packages' => %w(openstack-cinder mod_wsgi),
     'cinder_api_service' => 'openstack-cinder-api',
-    'cinder_volume_packages' => ['qemu-img-ev'],
+    'cinder_volume_packages' => %w(qemu-img-ev),
     'cinder_volume_service' => 'openstack-cinder-volume',
     'cinder_scheduler_packages' => [],
     'cinder_scheduler_service' => 'openstack-cinder-scheduler',
     'cinder_backup_packages' => [],
     'cinder_backup_service' => 'openstack-cinder-backup',
-    'cinder_iscsitarget_packages' => ['targetcli', 'dbus-python'],
+    'cinder_iscsitarget_packages' => %w(targetcli dbus-python),
     'cinder_iscsitarget_service' => 'target',
-    'cinder_lvm_packages' => ['lvm2'],
+    'cinder_lvm_packages' => %w(lvm2),
     'package_overrides' => '',
   }
 when 'debian'
   # operating system user and group names
   default['openstack']['block-storage']['platform'] = {
-    'cinder_common_packages' => ['cinder-common'],
-    'cinder_api_packages' => ['libapache2-mod-wsgi-py3', 'python3-cinder', 'cinder-api'],
+    'cinder_common_packages' => %w(cinder-common),
+    'cinder_api_packages' =>
+      %w(
+        libapache2-mod-wsgi-py3
+        python3-cinder
+        cinder-api
+      ),
     'cinder_api_service' => 'cinder-api',
-    'cinder_volume_packages' => ['python3-cinder', 'cinder-volume', 'qemu-utils', 'thin-provisioning-tools'],
+    'cinder_volume_packages' =>
+      %w(
+        python3-cinder
+        cinder-volume
+        qemu-utils
+        thin-provisioning-tools
+      ),
     'cinder_volume_service' => 'cinder-volume',
-    'cinder_scheduler_packages' => ['python3-cinder', 'cinder-scheduler'],
+    'cinder_scheduler_packages' => %w(python3-cinder cinder-scheduler),
     'cinder_scheduler_service' => 'cinder-scheduler',
-    'cinder_backup_packages' => ['python3-cinder', 'cinder-backup'],
+    'cinder_backup_packages' => %w(python3-cinder cinder-backup),
     'cinder_backup_service' => 'cinder-backup',
-    'cinder_iscsitarget_packages' => ['targetcli-fb'],
+    'cinder_iscsitarget_packages' => %w(targetcli-fb),
     'cinder_iscsitarget_service' => 'tgt',
-    'cinder_lvm_packages' => ['lvm2'],
+    'cinder_lvm_packages' => %w(lvm2),
     'package_overrides' => '',
   }
 end
