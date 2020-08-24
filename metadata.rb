@@ -3,7 +3,7 @@ maintainer       'Chef OpenStack'
 maintainer_email 'openstack-discuss@lists.openstack.org'
 license          'Apache-2.0'
 description      'The OpenStack Advanced Volume Management service Cinder.'
-version          '19.0.0'
+version          '19.1.0'
 
 %w(ubuntu redhat centos).each do |os|
   supports os
