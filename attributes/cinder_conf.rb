@@ -15,6 +15,12 @@ default['openstack']['block-storage']['conf'].tap do |conf|
   conf['keystone_authtoken']['project_name'] = 'service'
   conf['keystone_authtoken']['user_domain_name'] = 'Default'
   conf['keystone_authtoken']['project_domain_name'] = 'Default'
+  conf['nova']['auth_type'] = 'password'
+  conf['nova']['region_name'] = node['openstack']['region']
+  conf['nova']['username'] = 'nova'
+  conf['nova']['project_name'] = 'service'
+  conf['nova']['user_domain_name'] = 'Default'
+  conf['nova']['project_domain_name'] = 'Default'
 
   conf['oslo_concurrency']['lock_path'] = '/var/lib/cinder/tmp'
 end
