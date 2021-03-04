@@ -45,7 +45,7 @@ describe 'openstack-block-storage::api' do
             daemon_process: 'cinder-wsgi',
             group: 'cinder',
             log_dir: '/var/log/apache2',
-            run_dir: '/var/lock/apache2',
+            run_dir: '/var/lock',
             server_entry: '/usr/bin/cinder-wsgi',
             server_host: '127.0.0.1',
             server_port: '8776',
@@ -61,7 +61,7 @@ describe 'openstack-block-storage::api' do
           %r{WSGIScriptAlias / /usr/bin/cinder-wsgi},
           %r{ErrorLog /var/log/apache2/cinder-wsgi_error.log},
           %r{CustomLog /var/log/apache2/cinder-wsgi_access.log combined},
-          %r{WSGISocketPrefix /var/lock/apache2},
+          %r{WSGISocketPrefix /var/lock},
         ].each do |line|
           expect(chef_run).to render_file(file).with_content(line)
         end

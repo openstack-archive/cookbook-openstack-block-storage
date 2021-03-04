@@ -57,6 +57,12 @@ node.default['openstack']['block-storage']['conf_secrets']
   .[]('keystone_authtoken')['password'] =
   get_password 'service', 'openstack-block-storage'
 
+if node['openstack']['block-storage']['conf']['nova']['auth_type'] == 'password'
+  node.default['openstack']['block-storage']['conf_secrets']
+  .[]('nova')['password'] =
+    get_password 'service', 'openstack-compute'
+end
+
 auth_url = identity_endpoint.to_s
 
 directory '/etc/cinder' do
@@ -72,6 +78,7 @@ node.default['openstack']['block-storage']['conf'].tap do |conf|
   conf['DEFAULT']['osapi_volume_listen'] = cinder_api_bind_address
   conf['DEFAULT']['osapi_volume_listen_port'] = cinder_api_bind['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
+  conf['nova']['auth_url'] = auth_url
 end
 
 # Todo(jr): Make this configurable depending on backend to be used
