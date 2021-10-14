@@ -2,7 +2,7 @@
 # Cookbook:: openstack-block-storage
 # Recipe:: cinder-common
 #
-# Copyright:: 2019-2020, Oregon State Univerity
+# Copyright:: 2019-2021, Oregon State Univerity
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

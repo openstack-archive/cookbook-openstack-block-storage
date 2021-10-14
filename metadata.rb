@@ -18,4 +18,4 @@ depends 'openstack-image', '>= 20.0.0'
 
 issues_url 'https://launchpad.net/openstack-chef'
 source_url 'https://opendev.org/openstack/cookbook-openstack-block-storage'
-chef_version '>= 15.0'
+chef_version '>= 16.0'

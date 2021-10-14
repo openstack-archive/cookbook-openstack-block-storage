@@ -2,12 +2,12 @@
 # Cookbook:: openstack-block-storage
 # Recipe:: volume
 #
-# Copyright:: 2012, Rackspace US, Inc.
-# Copyright:: 2012-2013, AT&T Services, Inc.
-# Copyright:: 2013, Opscode, Inc.
-# Copyright:: 2013-2014, SUSE Linux Gmbh.
-# Copyright:: 2013, IBM, Corp.
-# Copyright:: 2020, Oregon State University
+# Copyright:: 2012-2021, Rackspace US, Inc.
+# Copyright:: 2012-2021, AT&T Services, Inc.
+# Copyright:: 2013-2021, Chef Software, Inc.
+# Copyright:: 2013-2021, SUSE Linux Gmbh.
+# Copyright:: 2013-2021, IBM, Corp.
+# Copyright:: 2020-2021, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
