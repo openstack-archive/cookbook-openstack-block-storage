@@ -9,7 +9,7 @@ version          '20.0.0'
   supports os
 end
 
-depends 'apache2', '~> 8.1'
+depends 'apache2', '~> 8.6'
 depends 'lvm'
 depends 'openstackclient'
 depends 'openstack-common', '>= 20.0.0'

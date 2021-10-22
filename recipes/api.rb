@@ -77,7 +77,7 @@ else
   end
 end
 
-apache2_module 'wsgi'
+apache2_mod_wsgi 'openstack'
 apache2_module 'ssl' if node['openstack']['block-storage']['ssl']['enabled']
 
 # remove the cinder-wsgi.conf automatically generated from package

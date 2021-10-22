@@ -23,7 +23,7 @@ describe 'openstack-block-storage::api' do
     end
 
     it do
-      expect(chef_run).to upgrade_package %w(libapache2-mod-wsgi-py3 python3-cinder cinder-api)
+      expect(chef_run).to upgrade_package %w(python3-cinder cinder-api)
     end
 
     it 'upgrades mysql python3 package' do
@@ -75,7 +75,7 @@ describe 'openstack-block-storage::api' do
       end
 
       it do
-        expect(chef_run).to enable_apache2_module('wsgi')
+        expect(chef_run).to create_apache2_mod_wsgi('openstack')
       end
 
       it do
